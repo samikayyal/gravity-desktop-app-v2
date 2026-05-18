@@ -126,7 +126,8 @@
 ## Auth, Logging, And Audit
 
 - V1 uses employee mode plus admin password, not individual employee accounts.
-- Store admin password as a salted hash, never plaintext.
+- Store the admin password as plaintext in SQLite for v1. Do not add hashing or
+  salting unless the product decision changes.
 - Admin authorization is short-lived and scoped to the protected action/dialog.
 - Admin-authorized actions create audit events.
 - Separate technical logs from business audit events.

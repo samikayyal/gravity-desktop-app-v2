@@ -25,4 +25,14 @@ abstract final class AppColors {
   static const Color focusRing = Color(0xFF0F8F86);
   static const Color destructive = Color(0xFFD92D20);
   static const Color onDestructive = Color(0xFFFFFFFF);
+
+  static const Color statusBackupSuccessBg = Color(0xFFE7F7ED);
+  static const Color statusBackupSuccessFg = Color(0xFF166534);
+  static const Color statusBackupSuccessBorder = Color(0xFF8CD6A3);
+  static const Color statusBackupFailureBg = Color(0xFFFFE1DE);
+  static const Color statusBackupFailureFg = Color(0xFF9F1F17);
+  static const Color statusBackupFailureBorder = Color(0xFFEF8178);
+  static const Color statusInfoBg = Color(0xFFDCEEFF);
+  static const Color statusInfoFg = Color(0xFF0B528F);
+  static const Color statusInfoBorder = Color(0xFF86BFF0);
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'shell/foundation_shell.dart';
+import 'setup_gate.dart';
 import 'theme/app_theme.dart';
 
 class GravityDesktopApp extends StatelessWidget {
@@ -12,7 +12,7 @@ class GravityDesktopApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Gravity Front Desk',
       theme: buildAppTheme(),
-      home: const FoundationShell(),
+      home: const SetupGate(),
     );
   }
 }

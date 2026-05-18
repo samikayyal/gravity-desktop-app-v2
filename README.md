@@ -6,13 +6,9 @@ and GCP Cloud Storage backup/restore.
 
 ## Current Status
 
-This repository is currently in the product and architecture foundation stage.
-It contains the project context contract, but it does not yet contain a Flutter
-project scaffold, `pubspec.yaml`, `lib/`, or `test/` folders.
-
-The next implementation unit is to scaffold the Flutter Windows desktop app,
-add the baseline dependencies, create the planned folder structure, and get
-format/analyze/test passing before feature work begins.
+This repository has the Flutter Windows scaffold, baseline app shell, Drift
+database boundary, first-run setup gate, and New Installation setup slice in
+place. Restore package validation and database replacement are still pending.
 
 ## V1 Scope
 
@@ -53,7 +49,7 @@ backup.
 
 For a new installation, setup must collect:
 
-- Admin password, stored only as a salted hash.
+- Admin password, stored as plaintext in SQLite.
 - Required GCP backup configuration.
 - Initial socks and water bottle product prices, starting stock, and low-stock
   thresholds.

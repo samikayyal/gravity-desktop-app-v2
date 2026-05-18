@@ -44,7 +44,7 @@ Screen Widget
 | `lib/app/` | App shell, routing, theming, layout scaffolds, global provider wiring |
 | `lib/core/database/` | SQLite connection, Drift database, migrations, transactions |
 | `lib/core/config/` | Settings models and defaults |
-| `lib/core/security/` | Admin password hashing, authorization prompts, protected-action guards |
+| `lib/core/security/` | Admin authorization prompts and protected-action guards |
 | `lib/core/backup/` | Backup package creation, GCP upload/download, restore orchestration, backup status |
 | `lib/core/export/` | PDF and CSV generation from report/export models |
 | `lib/core/audit/` | Audit event helpers for sensitive actions |
@@ -79,7 +79,9 @@ truth.
 
 GCP Cloud Storage holds timestamped backup packages only. Each package contains
 the SQLite database plus validation manifest metadata. It must not contain GCP
-credentials, generated exports, local logs, or local secrets/config files.
+credentials, generated exports, local logs, or local secrets/config files. By
+current product decision, the SQLite database itself stores the admin password
+as plaintext, so database backup packages include that plaintext value.
 
 In-memory UI state is cache only: selected rows, search text, form drafts,
 checkout draft state, active board view models, alert flags, loading states, and
@@ -101,9 +103,9 @@ one front-desk computer.
 | Employee mode | Check players in/out, create and edit players, record payments, allow debt, collect debt, create subscriptions, sell products, add inventory stock, run End Day, view reports, export reports |
 | Admin password holder | Employee actions plus price changes, cloud restore, voiding/deleting records, stale-session corrections, old financial/session corrections, protected settings |
 
-The admin password is created during setup and stored as a salted hash, never
-plaintext. Admin authorization is short-lived and scoped to the protected action
-or dialog. Admin-authorized actions create audit events.
+The admin password is created during setup and stored as plaintext in SQLite.
+Admin authorization is short-lived and scoped to the protected action or dialog.
+Admin-authorized actions create audit events.
 
 ## Background Tasks
 

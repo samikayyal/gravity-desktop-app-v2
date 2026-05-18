@@ -17,7 +17,8 @@ through audit events, voids, corrections, and reversal ledger records.
 
 ## Data, Domain, And Storage
 
-- Store admin password as a salted hash only.
+- Store the admin password as plaintext in SQLite for v1. Do not hash or salt
+  it unless this product decision changes.
 - Audit events belong in SQLite and are separate from technical logs.
 - Audit events should include timestamp, action type, affected record, old value
   where relevant, new value where relevant, actor value, and whether admin
@@ -64,4 +65,3 @@ through audit events, voids, corrections, and reversal ledger records.
 - Sensitive changes require admin authorization and leave audit trails.
 - Mistakes are fixed through durable corrections and reversals rather than
   deleting history.
-

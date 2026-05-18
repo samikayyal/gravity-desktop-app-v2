@@ -23,8 +23,11 @@ database starts fresh or is replaced from a verified backup.
 - Store setup completion, installation ID, business timezone, backup
   configuration status, backup interval, stale-session threshold, and initial
   defaults in SQLite.
-- Store the admin password only as a salted password hash, never plaintext.
+- Store the admin password as plaintext in SQLite. Do not hash or salt it
+  unless this product decision changes.
 - Do not store or copy GCP credentials into cloud backup packages.
+- Because backup packages include the SQLite database, they also include the
+  plaintext admin password stored in that database.
 - Restore must verify the admin password stored in the selected backup,
   validate manifest/checksum, and create a local safety copy before replacing
   the active database.
@@ -71,4 +74,3 @@ database starts fresh or is replaced from a verified backup.
   only then replaces the active database.
 - Setup and restore never include GCP credentials or local secrets in backup
   packages.
-

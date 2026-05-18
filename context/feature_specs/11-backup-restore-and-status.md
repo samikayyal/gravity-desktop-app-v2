@@ -23,6 +23,8 @@ primary database.
   schema version, backup timestamp, installation ID, and checksum.
 - Backup packages must exclude GCP credentials, generated exports, local logs,
   local secret/config files, and other sensitive local-only configuration.
+- Because v1 stores the admin password as plaintext inside SQLite, database
+  backup packages include the plaintext admin password.
 - Store backup runs and backup manifest metadata in SQLite.
 - The GCP bucket must be private, block public access, and use narrowly scoped
   credentials.
@@ -66,4 +68,3 @@ primary database.
 - Cashier work remains offline-first and does not depend on network success.
 - Backup status is clear enough for employees to notice recent failures.
 - Cloud storage is never treated as live sync or the primary database.
-
