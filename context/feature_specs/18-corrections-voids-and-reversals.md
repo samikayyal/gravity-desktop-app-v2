@@ -1,4 +1,37 @@
-# Feature Spec 15: Corrections, Voids, and Reversals
+---
+id: "18"
+title: Corrections, Voids, and Reversals
+status: ready
+implementation_order: 18
+depends_on: ["06", "09", "10", "12", "13", "14", "16"]
+must_read:
+  - context/schema-reference.md
+  - context/glossary.md
+owns_tables:
+  - corrections
+  - audit_events
+  - payments
+  - sessions
+  - product_sales
+  - subscriptions
+  - inventory_movements
+owns_paths:
+  - lib/features/corrections/
+  - lib/domain/services/corrections_service.dart
+  - lib/data/repositories/corrections_repository.dart
+  - test/features/corrections/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/domain
+  - flutter test test/features/corrections
+stop_and_ask:
+  - adding hard deletes
+  - changing admin authorization requirements
+  - changing reversal ledger semantics
+---
+
+# Feature Spec 18: Corrections, Voids, and Reversals
 
 ## Purpose
 Define the mechanisms for reversing business events in the application without permanently deleting records. To ensure absolute compliance with park auditing standards, the database uses **soft-delete flags**, **void statuses**, and **reversing ledger adjustments** associated with short-lived **admin authorizations** and detailed **audit log records**.
@@ -145,12 +178,12 @@ sequenceDiagram
 
 | ID | Requirement Details | Check |
 | --- | --- | --- |
-| AC-15.1 | Verify that no SQL delete statements are called during standard correction flows. | [ ] |
-| AC-15.2 | Verify that the Admin Password Dialog validates correctly and prevents unauthenticated voids. | [ ] |
-| AC-15.3 | Verify that voiding a product sale successfully reverses the inventory stock count. | [ ] |
-| AC-15.4 | Verify that voiding a subscription cancels the outstanding debt linked to the purchase. | [ ] |
-| AC-15.5 | Verify that every correction inserts a row into the `corrections` and `audit_events` tables. | [ ] |
-| AC-15.6 | Verify that active board sessions voided within 10 minutes do not require passwords. | [ ] |
+| AC-18.1 | Verify that no SQL delete statements are called during standard correction flows. | [ ] |
+| AC-18.2 | Verify that the Admin Password Dialog validates correctly and prevents unauthenticated voids. | [ ] |
+| AC-18.3 | Verify that voiding a product sale successfully reverses the inventory stock count. | [ ] |
+| AC-18.4 | Verify that voiding a subscription cancels the outstanding debt linked to the purchase. | [ ] |
+| AC-18.5 | Verify that every correction inserts a row into the `corrections` and `audit_events` tables. | [ ] |
+| AC-18.6 | Verify that active board sessions voided within 10 minutes do not require passwords. | [ ] |
 
 ---
 

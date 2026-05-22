@@ -1,4 +1,30 @@
-# Player Profiles and Search Specification
+---
+id: "08"
+title: Player Profiles and Search
+status: ready
+implementation_order: 8
+depends_on: ["01", "02", "03", "05", "06"]
+must_read:
+  - context/schema-reference.md
+  - context/glossary.md
+owns_tables:
+  - players
+  - player_phones
+owns_paths:
+  - lib/features/players/
+  - lib/data/repositories/player_repository.dart
+  - test/features/players/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/features/players
+stop_and_ask:
+  - player merge behavior
+  - phone normalization changes
+  - any change to non-unique phone identity
+---
+
+# Feature Spec 08: Player Profiles and Search
 
 ## Purpose
 The Player Profiles and Search system serves as the baseline entry registry for customers. Cashiers must be able to search existing profiles quickly or register new ones with minimum friction during peak hours. This module ensures accurate tracking of customer contact numbers (specifically supporting multiple phone numbers per player), prevents dual check-ins, and manages search caching.

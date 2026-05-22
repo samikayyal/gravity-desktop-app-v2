@@ -1,4 +1,30 @@
-# First-Run Setup and Restore Specification
+---
+id: "07"
+title: First-Run Setup and Restore
+status: ready
+implementation_order: 7
+depends_on: ["01", "02", "03", "05", "06"]
+must_read:
+  - context/schema-reference.md
+  - context/glossary.md
+owns_tables:
+  - system_settings
+  - products
+owns_paths:
+  - lib/features/setup/
+  - lib/core/config/
+  - test/features/setup/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/features/setup
+stop_and_ask:
+  - changing required setup steps
+  - changing GCP credential storage
+  - changing restore overwrite behavior
+---
+
+# Feature Spec 07: First-Run Setup and Restore
 
 ## Purpose
 The First-Run Setup wizard ensures that every fresh application installation is properly initialized before any business or cashier actions occur. It guides the user through setting up the local administrator password, optionally restoring a prior database safely, testing cloud backup connectivity, and pre-filling baseline inventory products (socks and water).

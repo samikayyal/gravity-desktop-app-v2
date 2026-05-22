@@ -4,26 +4,33 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-- Spec-driven Context Setup (Clean Slate)
+- Implementation Planning / Context Health
 
 ## Current Goal
 
-- Complete the rewrite of the `context/` folder by generating all 20 reordered feature specifications under `context/feature_specs/` using the grill-me decisions.
+- Prepare the context docs for agentic Flutter scaffold implementation, then start the foundation scaffold unit.
 
 ## Completed
 
 - [x] Initial architecture alignment and grill-me design session.
 - [x] Database schema centralized in `context/schema-reference.md`.
 - [x] Top-level context files updated (`project-overview.md`, `architecture.md`, `code-standards.md`, `ui-context.md`, `ai-workflow-rules.md`).
-- [x] Feature specs 01 to 05 written and finalized (Scaffold, Theme/Tokens, Localization, Settings, Admin Auth/Audit).
+- [x] Feature specs generated under `context/feature_specs/`, including split domain/UI specs for checkout, group checkout, and end-day reporting.
+- [x] Context docs reviewed for agentic implementation readiness.
+- [x] Shared business terminology centralized in `context/glossary.md`.
+- [x] Feature specs annotated with agent-facing metadata blocks.
+- [x] Schema readiness fixes applied for payment void status and no-hard-delete foreign key wording.
+- [x] Feature specs renumbered by intended implementation order from `01-foundation-scaffold.md` through `23-technical-logging.md`.
+- [x] Removed the separate implementation plan file; implementation order now lives in the numbered feature spec filenames.
 
 ## In Progress
 
-- [/] Feature specifications generation in `context/feature_specs/` (Specs 06-20).
+- [/] Foundation scaffold planning and verification setup.
 
 ## Next Up
 
-- [ ] Spec 06: Player Profiles and Search (Player identity, profiles, multiple phones, search, and snapshots).
+- [ ] Start `01-foundation-scaffold.md`.
+- [ ] Implement the Flutter Windows scaffold, baseline dependencies, folder layout, test harness, and verification workflow before product features.
 
 ## Open Questions
 
@@ -52,3 +59,5 @@ Update this file after every meaningful implementation change.
 
 - 2026-05-22: Reset progress tracker to clean state. Rewrote top-level context files to match 20 design decisions from grill-me session. Centralized Drift SQLite tables in `context/schema-reference.md`.
 - 2026-05-22: Generated first 5 feature specifications (01-Foundation Scaffold, 02-UI Tokens and Theme, 03-Localization Infrastructure, 04-Settings and Configuration, 05-Admin Auth and Audit Infrastructure).
+- 2026-05-22: Applied requested agentic-implementation context cleanup: refreshed progress state, fixed broken spec links, updated `AGENTS.md`, added `glossary.md`, added feature-spec metadata, clarified schema readiness, moved shared UI primitives earlier in the spec order, and sliced foundation work.
+- 2026-05-22: Removed the separate plan file per user direction and renumbered feature specs so filenames carry the implementation order directly.

@@ -1,4 +1,26 @@
-# Feature Spec 13b: Individual Checkout (UI)
+---
+id: "15"
+title: Individual Checkout - UI
+status: ready
+implementation_order: 15
+depends_on: ["02", "03", "04", "13", "14"]
+must_read:
+  - context/glossary.md
+owns_tables: []
+owns_paths:
+  - lib/features/checkout/
+  - test/features/checkout/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/features/checkout
+stop_and_ask:
+  - changing checkout confirmation flow
+  - changing old debt visibility
+  - changing payment validation behavior
+---
+
+# Feature Spec 15: Individual Checkout - UI
 
 ## Purpose
 Detail the user interface components, cashier interaction states, and screen layouts for processing an individual checkout. The checkout interface lives in the **Right Context Panel (~40% width)**, allowing the cashier to add products to the session, review ticket costs, input split payments, view change calculations, and handle print choices while the **Left Panel (~60% width)** Active Board remains fully visible and active.
@@ -99,12 +121,12 @@ Detail the user interface components, cashier interaction states, and screen lay
 
 | ID | Requirement Details | Check |
 | --- | --- | --- |
-| AC-13b.1 | Verify that the Right Panel transitions into Checkout Mode when checkout is triggered from the Active Board. | [ ] |
-| AC-13b.2 | Verify that adding quick products immediately updates the checkout subtotal. | [ ] |
-| AC-13b.3 | Verify that cash discount inputs clamp to the session total and do not decrease product costs. | [ ] |
-| AC-13b.4 | Verify that old debt warnings appear automatically and allow one-click payment inclusion. | [ ] |
-| AC-13b.5 | Verify that entering split cash/card amounts computes exact change due in real time. | [ ] |
-| AC-13b.6 | Verify that submitting checkout successfully removes the player from the active list. | [ ] |
+| AC-15.1 | Verify that the Right Panel transitions into Checkout Mode when checkout is triggered from the Active Board. | [ ] |
+| AC-15.2 | Verify that adding quick products immediately updates the checkout subtotal. | [ ] |
+| AC-15.3 | Verify that cash discount inputs clamp to the session total and do not decrease product costs. | [ ] |
+| AC-15.4 | Verify that old debt warnings appear automatically and allow one-click payment inclusion. | [ ] |
+| AC-15.5 | Verify that entering split cash/card amounts computes exact change due in real time. | [ ] |
+| AC-15.6 | Verify that submitting checkout successfully removes the player from the active list. | [ ] |
 
 ---
 

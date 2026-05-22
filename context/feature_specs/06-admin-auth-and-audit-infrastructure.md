@@ -1,4 +1,30 @@
-# Feature Spec: Admin Auth and Audit Infrastructure
+---
+id: "06"
+title: Admin Auth and Audit Infrastructure
+status: ready
+implementation_order: 6
+depends_on: ["01", "05"]
+must_read:
+  - context/schema-reference.md
+  - context/glossary.md
+owns_tables:
+  - system_settings
+  - audit_events
+owns_paths:
+  - lib/core/security/
+  - lib/core/audit/
+  - lib/data/repositories/audit_repository.dart
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test
+stop_and_ask:
+  - changing plaintext admin password storage
+  - changing admin session lifetime
+  - changing audit event durability
+---
+
+# Feature Spec 06: Admin Auth and Audit Infrastructure
 
 ## Purpose
 The Admin Auth and Audit Infrastructure establishes a secure, robust operational boundary separating day-to-day employee cashier tasks from restricted administrative system actions. It handles plaintext admin password verification, maintains a short-lived administrative authorization state (5-minute sliding session), and enforces a transactional audit ledger (`audit_events`) in SQLite. This ensures all high-risk adjustments—such as pricing updates, transaction voids, stale session overrides, and cloud database restores—are authorized and durably recorded.

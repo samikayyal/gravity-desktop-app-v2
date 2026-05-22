@@ -1,4 +1,36 @@
-# Feature Spec 13a: Individual Checkout (Domain and Data)
+---
+id: "14"
+title: Individual Checkout - Domain and Data
+status: ready
+implementation_order: 14
+depends_on: ["01", "05", "06", "08", "09", "10", "11", "12", "13"]
+must_read:
+  - context/schema-reference.md
+  - context/glossary.md
+owns_tables:
+  - sessions
+  - payments
+  - debts
+  - debt_payments
+  - product_sales
+  - sale_items
+owns_paths:
+  - lib/domain/services/checkout_service.dart
+  - lib/data/repositories/checkout_repository.dart
+  - test/domain/checkout_calculator_test.dart
+  - test/data/checkout_repository_test.dart
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/domain
+  - flutter test test/data
+stop_and_ask:
+  - changing discount eligibility
+  - changing debt allocation behavior
+  - changing payment split or tip/change behavior
+---
+
+# Feature Spec 14: Individual Checkout - Domain and Data
 
 ## Purpose
 Define the business rules, data models, and database transaction structures required to calculate play ticket charges, compile checkout subtotals (session time + product additions), manage split payment processing (cash & card), process cash tips, and enforce restricted employee discounts for a single player checking out.
@@ -120,11 +152,11 @@ Where:
 
 | ID | Requirement Details | Check |
 | --- | --- | --- |
-| AC-13a.1 | Verify that the pricing service rounds play duration up to 30-min blocks after leeway. | [ ] |
-| AC-13a.2 | Verify that the discount logic only reduces the session price and stops at zero. | [ ] |
-| AC-13a.3 | Verify that product sale line items compile their own snapshot prices. | [ ] |
-| AC-13a.4 | Verify that a checkout transaction fails atomically if any single step fails. | [ ] |
-| AC-13a.5 | Verify that timezone translations correctly use Damascus local time for offset calculations. | [ ] |
+| AC-14.1 | Verify that the pricing service rounds play duration up to 30-min blocks after leeway. | [ ] |
+| AC-14.2 | Verify that the discount logic only reduces the session price and stops at zero. | [ ] |
+| AC-14.3 | Verify that product sale line items compile their own snapshot prices. | [ ] |
+| AC-14.4 | Verify that a checkout transaction fails atomically if any single step fails. | [ ] |
+| AC-14.5 | Verify that timezone translations correctly use Damascus local time for offset calculations. | [ ] |
 
 ---
 

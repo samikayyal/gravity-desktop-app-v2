@@ -1,4 +1,26 @@
-# Feature Spec: UI Tokens and Theme
+---
+id: "02"
+title: UI Tokens and Theme
+status: ready
+implementation_order: 2
+depends_on: ["01"]
+must_read:
+  - context/ui-context.md
+owns_tables: []
+owns_paths:
+  - lib/app/theme/
+  - pubspec.yaml
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test
+stop_and_ask:
+  - changing the Modern Cashier Calm visual direction
+  - changing the brand yellow or light-mode-only decision
+  - adding feature-local color systems
+---
+
+# Feature Spec 02: UI Tokens and Theme
 
 ## Purpose
 The goal of this specification is to define a unified, high-density light-mode theme called **Modern Cashier Calm**. It establishes the baseline color tokens (using a structured HSL-adapted palette), typography using the **Outfit** and **Inter** typefaces, strict vertical and horizontal spacing scales, corner radiuses, and explicit interactive visual states. It ensures all front-desk interface elements remain fast to scan, clean, and operational without custom feature-local overrides.

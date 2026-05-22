@@ -1,4 +1,32 @@
-# Product Sales Specification
+---
+id: "09"
+title: Product Sales
+status: ready
+implementation_order: 9
+depends_on: ["01", "02", "03", "05", "06", "08"]
+must_read:
+  - context/schema-reference.md
+  - context/glossary.md
+owns_tables:
+  - products
+  - product_sales
+  - sale_items
+  - payments
+owns_paths:
+  - lib/features/products/
+  - lib/data/repositories/product_repository.dart
+  - test/features/products/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/features/products
+stop_and_ask:
+  - anonymous sale debt behavior
+  - product price snapshot changes
+  - per-sale product price editing
+---
+
+# Feature Spec 09: Product Sales
 
 ## Purpose
 The Product Sales system handles concessions, gear, and accessory sales (e.g., brand-required grippy socks, bottled water, juices). The cashier must be able to ring up sales quickly either as anonymous cash/card transactions or by linking them to specific player profiles (e.g., to record a sale on credit). It enforces financial audit integrity by capturing snapshots of pricing and naming at the exact moment of sale.

@@ -1,4 +1,29 @@
-# Feature Spec: Foundation Scaffold
+---
+id: "01"
+title: Foundation Scaffold
+status: ready
+implementation_order: 1
+depends_on: []
+must_read:
+  - context/schema-reference.md
+owns_tables:
+  - initial Drift schema baseline
+owns_paths:
+  - pubspec.yaml
+  - analysis_options.yaml
+  - lib/
+  - test/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test
+stop_and_ask:
+  - changing the approved Flutter, Drift, Riverpod, or Freezed stack
+  - adding major dependencies outside the approved baseline
+  - destructive schema or migration behavior
+---
+
+# Feature Spec 01: Foundation Scaffold
 
 ## Purpose
 The high-level goal of the Foundation Scaffold is to establish a robust, clean-architecture framework for a single-device, offline-first Windows desktop cashier app. It defines the folder hierarchy, baseline dependencies, static analysis rules, test environment configurations, and build-automation guidelines. The foundation ensures developers can write predictable, testable, and highly structured Flutter code without architectural drift.
@@ -6,6 +31,27 @@ The high-level goal of the Foundation Scaffold is to establish a robust, clean-a
 ---
 
 ## Build Notes
+
+### Recommended Implementation Slices
+Foundation may be implemented as smaller complete slices, but all slices remain
+part of this spec:
+
+1. **01a - Flutter Windows scaffold and root project files**: Create the Flutter
+   desktop project structure, `pubspec.yaml`, `analysis_options.yaml`, and root
+   folders without product feature behavior.
+2. **01b - Baseline dependencies and code generation setup**: Add the approved
+   packages and generator configuration, then prove generated files can be
+   produced repeatably.
+3. **01c - Drift database shell and schema baseline**: Create the Drift database
+   class, connection helpers, and initial migration structure from
+   `context/schema-reference.md`.
+4. **01d - App shell and split-panel placeholder**: Render the Windows desktop
+   app shell and persistent split-panel placeholder without feature-local UI.
+5. **01e - Test harness and verification commands**: Establish in-memory SQLite
+   tests, widget harnesses, formatting, analyzer, and test commands.
+
+Do not implement product behavior inside foundation beyond what is required to
+prove the scaffold, boundaries, and verification workflow.
 
 ### Core Technologies & Libraries
 - **Desktop Runtime**: Flutter Desktop for Windows (locked to stable branch).
@@ -114,6 +160,11 @@ graph TD
     D -- No --> E[Show First-Run Setup Wizard]
     D -- Yes --> F[Load Main Split-Panel Scaffold]
 ```
+
+Placeholder scaffold UI should use minimal localization keys once the l10n
+infrastructure exists. Product feature screens must not add hardcoded
+user-facing strings; implement `03-localization-infrastructure.md` before real
+feature UI work begins.
 
 ### Desktop Split-Panel Scaffold Layout
 The app utilizes a layout optimized specifically for cashier desks using 1080p desktop monitors:

@@ -1,3 +1,32 @@
+---
+id: "12"
+title: Subscriptions
+status: ready
+implementation_order: 12
+depends_on: ["01", "02", "03", "04", "05", "06", "08", "11"]
+must_read:
+  - context/schema-reference.md
+  - context/glossary.md
+owns_tables:
+  - subscriptions
+  - subscription_usage_logs
+  - debts
+  - payments
+owns_paths:
+  - lib/features/subscriptions/
+  - lib/domain/services/subscription_service.dart
+  - lib/data/repositories/subscription_repository.dart
+  - test/features/subscriptions/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/features/subscriptions
+stop_and_ask:
+  - changing monthly expiry behavior
+  - changing 30-minute usage block behavior
+  - changing credit purchase or subscription debt behavior
+---
+
 # Feature Spec 12: Subscriptions
 
 ## Purpose

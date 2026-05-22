@@ -1,4 +1,31 @@
-# Inventory Specification
+---
+id: "10"
+title: Inventory
+status: ready
+implementation_order: 10
+depends_on: ["01", "02", "03", "05", "06", "09"]
+must_read:
+  - context/schema-reference.md
+  - context/glossary.md
+owns_tables:
+  - products
+  - inventory_movements
+owns_paths:
+  - lib/features/inventory/
+  - lib/domain/services/inventory_service.dart
+  - lib/data/repositories/inventory_repository.dart
+  - test/features/inventory/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/features/inventory
+stop_and_ask:
+  - preventing negative stock
+  - changing stock movement ledger behavior
+  - hard-deleting products or movements
+---
+
+# Feature Spec 10: Inventory
 
 ## Purpose
 The Inventory system tracks and audits all physical stock (e.g., socks, refreshments) in the park. To ensure strict financial accountability and theft prevention, stock changes can *only* occur via logged ledger movements. This design accommodates operational realities (like selling items before a restock sheet is entered) by allowing negative stock levels, while flagging warnings clearly for cashier adjustments.

@@ -16,6 +16,16 @@ This document serves as the single source of truth for the local SQLite database
 
 ---
 
+## Schema Readiness Notes
+
+- Payment rows include a `status` field so corrections and End Day reports can
+  filter voided payments without deleting original payment records.
+- Foreign key relationships must not be implemented as routine destructive
+  cascades for operational workflows. Child rows remain durable history unless a
+  future migration explicitly documents a safe, non-business-data cleanup path.
+
+---
+
 ## Table Definitions
 
 ### 1. `players`
@@ -30,7 +40,7 @@ Stores individual player profile information.
 ### 2. `player_phones`
 Stores phone numbers for players. Players can have multiple phone numbers (at least one is required).
 - `id` (Int, Primary Key, AutoIncrement)
-- `player_id` (Text, Foreign Key -> `players.id`, OnDelete Cascade)
+- `player_id` (Text, Foreign Key -> `players.id`)
 - `phone_number` (Text): Phone number string.
 - `is_primary` (Bool): Flag indicating the primary contact number.
 
@@ -88,7 +98,7 @@ Represents a sale event. Can contain multiple products.
 ### 8. `sale_items`
 Detailed line items for product sales. Unit price is snapshot at checkout time.
 - `id` (Int, Primary Key, AutoIncrement)
-- `sale_id` (Text, Foreign Key -> `product_sales.id`, OnDelete Cascade)
+- `sale_id` (Text, Foreign Key -> `product_sales.id`)
 - `product_id` (Text, Foreign Key -> `products.id`)
 - `product_name_snapshot` (Text): Snapshot of product name at sale time.
 - `quantity` (Int): Units sold.
@@ -102,6 +112,7 @@ Tracks cashier payment transactions. Associated with individual or group checkou
 - `payment_method` (Text): `'cash'` or `'card'`.
 - `amount_paid` (Int): Amount received in SYP.
 - `tip_amount` (Int): Tip amount included in payment in SYP.
+- `status` (Text): `'completed'`, `'voided'`.
 - `created_at` (Text): UTC ISO-8601 timestamp.
 - `session_id` (Text, Nullable, Foreign Key -> `sessions.id`): Associated checkout session if applicable.
 - `sale_id` (Text, Nullable, Foreign Key -> `product_sales.id`): Associated product sale if applicable.

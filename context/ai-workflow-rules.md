@@ -5,10 +5,11 @@
 - Build this project incrementally using a spec-driven workflow.
 - Treat the context files as the project contract.
 - Use `AGENTS.md` as the required entrypoint for project instructions.
-- Before implementation or architectural decisions, read the six top-level
-  context files in the order listed by `AGENTS.md`.
+- Before implementation or architectural decisions, read the required context
+  files in the order listed by `AGENTS.md`.
 - After the top-level read, read only the relevant numbered file under
   `context/feature_specs/` for the feature unit being implemented.
+- The numbered feature spec filenames are the intended implementation order.
 - Implement against the specs. Do not invent behavior from scratch.
 - The first implementation unit is project scaffold/foundation because the repo
   currently has no Flutter scaffold, `pubspec.yaml`, `lib/`, or `test/`
@@ -55,9 +56,14 @@ quickly and clearly, introduces a major dependency or architecture decision, or
 depends on requirements not fully defined in the context files.
 
 ### Rules for Split (a/b) Feature Specs
-For features split into domain/data (a) and UI (b) specs (e.g., Checkout 13a/13b, Group Checkout 14a/14b, End-Day Reporting 17a/17b):
-- **Implement part (a) (Domain & Data) first**: Focus on Drift schema updates, model definitions, service pricing calculators, repository classes, and pure Dart unit tests.
-- **Implement part (b) (UI Screen) second**: Once the domain logic passes 100% of unit tests, build the Riverpod view models, screens, validation widgets, and functional widget tests. Never mix these two steps.
+For features split into domain/data and UI specs (for example, Checkout
+`14`/`15`, Group Checkout `16`/`17`, and End-Day Reporting `20`/`21`):
+- **Implement the domain/data spec first**: Focus on Drift schema updates,
+  model definitions, service calculators, repository classes, and pure Dart
+  unit tests.
+- **Implement the UI spec second**: Once the domain logic passes its unit tests,
+  build the Riverpod view models, screens, validation widgets, and functional
+  widget tests. Never mix these two steps.
 
 Finish the current unit before starting the next unit.
 
@@ -119,7 +125,7 @@ verification. Never modify real app data directly.
 - Update `context/ui-context.md` and feature specs
   [`02-ui-tokens-and-theme.md`](feature_specs/02-ui-tokens-and-theme.md),
   [`03-localization-infrastructure.md`](feature_specs/03-localization-infrastructure.md), and
-  [`19-shared-ui-primitives.md`](feature_specs/19-shared-ui-primitives.md)
+  [`04-shared-ui-primitives.md`](feature_specs/04-shared-ui-primitives.md)
   when UI patterns, layout rules, status colors, interaction behavior, or design
   standards change.
 - Update the relevant `context/feature_specs/*.md` file when feature-level
@@ -201,4 +207,3 @@ useful.
 
 Do not claim a unit is complete if verification failed, was skipped without
 explanation, or required tests were not added.
-

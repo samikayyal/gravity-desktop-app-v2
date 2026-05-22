@@ -1,4 +1,26 @@
-# Feature Specification: End Day Reporting - UI
+---
+id: "21"
+title: End Day Reporting - UI
+status: ready
+implementation_order: 21
+depends_on: ["04", "20"]
+must_read:
+  - context/glossary.md
+owns_tables: []
+owns_paths:
+  - lib/features/reports/
+  - test/features/reports/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/features/reports
+stop_and_ask:
+  - changing blind close behavior
+  - changing admin override threshold
+  - changing active-session close blocking
+---
+
+# Feature Spec 21: End Day Reporting - UI
 
 ## Purpose
 Provide a foolproof, high-efficiency user interface for cashiers to reconcile register funds at the end of their shift. The design enforces "blind closing" to eliminate counting bias, presents clear financial summary cards, blocks closeouts if active sessions remain, and locks down mismatch submissions behind administrative authorization.
@@ -27,7 +49,7 @@ Provide a foolproof, high-efficiency user interface for cashiers to reconcile re
 
 ### References
 This UI interacts exclusively with the data models, calculators, and repositories defined in:
-- [17a-end-day-reporting-domain-and-data.md](17a-end-day-reporting-domain-and-data.md)
+- [20-end-day-reporting-domain-and-data.md](20-end-day-reporting-domain-and-data.md)
 - [schema-reference.md](../schema-reference.md) (`end_day_closes` table)
 
 ---

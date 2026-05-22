@@ -1,4 +1,31 @@
-# Feature Spec 11: Check-in and Active Sessions
+---
+id: "13"
+title: Check-in and Active Sessions
+status: ready
+implementation_order: 13
+depends_on: ["01", "02", "03", "04", "05", "06", "08", "11", "12"]
+must_read:
+  - context/schema-reference.md
+  - context/glossary.md
+owns_tables:
+  - sessions
+  - players
+owns_paths:
+  - lib/features/sessions/
+  - lib/domain/services/session_service.dart
+  - lib/data/repositories/session_repository.dart
+  - test/features/sessions/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/features/sessions
+stop_and_ask:
+  - changing dual-check-in prevention
+  - changing stale-session correction rules
+  - changing subscription auto-detection behavior
+---
+
+# Feature Spec 13: Check-in and Active Sessions
 
 ## Purpose
 Provide a high-throughput, reliable check-in experience and a real-time "Active Board" for cashiers at the trampoline park. The cashier must be able to quickly select or search for a player, configure their duration (Open Time vs. Fixed Duration), auto-detect valid subscriptions, check them in, and track their remaining session time dynamically. The Active Board serves as the persistent left panel of the split-pane cashier desk layout, showing real-time timers and triggering visual/auditory alarms when play sessions expire (overdue).
@@ -121,14 +148,14 @@ When a Fixed Duration session's timer crosses `00:00:00` (accounting for the con
 
 | ID | Requirement Details | Check |
 | --- | --- | --- |
-| AC-11.1 | Verify that selecting a player opens the Check-In form in the Right Panel. | [ ] |
-| AC-11.2 | Verify that the entry type selector locks to subscription if the player has remaining balance. | [ ] |
-| AC-11.3 | Verify that Fixed Duration selector changes in exactly 30-minute intervals via +/- buttons. | [ ] |
-| AC-11.4 | Verify that checking in a player successfully updates their status to active and spawns a card in the Left Panel. | [ ] |
-| AC-11.5 | Verify that the timer ticker refreshes elapsed or countdown time every second. | [ ] |
-| AC-11.6 | Verify that when a countdown hits 0 (plus leeway), the visual card turns red and play-alert triggers once. | [ ] |
-| AC-11.7 | Verify that clicking "Snooze" silences the individual card alarm and delays visual flashing. | [ ] |
-| AC-11.8 | Verify that the Global Mute option in the top bar silences all incoming auditory alerts. | [ ] |
+| AC-13.1 | Verify that selecting a player opens the Check-In form in the Right Panel. | [ ] |
+| AC-13.2 | Verify that the entry type selector locks to subscription if the player has remaining balance. | [ ] |
+| AC-13.3 | Verify that Fixed Duration selector changes in exactly 30-minute intervals via +/- buttons. | [ ] |
+| AC-13.4 | Verify that checking in a player successfully updates their status to active and spawns a card in the Left Panel. | [ ] |
+| AC-13.5 | Verify that the timer ticker refreshes elapsed or countdown time every second. | [ ] |
+| AC-13.6 | Verify that when a countdown hits 0 (plus leeway), the visual card turns red and play-alert triggers once. | [ ] |
+| AC-13.7 | Verify that clicking "Snooze" silences the individual card alarm and delays visual flashing. | [ ] |
+| AC-13.8 | Verify that the Global Mute option in the top bar silences all incoming auditory alerts. | [ ] |
 
 ---
 

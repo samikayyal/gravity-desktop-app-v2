@@ -1,4 +1,29 @@
-# Feature Spec: Settings and Configuration
+---
+id: "05"
+title: Settings and Configuration
+status: ready
+implementation_order: 5
+depends_on: ["01", "02", "03"]
+must_read:
+  - context/schema-reference.md
+  - context/glossary.md
+owns_tables:
+  - system_settings
+owns_paths:
+  - lib/core/config/
+  - lib/features/settings/
+  - lib/data/repositories/settings_repository.dart
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test
+stop_and_ask:
+  - changing pricing defaults
+  - changing stale-session thresholds
+  - changing admin protection requirements for settings
+---
+
+# Feature Spec 05: Settings and Configuration
 
 ## Purpose
 The Settings and Configuration system provides persistent control over the trampoline park's core financial and operational rules. It manages session pricing models (SYP), checkout grace leeway periods (default 10 minutes), stale session alert thresholds, and default product prices. The specification partitions configurations into public cashier settings and admin-protected options, establishing safe input boundaries, validation limits, and transactional storage constraints.
@@ -64,7 +89,7 @@ The settings UI implements a split dashboard split into side-by-side or partitio
    - Screen scaling multiplier (1.0x, 1.1x, 1.2x).
 2. **Admin Operations (Protected)**:
    - Displays a locked overlay containing a "Tap to Edit Admin Settings" action.
-   - Clicking prompts the standard short-lived Admin Password dialog (detailed in [05-admin-auth-and-audit-infrastructure.md](05-admin-auth-and-audit-infrastructure.md)).
+   - Clicking prompts the standard short-lived Admin Password dialog (detailed in [06-admin-auth-and-audit-infrastructure.md](06-admin-auth-and-audit-infrastructure.md)).
    - Unlocked state renders dense, inline-validated form fields:
 
 ```text

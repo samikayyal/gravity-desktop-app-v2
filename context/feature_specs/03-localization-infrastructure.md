@@ -1,4 +1,29 @@
-# Feature Spec: Localization Infrastructure
+---
+id: "03"
+title: Localization Infrastructure
+status: ready
+implementation_order: 3
+depends_on: ["01", "02"]
+must_read:
+  - context/glossary.md
+owns_tables:
+  - system_settings
+owns_paths:
+  - l10n.yaml
+  - lib/l10n/
+  - lib/app/
+verification:
+  - flutter gen-l10n
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test
+stop_and_ask:
+  - changing supported locales
+  - changing Arabic numeral or RTL behavior
+  - adding hardcoded user-facing UI strings
+---
+
+# Feature Spec 03: Localization Infrastructure
 
 ## Purpose
 The localization infrastructure provides native support for bilingual operations (English LTR and Arabic RTL). It establishes standard configurations for Flutter's localization toolchain (`flutter_localizations`), defines strict `app_en.arb` and `app_ar.arb` formatting rules, configures RTL-aware layouts, loads specialized Arabic typefaces (**Cairo** or **Tajawal**), and sets naming conventions for localization keys. While full Arabic translations are deferred in early phases, the technical plumbing is established from day one.

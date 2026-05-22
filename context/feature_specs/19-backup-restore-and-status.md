@@ -1,4 +1,31 @@
-# Feature Specification: Backup, Restore, and Cloud Status
+---
+id: "19"
+title: Backup, Restore, and Cloud Status
+status: ready
+implementation_order: 19
+depends_on: ["01", "05", "06"]
+must_read:
+  - context/schema-reference.md
+  - context/glossary.md
+owns_tables:
+  - backup_runs
+owns_paths:
+  - lib/core/backup/
+  - lib/features/settings/
+  - test/data/backup/
+  - test/features/backup/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/data/backup
+  - flutter test test/features/backup
+stop_and_ask:
+  - changing backup package contents
+  - changing restore overwrite behavior
+  - storing GCP credentials outside local gitignored env files
+---
+
+# Feature Spec 19: Backup, Restore, and Cloud Status
 
 ## Purpose
 Ensure robust, offline-first data protection and seamless disaster recovery for the trampoline park desktop application. While SQLite is the local, authoritative source of truth, this feature provides automated background backups and admin-supervised cloud restoration via Google Cloud Storage (GCP) with absolute safety safeguards.

@@ -1,4 +1,29 @@
-# Feature Specification: Shared UI Primitives
+---
+id: "04"
+title: Shared UI Primitives
+status: ready
+implementation_order: 4
+depends_on: ["01", "02", "03"]
+blocks_ui_specs: ["07", "08", "09", "10", "12", "13", "15", "17", "21", "22"]
+must_read:
+  - context/ui-context.md
+  - context/glossary.md
+owns_tables: []
+owns_paths:
+  - lib/app/widgets/
+  - lib/app/layout/
+  - test/features/shared_ui/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/features/shared_ui
+stop_and_ask:
+  - changing shared split-panel layout
+  - changing component radius or color token rules
+  - adding feature-local replacements for shared primitives
+---
+
+# Feature Spec 04: Shared UI Primitives
 
 ## Purpose
 Establish a centralized catalog of reusable presentation widgets and design tokens that enforce the **"Modern Cashier Calm"** theme. This specification guarantees absolute visual consistency, high operational scanning speed, and strict accessibility standards across all front-desk operations on the target 1080p Windows desktop interface.

@@ -55,7 +55,9 @@
 - Text inside buttons, status chips, rows, and forms must fit at the 1080p
   target without clipping.
 - Detailed UI token and primitive rules live in
-  [`15-shared-ui-theme-and-primitives.md`](feature_specs/15-shared-ui-theme-and-primitives.md).
+  [`02-ui-tokens-and-theme.md`](feature_specs/02-ui-tokens-and-theme.md)
+  and
+  [`04-shared-ui-primitives.md`](feature_specs/04-shared-ui-primitives.md).
 
 ## Services, Repositories, And Background Jobs
 
@@ -136,8 +138,9 @@
 - Avoid logging sensitive data. Prefer IDs over names and never log full phone
   numbers unless there is a specific operational need.
 - Detailed admin/audit and logging rules live in
-  [`12-admin-audit-corrections.md`](feature_specs/12-admin-audit-corrections.md)
-  and [`17-technical-logging.md`](feature_specs/17-technical-logging.md).
+  [`06-admin-auth-and-audit-infrastructure.md`](feature_specs/06-admin-auth-and-audit-infrastructure.md),
+  [`18-corrections-voids-and-reversals.md`](feature_specs/18-corrections-voids-and-reversals.md),
+  and [`23-technical-logging.md`](feature_specs/23-technical-logging.md).
 
 ## Dependencies
 
@@ -193,4 +196,3 @@ All user-facing text must be localized using flutter_localizations ARB files. Ke
   - `msg...` for alerts, feedback, errors (e.g., `msgCheckInSuccess`, `msgStaleSessionWarning`).
   - `title...` for headers, screen titles (e.g., `titleActiveBoard`, `titleDailyClose`).
   - `chip...` for status badges/chips (e.g., `chipOverdue`, `chipSubscription`).
-

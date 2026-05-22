@@ -37,7 +37,7 @@ Detailed color token tables, typography, radius scale, component expectations,
 layout patterns, icon guidance, and visual hierarchy rules are split into:
 - [`context/feature_specs/02-ui-tokens-and-theme.md`](feature_specs/02-ui-tokens-and-theme.md): Baseline design tokens, HSL palette mapping, and Modern Cashier Calm themes.
 - [`context/feature_specs/03-localization-infrastructure.md`](feature_specs/03-localization-infrastructure.md): RTL layout guidelines, Arabic typography, l10n keys, and ARB structure.
-- [`context/feature_specs/19-shared-ui-primitives.md`](feature_specs/19-shared-ui-primitives.md): Standardized components (buttons, chips, inputs, tables, dialogs) derived from design tokens.
+- [`context/feature_specs/04-shared-ui-primitives.md`](feature_specs/04-shared-ui-primitives.md): Standardized components (buttons, chips, inputs, tables, dialogs) derived from design tokens.
 
 Read these specs before implementing theme code, localization logic, shared UI primitives, screen layouts, or custom visual components.
 

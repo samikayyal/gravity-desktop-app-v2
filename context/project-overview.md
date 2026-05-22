@@ -52,33 +52,34 @@ and password-protected restore only, not live multi-device syncing.
 
 Feature-level behavior, implementation notes, edge cases, tests, and acceptance
 criteria live in `context/feature_specs/`. Before implementing a feature unit,
-read the top-level context files first, then the relevant feature spec.
+read the top-level context files first, then the relevant feature spec. Feature
+spec filenames are numbered in the intended implementation order.
 
 | Spec | Feature |
 | --- | --- |
 | [`01-foundation-scaffold.md`](feature_specs/01-foundation-scaffold.md) | Flutter scaffold, baseline dependencies, folder layout, verification baseline |
 | [`02-ui-tokens-and-theme.md`](feature_specs/02-ui-tokens-and-theme.md) | UI colors, typography, border radius, and Modern Cashier Calm tokens |
 | [`03-localization-infrastructure.md`](feature_specs/03-localization-infrastructure.md) | ARB files, l10n keys, RTL layout rules, and Arabic font support |
-| [`04-settings-and-configuration.md`](feature_specs/04-settings-and-configuration.md) | Price defaults, leeway, stale thresholds, and protected settings |
-| [`05-admin-auth-and-audit-infrastructure.md`](feature_specs/05-admin-auth-and-audit-infrastructure.md) | Admin password and short-lived authorization, audit events ledger |
-| [`06-player-profiles-and-search.md`](feature_specs/06-player-profiles-and-search.md) | Player identity, profiles, multiple phones, search, and snapshots |
-| [`07-product-sales.md`](feature_specs/07-product-sales.md) | Product catalog and sales snapshots (anonymous or player-attached) |
-| [`08-inventory.md`](feature_specs/08-inventory.md) | Inventory stock ledger, stock movements, and low stock warnings |
-| [`09-first-run-setup-and-restore.md`](feature_specs/09-first-run-setup-and-restore.md) | First-run setup (admin pwd, skip-able GCP connectivity test, configurable products) |
-| [`10-time-pricing.md`](feature_specs/10-time-pricing.md) | Unified pricing matrix for all entry types, leeway, and rounding |
-| [`11-check-in-and-active-sessions.md`](feature_specs/11-check-in-and-active-sessions.md) | Check-in, persistent active board timers, auto-detected subscriptions, overdue sound+visual alerts |
+| [`04-shared-ui-primitives.md`](feature_specs/04-shared-ui-primitives.md) | Shared widgets (buttons, tables, chips, dialogs) derived from UI tokens |
+| [`05-settings-and-configuration.md`](feature_specs/05-settings-and-configuration.md) | Price defaults, leeway, stale thresholds, and protected settings |
+| [`06-admin-auth-and-audit-infrastructure.md`](feature_specs/06-admin-auth-and-audit-infrastructure.md) | Admin password and short-lived authorization, audit events ledger |
+| [`07-first-run-setup-and-restore.md`](feature_specs/07-first-run-setup-and-restore.md) | First-run setup (admin pwd, skip-able GCP connectivity test, configurable products) |
+| [`08-player-profiles-and-search.md`](feature_specs/08-player-profiles-and-search.md) | Player identity, profiles, multiple phones, search, and snapshots |
+| [`09-product-sales.md`](feature_specs/09-product-sales.md) | Product catalog and sales snapshots (anonymous or player-attached) |
+| [`10-inventory.md`](feature_specs/10-inventory.md) | Inventory stock ledger, stock movements, and low stock warnings |
+| [`11-time-pricing.md`](feature_specs/11-time-pricing.md) | Unified pricing matrix for all entry types, leeway, and rounding |
 | [`12-subscriptions.md`](feature_specs/12-subscriptions.md) | Hour subscription cards, 30-min block usage log, expiration, and credit purchases |
-| [`13a-individual-checkout-domain-and-data.md`](feature_specs/13a-individual-checkout-domain-and-data.md) | Pricing, payments, debt, tips, and discount calculations domain logic |
-| [`13b-individual-checkout-ui.md`](feature_specs/13b-individual-checkout-ui.md) | Dense checkout widget flow, card/cash splits, and validation |
-| [`14a-group-checkout-domain-and-data.md`](feature_specs/14a-group-checkout-domain-and-data.md) | Group checkout calculations, combined payments, and debt allocation |
-| [`14b-group-checkout-ui.md`](feature_specs/14b-group-checkout-ui.md) | Combined checkout screen widgets and confirmation flows |
-| [`15-corrections-voids-and-reversals.md`](feature_specs/15-corrections-voids-and-reversals.md) | Admin-authorized corrections and reversed ledger entries (preserving original history) |
-| [`16-backup-restore-and-status.md`](feature_specs/16-backup-restore-and-status.md) | Local SQLite backup packaging (excluding secrets), GCP uploads, and safe restore verification |
-| [`17a-end-day-reporting-domain-and-data.md`](feature_specs/17a-end-day-reporting-domain-and-data.md) | Frozen shift snapshot calculation, mismatch detection, and missed-close triggers |
-| [`17b-end-day-reporting-ui.md`](feature_specs/17b-end-day-reporting-ui.md) | Dense cashier close dialog, daily report widgets, and cash/card reconciliation |
-| [`18-exports.md`](feature_specs/18-exports.md) | Daily reports PDF and Excel-compatible CSV exports |
-| [`19-shared-ui-primitives.md`](feature_specs/19-shared-ui-primitives.md) | Shared widgets (buttons, tables, chips, dialogs) derived from UI tokens |
-| [`20-technical-logging.md`](feature_specs/20-technical-logging.md) | Local technical log rotating, background uploads, and sensitive-data stripping |
+| [`13-check-in-and-active-sessions.md`](feature_specs/13-check-in-and-active-sessions.md) | Check-in, persistent active board timers, auto-detected subscriptions, overdue sound+visual alerts |
+| [`14-individual-checkout-domain-and-data.md`](feature_specs/14-individual-checkout-domain-and-data.md) | Pricing, payments, debt, tips, and discount calculations domain logic |
+| [`15-individual-checkout-ui.md`](feature_specs/15-individual-checkout-ui.md) | Dense checkout widget flow, card/cash splits, and validation |
+| [`16-group-checkout-domain-and-data.md`](feature_specs/16-group-checkout-domain-and-data.md) | Group checkout calculations, combined payments, and debt allocation |
+| [`17-group-checkout-ui.md`](feature_specs/17-group-checkout-ui.md) | Combined checkout screen widgets and confirmation flows |
+| [`18-corrections-voids-and-reversals.md`](feature_specs/18-corrections-voids-and-reversals.md) | Admin-authorized corrections and reversed ledger entries (preserving original history) |
+| [`19-backup-restore-and-status.md`](feature_specs/19-backup-restore-and-status.md) | Local SQLite backup packaging (excluding secrets), GCP uploads, and safe restore verification |
+| [`20-end-day-reporting-domain-and-data.md`](feature_specs/20-end-day-reporting-domain-and-data.md) | Frozen shift snapshot calculation, mismatch detection, and missed-close triggers |
+| [`21-end-day-reporting-ui.md`](feature_specs/21-end-day-reporting-ui.md) | Dense cashier close dialog, daily report widgets, and cash/card reconciliation |
+| [`22-exports.md`](feature_specs/22-exports.md) | Daily reports PDF and Excel-compatible CSV exports |
+| [`23-technical-logging.md`](feature_specs/23-technical-logging.md) | Local technical log rotating, background uploads, and sensitive-data stripping |
 
 ## V1 Scope
 
@@ -123,5 +124,5 @@ Out of scope:
   report records are durable, transactional, and auditable.
 - The UI supports dense cashier workflows with the shared visual system from
   `context/ui-context.md` and
-  [`02-ui-tokens-and-theme.md`](feature_specs/02-ui-tokens-and-theme.md) and [`19-shared-ui-primitives.md`](feature_specs/19-shared-ui-primitives.md).
-
+  [`02-ui-tokens-and-theme.md`](feature_specs/02-ui-tokens-and-theme.md) and
+  [`04-shared-ui-primitives.md`](feature_specs/04-shared-ui-primitives.md).

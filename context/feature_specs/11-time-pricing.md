@@ -1,4 +1,29 @@
-# Time Pricing Specification
+---
+id: "11"
+title: Time Pricing
+status: ready
+implementation_order: 11
+depends_on: ["01", "05"]
+must_read:
+  - context/schema-reference.md
+  - context/glossary.md
+owns_tables:
+  - system_settings
+  - sessions
+owns_paths:
+  - lib/domain/services/pricing_service.dart
+  - test/domain/pricing_service_test.dart
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/domain
+stop_and_ask:
+  - changing pricing intervals
+  - changing leeway or rounding rules
+  - changing SYP integer money storage
+---
+
+# Feature Spec 11: Time Pricing
 
 ## Purpose
 The Pricing Matrix Service represents the financial core of the trampoline park's play session system. Play sessions are structured either as pre-booked **Fixed Duration** blocks or uncapped **Open Time** accruals. This specification defines a transaction-safe, integer-only pricing engine that calculates session charges dynamically, factoring in a configurable 10-minute leeway grace period to prevent cashier disputes during exit checkouts.

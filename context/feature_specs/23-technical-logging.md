@@ -1,4 +1,28 @@
-# Feature Specification: Technical Logging
+---
+id: "23"
+title: Technical Logging
+status: ready
+implementation_order: 23
+depends_on: ["01", "05", "19"]
+must_read:
+  - context/glossary.md
+owns_tables: []
+owns_paths:
+  - lib/core/logging/
+  - test/domain/logging/
+  - test/data/logging/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/domain/logging
+  - flutter test test/data/logging
+stop_and_ask:
+  - logging full customer names or phone numbers
+  - including logs in backup packages
+  - making log upload block cashier work
+---
+
+# Feature Spec 23: Technical Logging
 
 ## Purpose
 Establish a high-reliability, local-first technical logging subsystem to capture application errors, database queries, and system events. This feature isolates technical developer logs from business audit databases, enforces strict regulatory compliance by automatically stripping customer Personal Identifiable Information (PII) at the logging boundary, handles automated local log file rotation, and manages silent background uploads to the cloud developer bucket.

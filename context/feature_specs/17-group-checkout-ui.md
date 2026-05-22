@@ -1,4 +1,26 @@
-# Feature Spec 14b: Group Checkout (UI)
+---
+id: "17"
+title: Group Checkout - UI
+status: ready
+implementation_order: 17
+depends_on: ["04", "15", "16"]
+must_read:
+  - context/glossary.md
+owns_tables: []
+owns_paths:
+  - lib/features/checkout/
+  - test/features/checkout/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/features/checkout
+stop_and_ask:
+  - changing group selection locking
+  - changing old debt warning behavior
+  - changing combined receipt behavior
+---
+
+# Feature Spec 17: Group Checkout - UI
 
 ## Purpose
 Detail the user interface components, cashier interaction states, and screen layouts for multi-player group checkouts. The interface provides checkboxes and multi-select toggles on the **Left Active Board Panel (~60% width)**, which launches a comprehensive group summary, joint payment split sheet, and debt assignment controls in the **Right Context Panel (~40% width)**.
@@ -105,12 +127,12 @@ graph LR
 
 | ID | Requirement Details | Check |
 | --- | --- | --- |
-| AC-14b.1 | Verify that the Active Board supports multi-selection checkboxes in Group Mode. | [ ] |
-| AC-14b.2 | Verify that clicking Group Checkout loads the joint list in the Context Panel. | [ ] |
-| AC-14b.3 | Verify that shared products added to the group cart update the combined subtotal. | [ ] |
-| AC-14b.4 | Verify that old debts are listed as separate actionable line items and never merged silently. | [ ] |
-| AC-14b.5 | Verify that the checkout button locks sessions on the Active Board to prevent concurrent edits. | [ ] |
-| AC-14b.6 | Verify that submitting group checkout successfully closes all selected sessions and prints a combined receipt. | [ ] |
+| AC-17.1 | Verify that the Active Board supports multi-selection checkboxes in Group Mode. | [ ] |
+| AC-17.2 | Verify that clicking Group Checkout loads the joint list in the Context Panel. | [ ] |
+| AC-17.3 | Verify that shared products added to the group cart update the combined subtotal. | [ ] |
+| AC-17.4 | Verify that old debts are listed as separate actionable line items and never merged silently. | [ ] |
+| AC-17.5 | Verify that the checkout button locks sessions on the Active Board to prevent concurrent edits. | [ ] |
+| AC-17.6 | Verify that submitting group checkout successfully closes all selected sessions and prints a combined receipt. | [ ] |
 
 ---
 

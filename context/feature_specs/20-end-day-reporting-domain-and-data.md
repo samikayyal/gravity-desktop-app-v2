@@ -1,4 +1,35 @@
-# Feature Specification: End Day Reporting - Domain and Data
+---
+id: "20"
+title: End Day Reporting - Domain and Data
+status: ready
+implementation_order: 20
+depends_on: ["14", "16", "18", "19"]
+must_read:
+  - context/schema-reference.md
+  - context/glossary.md
+owns_tables:
+  - end_day_closes
+  - payments
+  - debts
+  - debt_payments
+  - backup_runs
+owns_paths:
+  - lib/domain/services/end_day_service.dart
+  - lib/data/repositories/end_day_repository.dart
+  - test/domain/end_day_service_test.dart
+  - test/data/end_day_repository_test.dart
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/domain
+  - flutter test test/data
+stop_and_ask:
+  - changing shift boundaries
+  - changing missed-close behavior
+  - changing mismatch handling
+---
+
+# Feature Spec 20: End Day Reporting - Domain and Data
 
 ## Purpose
 Define the business logic, mathematical formulas, timezone boundaries, and database query rules for daily cashier reconciliation. The End Day reporting architecture guarantees that financial figures are frozen in historical snapshots (`end_day_closes`), allowing the business to maintain a flawless audit trail of physical cash and card receipts against expected system ledger calculations.

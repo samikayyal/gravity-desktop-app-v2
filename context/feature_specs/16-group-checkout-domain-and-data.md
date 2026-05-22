@@ -1,4 +1,34 @@
-# Feature Spec 14a: Group Checkout (Domain and Data)
+---
+id: "16"
+title: Group Checkout - Domain and Data
+status: ready
+implementation_order: 16
+depends_on: ["13", "14"]
+must_read:
+  - context/schema-reference.md
+  - context/glossary.md
+owns_tables:
+  - sessions
+  - payments
+  - debts
+  - debt_payments
+owns_paths:
+  - lib/domain/services/group_checkout_service.dart
+  - lib/data/repositories/group_checkout_repository.dart
+  - test/domain/group_checkout_service_test.dart
+  - test/data/group_checkout_repository_test.dart
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/domain
+  - flutter test test/data
+stop_and_ask:
+  - changing group debt split behavior
+  - adding group checkout discounts
+  - silently including old debt in group totals
+---
+
+# Feature Spec 16: Group Checkout - Domain and Data
 
 ## Purpose
 Define the business rules, data models, and database transaction structures required to execute a multi-player **Group Checkout**. The system must aggregate separate player sessions and product sales, validate split payment methods against the aggregate total, allocate debt to specific group members in case of underpayment, and maintain complete transactional integrity across SQLite tables.
@@ -117,11 +147,11 @@ class DebtAllocation with _$DebtAllocation {
 
 | ID | Requirement Details | Check |
 | --- | --- | --- |
-| AC-14a.1 | Verify that the service aggregates multiple session calculations into a single group subtotal. | [ ] |
-| AC-14a.2 | Verify that the global group-level discount field is rejected by the domain layer. | [ ] |
-| AC-14a.3 | Verify that underpaid totals trigger mandatory debt assignment to a designated player or split. | [ ] |
-| AC-14a.4 | Verify that old debt cannot be silently rolled into the group checkout payment. | [ ] |
-| AC-14a.5 | Verify that all payments in a group checkout share the same `payment_group_id`. | [ ] |
+| AC-16.1 | Verify that the service aggregates multiple session calculations into a single group subtotal. | [ ] |
+| AC-16.2 | Verify that the global group-level discount field is rejected by the domain layer. | [ ] |
+| AC-16.3 | Verify that underpaid totals trigger mandatory debt assignment to a designated player or split. | [ ] |
+| AC-16.4 | Verify that old debt cannot be silently rolled into the group checkout payment. | [ ] |
+| AC-16.5 | Verify that all payments in a group checkout share the same `payment_group_id`. | [ ] |
 
 ---
 

@@ -1,4 +1,29 @@
-# Feature Specification: File Exports (PDF and CSV)
+---
+id: "22"
+title: File Exports - PDF and CSV
+status: ready
+implementation_order: 22
+depends_on: ["04", "20", "21"]
+must_read:
+  - context/glossary.md
+owns_tables: []
+owns_paths:
+  - lib/core/export/
+  - lib/features/reports/
+  - test/domain/export/
+  - test/features/export/
+verification:
+  - dart format --set-exit-if-changed .
+  - flutter analyze
+  - flutter test test/domain/export
+  - flutter test test/features/export
+stop_and_ask:
+  - changing export formats
+  - adding true XLSX output
+  - changing report numbers or date boundaries
+---
+
+# Feature Spec 22: File Exports - PDF and CSV
 
 ## Purpose
 Provide the trampoline park owner, accountant, and administrators with clear, structured, and professional digital records. This feature handles generating daily closing shift summaries in highly readable PDF formats (optimized for A4 printing) and Excel-compatible CSV logs for bulk accounting analysis.

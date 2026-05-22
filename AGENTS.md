@@ -15,11 +15,18 @@ or making any architectural decision:
    scoping rules, and delivery approach
 6. `context/progress-tracker.md` — current phase,
    completed work, open questions, and next steps
+7. `context/glossary.md` — shared business terms
 
 After those files, read the relevant numbered file under
 `context/feature_specs/` for the feature or vertical slice
 being implemented. Only read feature specs that are relevant
-to the current unit.
+to the current unit. The feature spec filenames are numbered in
+the intended implementation order.
+
+Read `context/schema-reference.md` before any unit that touches
+SQLite, Drift schema, repositories, migrations, backup/restore,
+checkout, reports, audit, inventory, subscriptions, debt, or any
+other persisted business data.
 
 Update `context/progress-tracker.md` after each
 meaningful implementation change.
