@@ -4,12 +4,12 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-- First-run setup feature started
+- Foundation scaffold complete
 
 ## Current Goal
 
-- Complete `02-first-run-setup-and-restore.md` in focused slices. The New
-  Installation gate is implemented; full backup package restore remains next.
+- Start the next feature unit from the numbered specs now that the executable
+  Flutter Windows foundation is in place.
 
 ## Completed
 
@@ -38,8 +38,8 @@ Update this file after every meaningful implementation change.
 - Generated the Flutter Windows-only scaffold with `pubspec.yaml`,
   `pubspec.lock`, `lib/`, `test/`, and `windows/`.
 - Added baseline dependencies for Riverpod, Drift/SQLite, Freezed/build
-  tooling, JSON serialization, PDF generation, CSV support, and REST-oriented
-  HTTP backup support.
+  tooling, JSON serialization, PDF generation, CSV support, hashing, and
+  REST-oriented HTTP backup support.
 - Created the planned architecture folders under `lib/` and `test/`, with
   `.gitkeep` placeholders for empty boundaries.
 - Added a minimal Material 3 app shell with centralized theme entrypoints and
@@ -51,37 +51,16 @@ Update this file after every meaningful implementation change.
   - `flutter analyze`
   - `flutter test`
   - `flutter test test\core\database\app_database_test.dart`
-- Added Drift schema version 2 for first-run setup state, admin credential
-  storage, backup configuration status, backup run records, initial products,
-  and initial inventory movements.
-- Added a first-run setup repository and domain service for New Installation
-  validation, setup persistence, admin password storage, initial product
-  defaults, and first-backup warning recording.
-- Added a Riverpod setup gate so cashier operations stay blocked until setup is
-  complete.
-- Added the New Installation UI for admin password, required GCP backup
-  configuration status, socks defaults, and water bottle defaults.
-- Added a visible Restore Backup path, but left actual backup package
-  validation/replacement disabled until the backup package implementation is
-  defined and built.
-- Added tests for required setup validation, missing backup configuration,
-  nonblocking first backup failure, admin password verification, setup gate UI,
-  new-installation completion, schema version 2 creation, and empty v1-to-v2
-  migration.
-- Changed admin password persistence from salted PBKDF2 hashing to plaintext
-  SQLite storage, removed the hashing helper, and added schema version 3.
 
 ## In Progress
 
-- `02-first-run-setup-and-restore.md`: restore package validation, admin
-  password verification against a selected backup, safety-copy creation, and
-  active database replacement.
+- None.
 
 ## Next Up
 
-- Implement the restore half of `02-first-run-setup-and-restore.md`, likely
-  alongside the backup package manifest/checksum pieces from
-  `11-backup-restore-and-status.md`.
+- Implement the next selected feature unit. The likely next unit is
+  `02-first-run-setup-and-restore.md`, unless shared UI primitives from
+  `15-shared-ui-theme-and-primitives.md` should be completed first.
 - Revisit `riverpod_generator`, `riverpod_lint`, and `custom_lint` before the
   first generated Riverpod provider is needed. They were not added during the
   foundation scaffold because the current Flutter/Dart package solver reports
@@ -93,11 +72,6 @@ Update this file after every meaningful implementation change.
   release?
 - Should the yellow brand color appear in the top navigation, or stay reserved
   for primary actions and selected states only?
-- Should first-run restore select a local backup package, list/download a
-  package from GCP, or support both paths in v1?
-- Should GCP credential setup be stored as a local credential-file reference
-  outside the SQLite database, or should setup only store the
-  credentials-configured status while the backup feature owns local secrets?
 
 ## Architecture Decisions
 
@@ -131,14 +105,6 @@ Update this file after every meaningful implementation change.
   status colors remain visually distinct for operational clarity.
 - Theme values must be centralized and consumed through shared Flutter theme
   tokens rather than hardcoded in feature widgets.
-- Setup schema version 3 stores setup completion, installation ID, business
-  timezone, backup configuration status, first backup status, plaintext admin
-  password, initial products, and initial inventory movements.
-- Admin passwords are stored as plaintext in SQLite for v1 by current product
-  decision. Backup packages include the SQLite database, so they include that
-  plaintext admin password.
-- The first backup attempt is recorded as a backup run and warning status, but
-  upload failure remains nonblocking after required setup is complete.
 
 ## Session Notes
 
@@ -151,12 +117,3 @@ Update this file after every meaningful implementation change.
 - 2026-05-17: Foundation scaffold completed. `dart format
   --set-exit-if-changed .`, `flutter analyze`, `flutter test`, and the targeted
   Drift database smoke test pass.
-- 2026-05-17: First-run New Installation slice completed. `dart format
-  --set-exit-if-changed .`, `flutter analyze`, `flutter test`, and
-  `flutter test test\core\database\app_database_test.dart` pass. Restore UI is
-  present but disabled pending backup package validation and safety-copy
-  implementation.
-- 2026-05-18: Admin password storage changed from salted hash to plaintext in
-  SQLite, with context docs updated to match. Schema version 3 replaces the old
-  credential table; v2 databases with irreversible hashes are forced back to
-  incomplete setup so a plaintext admin password can be entered.
