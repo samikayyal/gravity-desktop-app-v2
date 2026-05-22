@@ -36,30 +36,41 @@ Screen Widget
 - Drift classes own schema, migrations, transactions, and query details.
 - Raw Drift rows must not cross repository boundaries into UI.
 
+## UI Layout Structure
+
+The application implements a dense, high-efficiency layout designed for a 1080p display to minimize cashier context switching:
+
+- **Persistent Split-Panel Layout**:
+  - **Left Panel (~60% width)**: The "Active Board" is always visible. It lists all active check-ins, overdue alerts, open-time sessions, and subscription statuses, maintaining real-time timers.
+  - **Right Panel (~40% width)**: The "Context & Action Panel". Clicking a player, check-in action, or starting checkout opens the relevant form or summary here, keeping the Active Board in full view.
+- **Hybrid Side Navigation**: A thin persistent side rail allows switching modules (Players, Product Catalog, Inventory, Reports, Settings) while preserving active operations when possible.
+- **Responsive Dense Scaling**: The interface is optimized to prevent horizontal scrolling or text clipping, using compact tables, status chips, and concise form fields.
+
 ## System Boundaries
 
 | Folder | Responsibility |
 | --- | --- |
 | `lib/main.dart` | App entry point only |
-| `lib/app/` | App shell, routing, theming, layout scaffolds, global provider wiring |
+| `lib/app/` | App shell, routing, global l10n setup, theming, layout scaffolds, provider wiring |
 | `lib/core/database/` | SQLite connection, Drift database, migrations, transactions |
-| `lib/core/config/` | Settings models and defaults |
-| `lib/core/security/` | Admin authorization prompts and protected-action guards |
-| `lib/core/backup/` | Backup package creation, GCP upload/download, restore orchestration, backup status |
-| `lib/core/export/` | PDF and CSV generation from report/export models |
-| `lib/core/audit/` | Audit event helpers for sensitive actions |
-| `lib/core/logging/` | Technical logging, local log retention, queued log upload |
-| `lib/domain/` | Pure business models, value objects, validation results, services |
-| `lib/data/repositories/` | Persistence mapping between SQLite and domain models |
-| `lib/features/players/` | Player search, profile forms, phone editing, debt warnings, history |
-| `lib/features/sessions/` | Check-in, active board, timers, stale sessions, checkout UI |
-| `lib/features/payments/` | Payment entry, split payments, tips, payment history, debt collection |
-| `lib/features/subscriptions/` | Subscription creation, renewal, remaining blocks, usage history |
-| `lib/features/products/` | Product catalog, product sales, product selection |
-| `lib/features/inventory/` | Stock movements, restock/correction flows, stock warnings |
-| `lib/features/reports/` | End Day, frozen/live reports, graphs, export triggers |
-| `lib/features/settings/` | Admin-protected prices, leeway, stale threshold, backup config, admin password |
-| `lib/features/setup/` | First-run new installation and restore-existing-backup flows |
+| `lib/core/config/` | Settings models, leeway/thresholds, and `.env` loader config |
+| `lib/core/security/` | Admin password verification, short-lived session grants, access guards |
+| `lib/core/backup/` | Backup packaging, GCP client integration, restore safeguards |
+| `lib/core/export/` | PDF shift report generation and Excel-compatible CSV exports |
+| `lib/core/audit/` | Audit event ledger helpers |
+| `lib/core/logging/` | Rotating log files, automated uploads, metadata stripping |
+| `lib/domain/` | Pure business entities, pricing matrices, checkout calculators, subscription rules |
+| `lib/data/repositories/` | Mapping of database rows to domain models |
+| `lib/features/players/` | Player profile creation, search, multiple phone management, and debt history |
+| `lib/features/sessions/` | Check-in forms, persistent Active Board UI, timer refresh providers |
+| `lib/features/checkout/` | Checkout flow UI (individual and group), cash/card payment entries, tips, splits |
+| `lib/features/subscriptions/` | Subscription purchases, usage logs, block countdowns, expiration checks |
+| `lib/features/products/` | Product catalog administration, configurable product prices/stock |
+| `lib/features/inventory/` | Stock movement history, restock entry widgets, low stock warnings |
+| `lib/features/corrections/` | Admin void/reversal UI, adjustments log |
+| `lib/features/reports/` | End Day cashier close, frozen snapshot lists, shift reports, and graphs |
+| `lib/features/settings/` | Price updates, leeway adjustments, stale timers, system controls |
+| `lib/features/setup/` | First-run setup wizard (admin password, GCP connectivity test, product setup) |
 | `test/domain/` | Unit tests for business rules |
 | `test/data/` | Repository, transaction, and migration tests |
 | `test/features/` | Functional widget/view-model tests |
@@ -79,9 +90,11 @@ truth.
 
 GCP Cloud Storage holds timestamped backup packages only. Each package contains
 the SQLite database plus validation manifest metadata. It must not contain GCP
-credentials, generated exports, local logs, or local secrets/config files. By
-current product decision, the SQLite database itself stores the admin password
-as plaintext, so database backup packages include that plaintext value.
+credentials, generated exports, local logs, or local secrets/config files. GCP
+credentials and bucket names are loaded from a local gitignored `.env` file and
+never stored in SQLite. By current product decision, the SQLite database itself
+stores the admin password as plaintext, so database backup packages include that
+plaintext value.
 
 In-memory UI state is cache only: selected rows, search text, form drafts,
 checkout draft state, active board view models, alert flags, loading states, and
@@ -153,16 +166,14 @@ deterministic business logic.
    void/correction/reversal records.
 15. End Day is blocked while any player is checked in.
 16. End Day saves a frozen close snapshot; live recalculated reports may differ
-   later.
+    later.
 17. Admin password is required for protected actions.
 18. Restore from backup is intentional and never automatic overwrite.
 19. Cash/card payment records preserve method and amount for reconciliation.
 20. Money, debt, subscription usage, inventory, and closed-day changes are
    transactional.
-21. New installations require admin password setup, GCP backup configuration,
-   and initial product setup before cashier operations.
-22. Backup upload failure is recorded and shown but does not block offline work
-   after setup.
+21. New installations require admin password setup, verification of GCP connection settings (via gitignored `.env`), and initial product catalog setup (socks/water pre-filled but editable) before cashier operations.
+22. Backup upload failure is recorded and shown as an operational warning, but does not block offline cashier work.
 23. Backup packages include only the database and validation manifest.
 24. Restore validates manifest/checksum and creates a local safety copy before
    replacing the active database.

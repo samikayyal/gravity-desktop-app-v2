@@ -4,69 +4,51 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-- Foundation scaffold complete
+- Spec-driven Context Setup (Clean Slate)
 
 ## Current Goal
 
-- Start the next feature unit from the numbered specs now that the executable
-  Flutter Windows foundation is in place.
+- Complete the rewrite of the `context/` folder by generating all 20 reordered feature specifications under `context/feature_specs/` using the grill-me decisions.
 
 ## Completed
 
-- None.
+- [x] Initial architecture alignment and grill-me design session.
+- [x] Database schema centralized in `context/schema-reference.md`.
+- [x] Top-level context files updated (`project-overview.md`, `architecture.md`, `code-standards.md`, `ui-context.md`, `ai-workflow-rules.md`).
+- [x] Feature specs 01 to 05 written and finalized (Scaffold, Theme/Tokens, Localization, Settings, Admin Auth/Audit).
 
 ## In Progress
 
-- None.
+- [/] Feature specifications generation in `context/feature_specs/` (Specs 06-20).
 
 ## Next Up
 
-- None.
+- [ ] Spec 06: Player Profiles and Search (Player identity, profiles, multiple phones, search, and snapshots).
 
 ## Open Questions
 
+- None.
 
 ## Architecture Decisions
 
-- V1 targets one Windows front-desk computer only.
-- Local SQLite is the source of truth.
-- GCP Cloud Storage is backup/restore only, not live sync.
-- Drift is the required SQLite access layer.
-- Riverpod is the required state-management and dependency-wiring layer.
-- First-run setup must support New Installation and Restore Existing Backup.
-- New installation requires admin password creation, required GCP backup
-  configuration, and initial socks/water product setup before cashier
-  operations.
-- Backup upload success is not required before cashier operations; failures are
-  recorded and shown as warnings.
-- Backup packages contain the SQLite database plus manifest metadata and must
-  exclude credentials, logs, generated exports, and local secrets/config.
-- Default business timezone is `Asia/Damascus`.
-- End Day covers activity since the previous saved close.
-- Missed-close suggestions use a default 10-hour no-check-in inactivity gap and
-  require cashier/admin confirmation before snapshots are saved.
-- The 10-minute pricing leeway is free billing grace time.
-- Employee discounts are flat SYP values for individual checkout eligible
-  subtotals only; reason is optional.
-- Mistakes are handled through admin-authorized void/correction/reversal ledger
-  records that preserve the original records.
-- Subscription months expire one calendar month after activation at the same
-  local `Asia/Damascus` time.
-- Product sale line items snapshot product name and unit price at sale time.
-- UI uses a light-mode-only **Modern Cashier Calm** design direction.
-- Brand yellow `#FBF306` is the primary action and brand highlight color, but
-  status colors remain visually distinct for operational clarity.
-- Theme values must be centralized and consumed through shared Flutter theme
-  tokens rather than hardcoded in feature widgets.
+- **Single Cashier Setup**: V1 targets one Windows front-desk computer only.
+- **Offline-First Truth**: Local SQLite database is the source of truth; GCP Cloud Storage is backup/restore only.
+- **Drift & Riverpod**: Drift is the required SQLite access layer, and Riverpod is the required state-management and dependency-wiring layer.
+- **UI Persistent Split-Panel**: Split-panel layout (Left ~60% persistent Active Board, Right ~40% Context & Action panel) for high cashier efficiency.
+- **Hybrid Side Navigation**: Persistent thin side rail for switching modules (Players, Products, Inventory, Reports, Settings).
+- **Check-In Entry Redesign**: Entry type selection is either Open Time or Fixed Duration (30-minute block increments via +/- buttons).
+- **Auto-Detected Subscriptions**: Active subscriptions are automatically detected at check-in. Subscription holders must enter using their subscription.
+- **Simplified Setup Wizard**: Setup collects admin password and runs a skip-able GCP connection test. Configurable products are pre-filled with default socks/water.
+- **GCP Credential Storage**: GCP credentials (key, bucket) are loaded from a local gitignored `.env` file, never stored in SQLite or exposed in setup forms.
+- **Sound + Visual Notifications**: Overdue players trigger a visual state change and an auditory system alert. A global mute option is provided.
+- **Durable Audit Ledger**: Audit events capture admin password entry and high-risk actions.
+- **No Hard Deletions**: Deleting rows is forbidden. System uses void/reversal ledger records to correct financial and session mistakes.
+- **Business Timezone**: Default business timezone is `Asia/Damascus` (timestamps stored as UTC ISO-8601 strings).
+- **End Day Reporting**: Shifts are closed by entering counted cash/card amounts and checking for mismatches. Closed shift data is frozen in time.
+- **Flat Cash Discounts**: Employee discounts are flat SYP cash values on eligible subtotals, never reducing old debt, tips, or group totals.
+- **Local Rotating Logs**: Technical log files are rotated locally, keeping sensitive names/phones private.
 
 ## Session Notes
 
-- 2026-05-17: UI color token system documented in `context/ui-context.md`.
-- 2026-05-17: Non-UI context cleanup completed. Repo remains documentation-only;
-  no Flutter scaffold, `pubspec.yaml`, `lib/`, or `test/` exists yet.
-- 2026-05-17: Context feature-spec split completed. Flutter/Dart verification
-  was not applicable because the repo still has no Flutter scaffold,
-  `pubspec.yaml`, `lib/`, or `test/`.
-- 2026-05-17: Foundation scaffold completed. `dart format
-  --set-exit-if-changed .`, `flutter analyze`, `flutter test`, and the targeted
-  Drift database smoke test pass.
+- 2026-05-22: Reset progress tracker to clean state. Rewrote top-level context files to match 20 design decisions from grill-me session. Centralized Drift SQLite tables in `context/schema-reference.md`.
+- 2026-05-22: Generated first 5 feature specifications (01-Foundation Scaffold, 02-UI Tokens and Theme, 03-Localization Infrastructure, 04-Settings and Configuration, 05-Admin Auth and Audit Infrastructure).

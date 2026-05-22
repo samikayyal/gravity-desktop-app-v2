@@ -174,3 +174,23 @@
 Use the folder ownership defined in `context/architecture.md`. Do not introduce
 new top-level ownership boundaries without updating architecture context in the
 same unit.
+
+## Naming Conventions
+
+### File & Class Naming
+We enforce consistent naming to make the code highly readable and navigable for both humans and agents:
+- **Repositories**: `lib/data/repositories/{feature}_repository.dart` containing class `{Feature}Repository`. Example: `PlayerRepository`, `ProductRepository`.
+- **Domain Services**: `lib/domain/services/{feature}_service.dart` containing class `{Feature}Service`. Example: `PricingService`, `CheckoutService`.
+- **Riverpod State Notifiers/ViewModels**: `lib/features/{feature}/presentation/{feature}_notifier.dart` containing class `{Feature}Notifier`. Example: `ActiveBoardNotifier`, `CheckoutNotifier`.
+- **UI Screens/Widgets**: `lib/features/{feature}/presentation/{feature}_screen.dart` containing class `{Feature}Screen`. Example: `CheckoutScreen`, `ReportsScreen`.
+
+### Localization (l10n) Key Naming
+All user-facing text must be localized using flutter_localizations ARB files. Key names follow:
+- **Format**: lowerCamelCase.
+- **Prefixes**:
+  - `label...` for form labels (e.g., `labelFullName`, `labelPhoneNumber`).
+  - `btn...` for actionable buttons (e.g., `btnCheckIn`, `btnCheckout`).
+  - `msg...` for alerts, feedback, errors (e.g., `msgCheckInSuccess`, `msgStaleSessionWarning`).
+  - `title...` for headers, screen titles (e.g., `titleActiveBoard`, `titleDailyClose`).
+  - `chip...` for status badges/chips (e.g., `chipOverdue`, `chipSubscription`).
+

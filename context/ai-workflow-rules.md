@@ -25,6 +25,7 @@
 - Keep business rules out of Flutter widgets.
 - Keep persistence details out of widgets and domain services.
 - Keep generated code generated. Do not hand-edit it.
+- All user-facing strings must use l10n keys from ARB files rather than hardcoded string literals in UI widgets, laying localization groundwork from day one.
 
 ## Scoping Rules
 
@@ -52,6 +53,11 @@ Split work when a request combines major business areas, mixes schema
 migration with major UI work, spans unrelated features, cannot be verified
 quickly and clearly, introduces a major dependency or architecture decision, or
 depends on requirements not fully defined in the context files.
+
+### Rules for Split (a/b) Feature Specs
+For features split into domain/data (a) and UI (b) specs (e.g., Checkout 13a/13b, Group Checkout 14a/14b, End-Day Reporting 17a/17b):
+- **Implement part (a) (Domain & Data) first**: Focus on Drift schema updates, model definitions, service pricing calculators, repository classes, and pure Dart unit tests.
+- **Implement part (b) (UI Screen) second**: Once the domain logic passes 100% of unit tests, build the Riverpod view models, screens, validation widgets, and functional widget tests. Never mix these two steps.
 
 Finish the current unit before starting the next unit.
 
@@ -110,8 +116,10 @@ verification. Never modify real app data directly.
   model, access model, background task model, or invariants change.
 - Update `context/code-standards.md` when conventions, testing expectations,
   dependency rules, logging rules, or verification standards change.
-- Update `context/ui-context.md` and
-  [`15-shared-ui-theme-and-primitives.md`](feature_specs/15-shared-ui-theme-and-primitives.md)
+- Update `context/ui-context.md` and feature specs
+  [`02-ui-tokens-and-theme.md`](feature_specs/02-ui-tokens-and-theme.md),
+  [`03-localization-infrastructure.md`](feature_specs/03-localization-infrastructure.md), and
+  [`19-shared-ui-primitives.md`](feature_specs/19-shared-ui-primitives.md)
   when UI patterns, layout rules, status colors, interaction behavior, or design
   standards change.
 - Update the relevant `context/feature_specs/*.md` file when feature-level
