@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gravity_desktop_app_v2/app/localization/app_supported_locales.dart';
 import 'package:gravity_desktop_app_v2/app/theme/color_tokens.dart';
 import 'package:gravity_desktop_app_v2/app/theme/spacing_tokens.dart';
 
 abstract final class AppTheme {
   static const String outfitFontFamily = 'Outfit';
   static const String interFontFamily = 'Inter';
+  static const String cairoFontFamily = 'Cairo';
+  static const String tajawalFontFamily = 'Tajawal';
   static const TextStyle tableNumberStyle = TextStyle(
     fontFamily: interFontFamily,
     fontSize: 13,
@@ -17,73 +20,103 @@ abstract final class AppTheme {
 
   static final ThemeData _lightTheme = _buildLightTheme();
 
-  static ThemeData _buildLightTheme() {
-    const textTheme = TextTheme(
+  static ThemeData lightForLocale(Locale locale) {
+    if (AppSupportedLocales.isRtl(locale)) {
+      return _buildLightTheme(
+        headingFontFamily: tajawalFontFamily,
+        bodyFontFamily: cairoFontFamily,
+        numberFontFamily: tajawalFontFamily,
+      );
+    }
+    return light;
+  }
+
+  static TextStyle tableNumberStyleForLocale(Locale locale) {
+    if (AppSupportedLocales.isRtl(locale)) {
+      return tableNumberStyle.copyWith(fontFamily: tajawalFontFamily);
+    }
+    return tableNumberStyle;
+  }
+
+  static ThemeData _buildLightTheme({
+    String headingFontFamily = outfitFontFamily,
+    String bodyFontFamily = interFontFamily,
+    String numberFontFamily = interFontFamily,
+  }) {
+    final tableNumberStyle = TextStyle(
+      fontFamily: numberFontFamily,
+      fontSize: 13,
+      fontWeight: FontWeight.w500,
+      height: 1.2,
+      color: AppColorTokens.textPrimary,
+    );
+
+    final textTheme = TextTheme(
       displayLarge: TextStyle(
-        fontFamily: outfitFontFamily,
+        fontFamily: headingFontFamily,
         fontSize: 36,
         fontWeight: FontWeight.w700,
         height: 1,
         color: AppColorTokens.textPrimary,
       ),
       headlineLarge: TextStyle(
-        fontFamily: outfitFontFamily,
+        fontFamily: headingFontFamily,
         fontSize: 24,
         fontWeight: FontWeight.w700,
         height: 1.2,
         color: AppColorTokens.textPrimary,
       ),
       titleLarge: TextStyle(
-        fontFamily: outfitFontFamily,
+        fontFamily: headingFontFamily,
         fontSize: 18,
         fontWeight: FontWeight.w600,
         height: 1.3,
         color: AppColorTokens.textPrimary,
       ),
       titleMedium: TextStyle(
-        fontFamily: interFontFamily,
+        fontFamily: bodyFontFamily,
         fontSize: 14,
         fontWeight: FontWeight.w600,
         height: 1.4,
         color: AppColorTokens.textPrimary,
       ),
       bodyLarge: TextStyle(
-        fontFamily: interFontFamily,
+        fontFamily: bodyFontFamily,
         fontSize: 14,
         fontWeight: FontWeight.w400,
         height: 1.4,
         color: AppColorTokens.textPrimary,
       ),
       bodyMedium: TextStyle(
-        fontFamily: interFontFamily,
+        fontFamily: bodyFontFamily,
         fontSize: 14,
         fontWeight: FontWeight.w400,
         height: 1.4,
         color: AppColorTokens.textPrimary,
       ),
       bodySmall: TextStyle(
-        fontFamily: interFontFamily,
+        fontFamily: bodyFontFamily,
         fontSize: 12,
         fontWeight: FontWeight.w400,
         height: 1.3,
         color: AppColorTokens.textSecondary,
       ),
       labelLarge: TextStyle(
-        fontFamily: interFontFamily,
+        fontFamily: bodyFontFamily,
         fontSize: 14,
         fontWeight: FontWeight.w600,
         height: 1.2,
         color: AppColorTokens.textPrimary,
       ),
       labelMedium: TextStyle(
-        fontFamily: interFontFamily,
+        fontFamily: bodyFontFamily,
         fontSize: 12,
         fontWeight: FontWeight.w600,
         height: 1.2,
         color: AppColorTokens.textSecondary,
       ),
       labelSmall: TextStyle(
-        fontFamily: interFontFamily,
+        fontFamily: bodyFontFamily,
         fontSize: 11,
         fontWeight: FontWeight.w700,
         height: 1.1,
@@ -119,21 +152,21 @@ abstract final class AppTheme {
       scaffoldBackgroundColor: AppColorTokens.neutralBackground,
       canvasColor: AppColorTokens.neutralBackground,
       dividerColor: AppColorTokens.quietBorder,
-      fontFamily: interFontFamily,
+      fontFamily: bodyFontFamily,
       textTheme: textTheme,
       primaryTextTheme: textTheme,
       visualDensity: VisualDensity.compact,
       extensions: const <ThemeExtension<dynamic>>[AppColorsExtension.light()],
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: AppColorTokens.neutralSurface,
         foregroundColor: AppColorTokens.textPrimary,
         elevation: 0,
         scrolledUnderElevation: 0,
-        shape: Border(
+        shape: const Border(
           bottom: BorderSide(color: AppColorTokens.quietBorder, width: 1),
         ),
         titleTextStyle: TextStyle(
-          fontFamily: outfitFontFamily,
+          fontFamily: headingFontFamily,
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: AppColorTokens.textPrimary,
@@ -154,12 +187,18 @@ abstract final class AppTheme {
         thickness: 1,
         space: 1,
       ),
-      elevatedButtonTheme: ElevatedButtonThemeData(style: _filledButtonStyle()),
-      filledButtonTheme: FilledButtonThemeData(style: _filledButtonStyle()),
-      outlinedButtonTheme: OutlinedButtonThemeData(
-        style: _outlinedButtonStyle(),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: _filledButtonStyle(bodyFontFamily),
       ),
-      textButtonTheme: TextButtonThemeData(style: _textButtonStyle()),
+      filledButtonTheme: FilledButtonThemeData(
+        style: _filledButtonStyle(bodyFontFamily),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: _outlinedButtonStyle(bodyFontFamily),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: _textButtonStyle(bodyFontFamily),
+      ),
       iconButtonTheme: IconButtonThemeData(style: _iconButtonStyle()),
       inputDecorationTheme: InputDecorationThemeData(
         isDense: true,
@@ -190,19 +229,23 @@ abstract final class AppTheme {
           color: AppColorTokens.statusOverdue,
         ),
       ),
-      navigationRailTheme: const NavigationRailThemeData(
+      navigationRailTheme: NavigationRailThemeData(
         backgroundColor: AppColorTokens.neutralSurface,
         indicatorColor: AppColorTokens.brandPrimary,
-        selectedIconTheme: IconThemeData(color: AppColorTokens.textPrimary),
-        unselectedIconTheme: IconThemeData(color: AppColorTokens.textSecondary),
+        selectedIconTheme: const IconThemeData(
+          color: AppColorTokens.textPrimary,
+        ),
+        unselectedIconTheme: const IconThemeData(
+          color: AppColorTokens.textSecondary,
+        ),
         selectedLabelTextStyle: TextStyle(
-          fontFamily: interFontFamily,
+          fontFamily: bodyFontFamily,
           color: AppColorTokens.textPrimary,
           fontWeight: FontWeight.w700,
           fontSize: 12,
         ),
         unselectedLabelTextStyle: TextStyle(
-          fontFamily: interFontFamily,
+          fontFamily: bodyFontFamily,
           color: AppColorTokens.textSecondary,
           fontWeight: FontWeight.w400,
           fontSize: 12,
@@ -297,7 +340,7 @@ abstract final class AppTheme {
     );
   }
 
-  static ButtonStyle _filledButtonStyle() {
+  static ButtonStyle _filledButtonStyle(String fontFamily) {
     return ButtonStyle(
       minimumSize: const WidgetStatePropertyAll(Size(0, 40)),
       padding: const WidgetStatePropertyAll(
@@ -345,9 +388,9 @@ abstract final class AppTheme {
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(borderRadius: AppRadius.mdBorder),
       ),
-      textStyle: const WidgetStatePropertyAll(
+      textStyle: WidgetStatePropertyAll(
         TextStyle(
-          fontFamily: interFontFamily,
+          fontFamily: fontFamily,
           fontSize: 14,
           fontWeight: FontWeight.w700,
           height: 1.2,
@@ -363,7 +406,7 @@ abstract final class AppTheme {
     );
   }
 
-  static ButtonStyle _outlinedButtonStyle() {
+  static ButtonStyle _outlinedButtonStyle(String fontFamily) {
     return ButtonStyle(
       minimumSize: const WidgetStatePropertyAll(Size(0, 40)),
       padding: const WidgetStatePropertyAll(
@@ -412,9 +455,9 @@ abstract final class AppTheme {
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(borderRadius: AppRadius.mdBorder),
       ),
-      textStyle: const WidgetStatePropertyAll(
+      textStyle: WidgetStatePropertyAll(
         TextStyle(
-          fontFamily: interFontFamily,
+          fontFamily: fontFamily,
           fontSize: 14,
           fontWeight: FontWeight.w600,
           height: 1.2,
@@ -430,7 +473,7 @@ abstract final class AppTheme {
     );
   }
 
-  static ButtonStyle _textButtonStyle() {
+  static ButtonStyle _textButtonStyle(String fontFamily) {
     return ButtonStyle(
       minimumSize: const WidgetStatePropertyAll(Size(0, 36)),
       padding: const WidgetStatePropertyAll(
@@ -456,9 +499,9 @@ abstract final class AppTheme {
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(borderRadius: AppRadius.mdBorder),
       ),
-      textStyle: const WidgetStatePropertyAll(
+      textStyle: WidgetStatePropertyAll(
         TextStyle(
-          fontFamily: interFontFamily,
+          fontFamily: fontFamily,
           fontSize: 14,
           fontWeight: FontWeight.w600,
           height: 1.2,

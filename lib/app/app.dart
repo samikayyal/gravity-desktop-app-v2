@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gravity_desktop_app_v2/app/layout/split_panel_layout.dart';
+import 'package:gravity_desktop_app_v2/app/localization/app_supported_locales.dart';
+import 'package:gravity_desktop_app_v2/app/localization/localization_extensions.dart';
 import 'package:gravity_desktop_app_v2/app/providers.dart';
 import 'package:gravity_desktop_app_v2/app/theme/app_theme.dart';
 import 'package:gravity_desktop_app_v2/app/theme/color_tokens.dart';
@@ -11,6 +13,7 @@ import 'package:gravity_desktop_app_v2/app/theme/spacing_tokens.dart';
 import 'package:gravity_desktop_app_v2/core/database/local_database.dart';
 import 'package:gravity_desktop_app_v2/domain/entities/startup_state.dart';
 import 'package:gravity_desktop_app_v2/features/setup/presentation/first_run_setup_placeholder.dart';
+import 'package:gravity_desktop_app_v2/l10n/app_localizations.dart';
 
 class GravityApp extends ConsumerWidget {
   const GravityApp({super.key});
@@ -18,12 +21,18 @@ class GravityApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final startupAsync = ref.watch(startupStateProvider);
+    final localeAsync = ref.watch(appLocaleControllerProvider);
+    final locale = localeAsync.valueOrNull ?? AppSupportedLocales.defaultLocale;
+    final theme = AppTheme.lightForLocale(locale);
 
     return MaterialApp(
-      title: 'Gravity Cashier Desk',
+      onGenerateTitle: (context) => context.l10n.titleApp,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.light,
+      locale: locale,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      theme: theme,
+      darkTheme: theme,
       themeMode: ThemeMode.light,
       home: startupAsync.when(
         data: (state) {
@@ -60,6 +69,7 @@ class _DatabaseRescueScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final appColors = context.appColors;
+    final l10n = context.l10n;
 
     return Scaffold(
       body: Center(
@@ -97,14 +107,14 @@ class _DatabaseRescueScreen extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Database Rescue Console',
+                                l10n.titleDatabaseRescueConsole,
                                 style: theme.textTheme.titleLarge?.copyWith(
                                   color: appColors.statusStockNegative,
                                 ),
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                'Critical Database Startup Failure',
+                                l10n.titleCriticalDatabaseStartupFailure,
                                 style: theme.textTheme.labelMedium,
                               ),
                             ],
@@ -114,7 +124,7 @@ class _DatabaseRescueScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     Text(
-                      'The local SQLite database failed to initialize. This error usually occurs due to file corruption, file locking, or incorrect folder write permissions.',
+                      l10n.msgDatabaseStartupFailure,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurface,
                       ),
@@ -132,7 +142,7 @@ class _DatabaseRescueScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Error Details:',
+                            l10n.labelErrorDetails,
                             style: theme.textTheme.labelMedium?.copyWith(
                               color: colorScheme.onSurface,
                             ),
@@ -158,7 +168,7 @@ class _DatabaseRescueScreen extends ConsumerWidget {
                       children: [
                         OutlinedButton.icon(
                           icon: const Icon(Icons.refresh, size: 16),
-                          label: const Text('Retry Connection'),
+                          label: Text(l10n.btnRetryConnection),
                           onPressed: () {
                             ref.invalidate(startupStateProvider);
                           },
@@ -169,21 +179,19 @@ class _DatabaseRescueScreen extends ConsumerWidget {
                             Icons.settings_backup_restore_outlined,
                             size: 16,
                           ),
-                          label: const Text('Import GCP Backup'),
+                          label: Text(l10n.btnImportGcpBackup),
                           onPressed: () {
                             showDialog<void>(
                               context: context,
                               builder: (dialogContext) {
                                 return AlertDialog(
-                                  title: const Text('Manual Restore Guide'),
-                                  content: const Text(
-                                    'GCP Cloud Backup Restoration tool will be fully integrated in Feature 04/22.\n\nTo recover your data for now, copy your backup file over the corrupted local file shown above.',
-                                  ),
+                                  title: Text(l10n.titleManualRestoreGuide),
+                                  content: Text(l10n.msgManualRestoreGuide),
                                   actions: [
                                     TextButton(
                                       onPressed: () =>
                                           Navigator.of(dialogContext).pop(),
-                                      child: const Text('OK'),
+                                      child: Text(l10n.btnOk),
                                     ),
                                   ],
                                 );
@@ -211,6 +219,7 @@ class _RescuePathDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
 
     return FutureBuilder<File>(
       future: getDatabaseFile(),
@@ -223,7 +232,10 @@ class _RescuePathDetails extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Database File Location:', style: theme.textTheme.labelLarge),
+            Text(
+              l10n.labelDatabaseFileLocation,
+              style: theme.textTheme.labelLarge,
+            ),
             const SizedBox(height: AppSpacing.xs),
             Row(
               children: [
@@ -246,13 +258,13 @@ class _RescuePathDetails extends StatelessWidget {
                 const SizedBox(width: AppSpacing.xs),
                 IconButton(
                   icon: const Icon(Icons.copy_all_outlined, size: 20),
-                  tooltip: 'Copy File Path',
+                  tooltip: l10n.labelCopyFilePath,
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: dbPath));
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Database path copied to clipboard.'),
-                        duration: Duration(seconds: 2),
+                      SnackBar(
+                        content: Text(l10n.msgDatabasePathCopied),
+                        duration: const Duration(seconds: 2),
                       ),
                     );
                   },
@@ -261,7 +273,7 @@ class _RescuePathDetails extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'TIP: Keep a copy of this corrupted database file before attempting recovery.',
+              l10n.msgKeepCorruptedDatabaseCopy,
               style: theme.textTheme.bodySmall?.copyWith(
                 fontStyle: FontStyle.italic,
               ),

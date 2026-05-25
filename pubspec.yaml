@@ -34,6 +34,9 @@ dependencies:
 
   # Desktop Window Configuration
   window_manager: ^0.3.8
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +54,7 @@ dev_dependencies:
   sqlite3: ^2.4.0
 
 flutter:
+  generate: true
   uses-material-design: true
   fonts:
     - family: Outfit
@@ -70,4 +74,24 @@ flutter:
         - asset: assets/fonts/inter/Inter-Variable.ttf
           weight: 600
         - asset: assets/fonts/inter/Inter-Variable.ttf
+          weight: 700
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/cairo/Cairo-Variable.ttf
+          weight: 400
+        - asset: assets/fonts/cairo/Cairo-Variable.ttf
+          weight: 500
+        - asset: assets/fonts/cairo/Cairo-Variable.ttf
+          weight: 600
+        - asset: assets/fonts/cairo/Cairo-Variable.ttf
+          weight: 700
+    - family: Tajawal
+      fonts:
+        - asset: assets/fonts/tajawal/Tajawal-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/tajawal/Tajawal-Regular.ttf
+          weight: 500
+        - asset: assets/fonts/tajawal/Tajawal-Bold.ttf
+          weight: 600
+        - asset: assets/fonts/tajawal/Tajawal-Bold.ttf
           weight: 700

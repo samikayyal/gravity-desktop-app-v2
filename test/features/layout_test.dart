@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gravity_desktop_app_v2/app/localization/app_supported_locales.dart';
 import 'package:gravity_desktop_app_v2/app/layout/split_panel_layout.dart';
 import 'package:gravity_desktop_app_v2/app/theme/app_theme.dart';
+import 'package:gravity_desktop_app_v2/l10n/app_localizations.dart';
 
 void main() {
   Widget buildTestableWidget() {
-    return MaterialApp(theme: AppTheme.light, home: const SplitPanelLayout());
+    return MaterialApp(
+      theme: AppTheme.light,
+      locale: AppSupportedLocales.english,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      home: const SplitPanelLayout(),
+    );
   }
 
   group('SplitPanelLayout Desktop Sizing Tests', () {

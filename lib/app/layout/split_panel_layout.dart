@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gravity_desktop_app_v2/app/localization/app_supported_locales.dart';
+import 'package:gravity_desktop_app_v2/app/localization/cashier_formatters.dart';
+import 'package:gravity_desktop_app_v2/app/localization/localization_extensions.dart';
+import 'package:gravity_desktop_app_v2/app/providers.dart';
 import 'package:gravity_desktop_app_v2/app/theme/color_tokens.dart';
 import 'package:gravity_desktop_app_v2/app/theme/spacing_tokens.dart';
 
@@ -10,17 +15,22 @@ class SplitPanelLayout extends StatefulWidget {
 }
 
 class _SplitPanelLayoutState extends State<SplitPanelLayout> {
+  static const int _settingsIndex = 5;
+
   int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
+    final isSettingsSelected = _selectedIndex == _settingsIndex;
 
     return Scaffold(
       body: Row(
         children: [
           NavigationRail(
+            key: const Key('mainNavigationRail'),
             selectedIndex: _selectedIndex,
             onDestinationSelected: (int index) {
               setState(() {
@@ -28,36 +38,36 @@ class _SplitPanelLayoutState extends State<SplitPanelLayout> {
               });
             },
             labelType: NavigationRailLabelType.all,
-            destinations: const [
+            destinations: [
               NavigationRailDestination(
-                icon: Icon(Icons.dashboard_outlined),
-                selectedIcon: Icon(Icons.dashboard),
-                label: Text('Board'),
+                icon: const Icon(Icons.dashboard_outlined),
+                selectedIcon: const Icon(Icons.dashboard),
+                label: Text(l10n.labelBoard),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.people_alt_outlined),
-                selectedIcon: Icon(Icons.people_alt),
-                label: Text('Players'),
+                icon: const Icon(Icons.people_alt_outlined),
+                selectedIcon: const Icon(Icons.people_alt),
+                label: Text(l10n.labelPlayers),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.shopping_bag_outlined),
-                selectedIcon: Icon(Icons.shopping_bag),
-                label: Text('Products'),
+                icon: const Icon(Icons.shopping_bag_outlined),
+                selectedIcon: const Icon(Icons.shopping_bag),
+                label: Text(l10n.labelProducts),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.inventory_2_outlined),
-                selectedIcon: Icon(Icons.inventory_2),
-                label: Text('Inventory'),
+                icon: const Icon(Icons.inventory_2_outlined),
+                selectedIcon: const Icon(Icons.inventory_2),
+                label: Text(l10n.labelInventory),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.analytics_outlined),
-                selectedIcon: Icon(Icons.analytics),
-                label: Text('Reports'),
+                icon: const Icon(Icons.analytics_outlined),
+                selectedIcon: const Icon(Icons.analytics),
+                label: Text(l10n.labelReports),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.settings_outlined),
-                selectedIcon: Icon(Icons.settings),
-                label: Text('Settings'),
+                icon: const Icon(Icons.settings_outlined),
+                selectedIcon: const Icon(Icons.settings),
+                label: Text(l10n.labelSettings),
               ),
             ],
           ),
@@ -76,7 +86,7 @@ class _SplitPanelLayoutState extends State<SplitPanelLayout> {
                       children: [
                         _buildHeader(
                           context,
-                          'Active Board',
+                          l10n.titleActiveBoard,
                           Icons.timer_outlined,
                         ),
                         Expanded(
@@ -102,10 +112,16 @@ class _SplitPanelLayoutState extends State<SplitPanelLayout> {
                       children: [
                         _buildHeader(
                           context,
-                          'Action Panel',
+                          isSettingsSelected
+                              ? l10n.titleSettings
+                              : l10n.titleActionPanel,
                           Icons.bolt_outlined,
                         ),
-                        const Expanded(child: _ActionPanelEmptyState()),
+                        Expanded(
+                          child: isSettingsSelected
+                              ? const _SettingsLocalePanel()
+                              : const _ActionPanelEmptyState(),
+                        ),
                       ],
                     ),
                   ),
@@ -154,6 +170,10 @@ class _ActiveSessionPlaceholder extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final appColors = context.appColors;
+    final l10n = context.l10n;
+    final timerText = CashierFormatters.formatTimer(
+      Duration(minutes: 60 - (index * 5)),
+    );
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -177,17 +197,27 @@ class _ActiveSessionPlaceholder extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Player Profile Placeholder ${index + 1}',
+                    l10n.labelPlayerProfilePlaceholder(index + 1),
                     style: theme.textTheme.titleMedium,
                   ),
                   const SizedBox(height: AppSpacing.xxs),
                   Text(
-                    'Duration: 60 min | Check-in: 14:30',
+                    l10n.msgSessionSummary(60, '14:30'),
                     style: theme.textTheme.bodySmall,
                   ),
                 ],
               ),
             ),
+            const SizedBox(width: AppSpacing.sm),
+            Text(
+              timerText,
+              style: theme.dataTableTheme.dataTextStyle?.copyWith(
+                color: colorScheme.onSurface,
+                fontFeatures: const [FontFeature.tabularFigures()],
+                fontFamily: theme.dataTableTheme.dataTextStyle?.fontFamily,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
             Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.xs,
@@ -204,7 +234,7 @@ class _ActiveSessionPlaceholder extends StatelessWidget {
                 ),
               ),
               child: Text(
-                'Active',
+                l10n.chipActive,
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: appColors.statusActive,
                 ),
@@ -224,6 +254,7 @@ class _ActionPanelEmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
 
     return Center(
       child: Padding(
@@ -238,20 +269,82 @@ class _ActionPanelEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
-              'No Active Selection',
+              l10n.titleNoActiveSelection,
               style: theme.textTheme.titleLarge?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Select a player session from the Active Board or select a sidebar module to load cashier tasks.',
+              l10n.msgNoActiveSelectionInstructions,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodySmall,
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _SettingsLocalePanel extends ConsumerWidget {
+  const _SettingsLocalePanel();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+    final localeAsync = ref.watch(appLocaleControllerProvider);
+    final selectedLocale = AppSupportedLocales.normalize(
+      localeAsync.valueOrNull ?? Localizations.localeOf(context),
+    );
+
+    return ListView(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      children: [
+        Text(l10n.titleSettings, style: theme.textTheme.titleLarge),
+        const SizedBox(height: AppSpacing.md),
+        DropdownButtonFormField<Locale>(
+          key: ValueKey<String>(selectedLocale.languageCode),
+          initialValue: selectedLocale,
+          isExpanded: true,
+          decoration: InputDecoration(labelText: l10n.labelLanguage),
+          items: [
+            DropdownMenuItem<Locale>(
+              value: AppSupportedLocales.english,
+              child: Text(l10n.labelEnglishUs),
+            ),
+            DropdownMenuItem<Locale>(
+              value: AppSupportedLocales.arabic,
+              child: Text(l10n.labelArabicSyria),
+            ),
+          ],
+          onChanged: (locale) async {
+            if (locale == null) {
+              return;
+            }
+
+            try {
+              await ref
+                  .read(appLocaleControllerProvider.notifier)
+                  .setLocale(locale);
+              if (!context.mounted) {
+                return;
+              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(context.l10n.msgLanguageUpdated)),
+              );
+            } catch (_) {
+              if (!context.mounted) {
+                return;
+              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(context.l10n.msgLanguageUpdateFailed)),
+              );
+            }
+          },
+        ),
+      ],
     );
   }
 }

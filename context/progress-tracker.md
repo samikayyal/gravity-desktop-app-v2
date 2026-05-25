@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Start localization infrastructure after completing the baseline UI token and theme layer.
+- Start shared UI primitives after completing localization infrastructure.
 
 ## Completed
 
@@ -26,14 +26,15 @@ Update this file after every meaningful implementation change.
 - [x] **Foundation database hardening**: Enabled SQLite foreign key enforcement, aligned startup gating to `setup_complete`, standardized the runtime database filename as `gravity.db`, added DB-level enum/money checks, and added a partial unique index preventing duplicate non-closed sessions per player. Phone cardinality constraints remain deferred by request.
 - [x] **Database diagram documentation**: Added a Mermaid ERD covering the current 17-table Drift SQLite schema, relationship notes, nullable references, and key runtime guards.
 - [x] **Feature 02: UI Tokens and Theme**: Added centralized Modern Cashier Calm color tokens, spacing/radius tokens, `AppTheme.light`, `AppColorsExtension`, Outfit/Inter font assets, light-mode-only app wiring, themed button/input/card/navigation defaults, and contrast/theme-extension regression tests.
+- [x] **Feature 03: Localization Infrastructure**: Added Flutter gen-l10n configuration, English/Arabic ARB dictionaries, generated `AppLocalizations`, Arabic Cairo/Tajawal font assets, locale-aware theme switching, app-locale persistence through `system_settings`, RTL split-panel mirroring, Western-digit timer/SYP formatters, and localization regression tests.
 
 ## In Progress
 
-- [/] Ready to begin Feature 03: Localization Infrastructure.
+- [/] Ready to begin Feature 04: Shared UI Primitives.
 
 ## Next Up
 
-- [ ] Start `03-localization-infrastructure.md`.
+- [ ] Start `04-shared-ui-primitives.md`.
 
 ## Open Questions
 
@@ -70,3 +71,4 @@ Update this file after every meaningful implementation change.
 - 2026-05-25: Added `context/database-diagram.md` with a Mermaid ERD for the current 17-table Drift schema and linked it from `context/schema-reference.md`. Verification was documentation-only by targeted file review.
 - 2026-05-25: Implemented Feature 02 UI tokens and theme. Centralized the light-mode Material 3 theme in `lib/app/theme/`, registered all eight cashier status colors through `AppColorsExtension`, added Outfit and Inter variable font assets, replaced local placeholder color styling with theme-derived values, and verified with `dart format --set-exit-if-changed .`, `flutter analyze`, and `flutter test`.
 - 2026-05-25: Applied Feature 02 review fixes. Mapped `ColorScheme.onSurfaceVariant` to the secondary text token and added a central table-number typography token used by dense data tables. Verified with targeted theme tests plus full format, analyze, and test checks.
+- 2026-05-25: Implemented Feature 03 localization infrastructure. Added `l10n.yaml`, bilingual ARB files, generated localizations, Flutter localization delegates, persistent `app_locale` storage, Cairo/Tajawal font assets, Arabic theme font switching, localized placeholder/setup/rescue strings, a settings-panel language dropdown, RTL split-panel mirroring, and Western-digit cashier formatters. Verified with `flutter gen-l10n`, `dart format --set-exit-if-changed .`, `flutter analyze`, and `flutter test` (26 passing tests).

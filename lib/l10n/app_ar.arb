@@ -1,0 +1,59 @@
+{
+  "@@locale": "ar",
+  "titleApp": "Gravity Cashier Desk",
+  "titleActiveBoard": "لوحة اللاعبين",
+  "titleActionPanel": "لوحة الإجراءات",
+  "titleSettings": "الإعدادات",
+  "titleNoActiveSelection": "لا يوجد تحديد نشط",
+  "titleFirstRunSetupWizard": "معالج الإعداد الأول",
+  "titleDatabaseRescueConsole": "وحدة إنقاذ قاعدة البيانات",
+  "titleCriticalDatabaseStartupFailure": "فشل حرج في تشغيل قاعدة البيانات",
+  "titleManualRestoreGuide": "دليل الاستعادة اليدوية",
+  "labelBoard": "اللوحة",
+  "labelPlayers": "اللاعبون",
+  "labelProducts": "المنتجات",
+  "labelInventory": "المخزون",
+  "labelReports": "التقارير",
+  "labelSettings": "الإعدادات",
+  "labelLanguage": "اللغة",
+  "labelEnglishUs": "English (US)",
+  "labelArabicSyria": "العربية (سوريا)",
+  "labelErrorDetails": "تفاصيل الخطأ:",
+  "labelDatabaseFileLocation": "موقع ملف قاعدة البيانات:",
+  "labelCopyFilePath": "نسخ مسار الملف",
+  "labelPlayerProfilePlaceholder": "ملف لاعب تجريبي {playerNumber}",
+  "@labelPlayerProfilePlaceholder": {
+    "placeholders": {
+      "playerNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "msgNoActiveSelectionInstructions": "اختر جلسة لاعب من لوحة اللاعبين أو اختر وحدة من الشريط الجانبي لتحميل مهام الكاشير.",
+  "msgFirstRunSetupIntro": "Welcome to Gravity Cashier. Initialize your local administrator password, verify backup bucket configurations, and seed the default product catalogs.",
+  "msgDatabaseStartupFailure": "تعذر تشغيل قاعدة بيانات SQLite المحلية. يحدث هذا عادة بسبب تلف الملف أو قفل الملف أو صلاحيات كتابة غير صحيحة.",
+  "msgManualRestoreGuide": "GCP Cloud Backup Restoration tool will be fully integrated in a later backup and restore feature.\n\nTo recover your data for now, copy your backup file over the corrupted local file shown above.",
+  "msgDatabasePathCopied": "تم نسخ مسار قاعدة البيانات.",
+  "msgKeepCorruptedDatabaseCopy": "تلميح: احتفظ بنسخة من ملف قاعدة البيانات التالف قبل محاولة الاستعادة.",
+  "msgSessionSummary": "المدة: {durationMinutes} دقيقة | الدخول: {checkInTime}",
+  "@msgSessionSummary": {
+    "placeholders": {
+      "durationMinutes": {
+        "type": "int"
+      },
+      "checkInTime": {
+        "type": "String"
+      }
+    }
+  },
+  "msgLanguageUpdated": "تم تحديث اللغة.",
+  "msgLanguageUpdateFailed": "تعذر تحديث اللغة.",
+  "msgLocalizationFallbackSample": "Pending Arabic translation fallback text.",
+  "btnRetryConnection": "إعادة المحاولة",
+  "btnImportGcpBackup": "استيراد نسخة GCP",
+  "btnOk": "موافق",
+  "btnLaunchSetupWizard": "بدء معالج الإعداد",
+  "chipActive": "نشط",
+  "prodSocks": "جوارب",
+  "prodWaterBottle": "عبوة ماء 0.5 لتر"
+}

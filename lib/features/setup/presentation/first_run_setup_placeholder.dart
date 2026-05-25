@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gravity_desktop_app_v2/app/localization/localization_extensions.dart';
 import 'package:gravity_desktop_app_v2/app/theme/spacing_tokens.dart';
 
 class FirstRunSetupPlaceholder extends StatelessWidget {
@@ -8,6 +9,7 @@ class FirstRunSetupPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
 
     return Scaffold(
       body: Center(
@@ -36,12 +38,12 @@ class FirstRunSetupPlaceholder extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   Text(
-                    'First-Run Setup Wizard',
+                    l10n.titleFirstRunSetupWizard,
                     style: theme.textTheme.titleLarge,
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'Welcome to Gravity Cashier! Initialize your local administrator password, verify backup bucket configurations, and seed the default product catalogs.',
+                    l10n.msgFirstRunSetupIntro,
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: colorScheme.onSurfaceVariant,
@@ -53,7 +55,7 @@ class FirstRunSetupPlaceholder extends StatelessWidget {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: () {},
-                      child: const Text('Launch Setup Wizard'),
+                      child: Text(l10n.btnLaunchSetupWizard),
                     ),
                   ),
                 ],
