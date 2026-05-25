@@ -4,11 +4,11 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-- Implementation Planning / Context Health
+- Phase 1: Core Foundation Scaffold & UI Theme
 
 ## Current Goal
 
-- Prepare the context docs for agentic Flutter scaffold implementation, then start the foundation scaffold unit.
+- Complete the foundation scaffold verification and begin styling/theme configuration.
 
 ## Completed
 
@@ -22,15 +22,15 @@ Update this file after every meaningful implementation change.
 - [x] Schema readiness fixes applied for payment void status and no-hard-delete foreign key wording.
 - [x] Feature specs renumbered by intended implementation order from `01-foundation-scaffold.md` through `23-technical-logging.md`.
 - [x] Removed the separate implementation plan file; implementation order now lives in the numbered feature spec filenames.
+- [x] **Feature 01: Foundation Scaffold & Architectural Corrections**: Initialized Flutter app, strict analysis configs, full 17-table Drift database schema, resolved environment security (adaptive local loader supporting app support directories), database path isolation, Riverpod providers, dynamic routing startup flow, first-run wizard layout, repository boundaries with Freezed domain mapping, cashier-calm SplitPanelLayout visual placeholders, and robust database recovery console routing. Fully verified with zero compile warnings, stale codegen checks in CI/CD, and 9 passing unit/widget tests.
 
 ## In Progress
 
-- [/] Foundation scaffold planning and verification setup.
+- [/] Transitioning to Feature 02: UI Tokens and Theme.
 
 ## Next Up
 
-- [ ] Start `01-foundation-scaffold.md`.
-- [ ] Implement the Flutter Windows scaffold, baseline dependencies, folder layout, test harness, and verification workflow before product features.
+- [ ] Start `02-ui-tokens-and-theme.md`.
 
 ## Open Questions
 
@@ -61,3 +61,7 @@ Update this file after every meaningful implementation change.
 - 2026-05-22: Generated first 5 feature specifications (01-Foundation Scaffold, 02-UI Tokens and Theme, 03-Localization Infrastructure, 04-Settings and Configuration, 05-Admin Auth and Audit Infrastructure).
 - 2026-05-22: Applied requested agentic-implementation context cleanup: refreshed progress state, fixed broken spec links, updated `AGENTS.md`, added `glossary.md`, added feature-spec metadata, clarified schema readiness, moved shared UI primitives earlier in the spec order, and sliced foundation work.
 - 2026-05-22: Removed the separate plan file per user direction and renumbered feature specs so filenames carry the implementation order directly.
+- 2026-05-23: Resolved and verified all 7 architectural correction items. Fixed ambiguous repository imports and test package imports, achieved 100% clean formatting and zero static warnings, successfully executed all 9 widget/unit tests, and updated progress and walkthrough logs.
+- 2026-05-25: Resolved all 3 Round 2 Quality Gaps. Built startup_state domain entity, StartupRepository to isolate Drift queries, fully styled Database Rescue Screen for unmasked corruption errors, added git diff checks in CI and local verify scripts to prevent stale codegen, and integrated adaptive production .env path loading. Verified 100% test and analysis completion.
+
+

@@ -1,0 +1,54 @@
+name: gravity_desktop_app_v2
+description: "Gravity Windows Front-Desk Trampoline Park Cashier App."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # State Management & DI
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # Persistence (SQLite & Drift)
+  drift: ^2.16.0
+  sqlite3_flutter_libs: ^0.5.20
+  path_provider: ^2.1.2
+  path: ^1.9.0
+
+  # Data Modeling & Serialization
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+
+  # File Exports
+  pdf: ^3.10.8
+  csv: ^6.0.0
+
+  # Configuration
+  flutter_dotenv: ^5.1.0
+
+  # Desktop Window Configuration
+  window_manager: ^0.3.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+  # Code Generation
+  build_runner: ^2.4.8
+  drift_dev: ^2.16.0
+  freezed: ^2.4.7
+  json_serializable: ^6.7.1
+  riverpod_generator: ^2.3.9
+
+  # In-memory SQLite testing
+  sqlite3: ^2.4.0
+
+flutter:
+  uses-material-design: true
