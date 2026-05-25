@@ -71,7 +71,7 @@ The `manifest.json` structure is strictly defined as follows:
 {
   "backup_version": "1.0.0",
   "generated_at": "2026-05-22T17:31:13Z",
-  "schema_version": 4,
+  "schema_version": 1,
   "db_sha256": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2",
   "records": {
     "players": 1420,

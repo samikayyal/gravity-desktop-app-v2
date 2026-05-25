@@ -11,10 +11,10 @@ class StartupRepository {
   /// to represent database corruption or lock errors.
   Future<StartupState> checkStartupState() async {
     final query = _db.select(_db.systemSettings)
-      ..where((tbl) => tbl.key.equals('admin_password'));
+      ..where((tbl) => tbl.key.equals('setup_complete'));
     final result = await query.getSingleOrNull();
 
-    if (result != null && result.value.isNotEmpty) {
+    if (result?.value == '1') {
       return StartupState.complete;
     } else {
       return StartupState.needsSetup;

@@ -23,6 +23,7 @@ Update this file after every meaningful implementation change.
 - [x] Feature specs renumbered by intended implementation order from `01-foundation-scaffold.md` through `23-technical-logging.md`.
 - [x] Removed the separate implementation plan file; implementation order now lives in the numbered feature spec filenames.
 - [x] **Feature 01: Foundation Scaffold & Architectural Corrections**: Initialized Flutter app, strict analysis configs, full 17-table Drift database schema, resolved environment security (adaptive local loader supporting app support directories), database path isolation, Riverpod providers, dynamic routing startup flow, first-run wizard layout, repository boundaries with Freezed domain mapping, cashier-calm SplitPanelLayout visual placeholders, and robust database recovery console routing. Fully verified with zero compile warnings, stale codegen checks in CI/CD, and 9 passing unit/widget tests.
+- [x] **Foundation database hardening**: Enabled SQLite foreign key enforcement, aligned startup gating to `setup_complete`, standardized the runtime database filename as `gravity.db`, added DB-level enum/money checks, and added a partial unique index preventing duplicate non-closed sessions per player. Phone cardinality constraints remain deferred by request.
 
 ## In Progress
 
@@ -63,5 +64,5 @@ Update this file after every meaningful implementation change.
 - 2026-05-22: Removed the separate plan file per user direction and renumbered feature specs so filenames carry the implementation order directly.
 - 2026-05-23: Resolved and verified all 7 architectural correction items. Fixed ambiguous repository imports and test package imports, achieved 100% clean formatting and zero static warnings, successfully executed all 9 widget/unit tests, and updated progress and walkthrough logs.
 - 2026-05-25: Resolved all 3 Round 2 Quality Gaps. Built startup_state domain entity, StartupRepository to isolate Drift queries, fully styled Database Rescue Screen for unmasked corruption errors, added git diff checks in CI and local verify scripts to prevent stale codegen, and integrated adaptive production .env path loading. Verified 100% test and analysis completion.
-
+- 2026-05-25: Applied database review fixes except phone cardinality enforcement. Added Drift foreign key PRAGMA, schema check constraints for status and non-negative financial fields, duplicate active-session partial unique index, corrected startup detection to require `setup_complete = '1'`, standardized the runtime DB file to `gravity.db`, and added regression coverage for these database invariants.
 

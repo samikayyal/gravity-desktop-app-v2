@@ -18,6 +18,9 @@ class Players extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<String> get customConstraints => ['CHECK (age BETWEEN 1 AND 120)'];
 }
 
 class PlayerPhones extends Table {
@@ -45,6 +48,16 @@ class Sessions extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<String> get customConstraints => [
+    "CHECK (entry_type IN ('fixed', 'open'))",
+    'CHECK (reserved_blocks IS NULL OR reserved_blocks > 0)',
+    "CHECK (status IN ('active', 'overdue', 'stale', 'closed', 'voided'))",
+    'CHECK (calculated_charge >= 0)',
+    'CHECK (final_charge >= 0)',
+    'CHECK (discount_amount >= 0)',
+  ];
 }
 
 class Subscriptions extends Table {
@@ -56,10 +69,20 @@ class Subscriptions extends Table {
   TextColumn get expiresAt => text()();
   TextColumn get status =>
       text()(); // 'active', 'expired', 'exhausted', 'voided'
-  TextColumn get unpaidDebtId => text().nullable().references(Debts, #id)();
+  // Logical debt id for subscription purchases on credit. Debt rows retain the
+  // enforced FK back to subscriptions to avoid a circular Drift table graph.
+  TextColumn get unpaidDebtId => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<String> get customConstraints => [
+    'CHECK (total_minutes > 0)',
+    'CHECK (remaining_minutes >= 0)',
+    'CHECK (remaining_minutes <= total_minutes)',
+    "CHECK (status IN ('active', 'expired', 'exhausted', 'voided'))",
+  ];
 }
 
 class SubscriptionUsageLogs extends Table {
@@ -68,6 +91,12 @@ class SubscriptionUsageLogs extends Table {
   TextColumn get sessionId => text().references(Sessions, #id)();
   IntColumn get minutesConsumed => integer()();
   TextColumn get createdAt => text()();
+
+  @override
+  List<String> get customConstraints => [
+    'CHECK (minutes_consumed > 0)',
+    'CHECK (minutes_consumed % 30 = 0)',
+  ];
 }
 
 class Products extends Table {
@@ -80,6 +109,9 @@ class Products extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<String> get customConstraints => ['CHECK (unit_price >= 0)'];
 }
 
 class ProductSales extends Table {
@@ -91,6 +123,12 @@ class ProductSales extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<String> get customConstraints => [
+    'CHECK (total_charge >= 0)',
+    "CHECK (status IN ('completed', 'voided'))",
+  ];
 }
 
 class SaleItems extends Table {
@@ -100,6 +138,12 @@ class SaleItems extends Table {
   TextColumn get productNameSnapshot => text()();
   IntColumn get quantity => integer()();
   IntColumn get unitPriceSnapshot => integer()();
+
+  @override
+  List<String> get customConstraints => [
+    'CHECK (quantity > 0)',
+    'CHECK (unit_price_snapshot >= 0)',
+  ];
 }
 
 class Payments extends Table {
@@ -116,6 +160,14 @@ class Payments extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<String> get customConstraints => [
+    "CHECK (payment_method IN ('cash', 'card'))",
+    'CHECK (amount_paid >= 0)',
+    'CHECK (tip_amount >= 0)',
+    "CHECK (status IN ('completed', 'voided'))",
+  ];
 }
 
 class Debts extends Table {
@@ -134,6 +186,14 @@ class Debts extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<String> get customConstraints => [
+    'CHECK (original_amount > 0)',
+    'CHECK (remaining_amount >= 0)',
+    'CHECK (remaining_amount <= original_amount)',
+    "CHECK (status IN ('active', 'settled', 'voided'))",
+  ];
 }
 
 class DebtPayments extends Table {
@@ -142,6 +202,9 @@ class DebtPayments extends Table {
   TextColumn get paymentId => text().references(Payments, #id)();
   IntColumn get amountApplied => integer()();
   TextColumn get createdAt => text()();
+
+  @override
+  List<String> get customConstraints => ['CHECK (amount_applied > 0)'];
 }
 
 class InventoryMovements extends Table {
@@ -156,6 +219,11 @@ class InventoryMovements extends Table {
   TextColumn get createdAt => text()();
   TextColumn get associatedSaleId =>
       text().nullable().references(ProductSales, #id)();
+
+  @override
+  List<String> get customConstraints => [
+    "CHECK (movement_type IN ('restock', 'sale', 'correction', 'void'))",
+  ];
 }
 
 class EndDayCloses extends Table {
@@ -176,6 +244,18 @@ class EndDayCloses extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<String> get customConstraints => [
+    'CHECK (expected_cash >= 0)',
+    'CHECK (expected_card >= 0)',
+    'CHECK (counted_cash >= 0)',
+    'CHECK (counted_card >= 0)',
+    'CHECK (total_debt_issued >= 0)',
+    'CHECK (total_debt_collected >= 0)',
+    'CHECK (total_tips >= 0)',
+    "CHECK (backup_status IN ('pending', 'success', 'failed'))",
+  ];
 }
 
 class AuditEvents extends Table {
@@ -185,6 +265,11 @@ class AuditEvents extends Table {
   TextColumn get description => text()();
   TextColumn get triggeredAt => text()();
   TextColumn get metadata => text().nullable()(); // JSON string
+
+  @override
+  List<String> get customConstraints => [
+    "CHECK (event_type IN ('price_change', 'settings_update', 'stale_correction', 'manual_void', 'debt_correction', 'backup_restore'))",
+  ];
 }
 
 class BackupRuns extends Table {
@@ -195,6 +280,12 @@ class BackupRuns extends Table {
   TextColumn get status => text()(); // 'running', 'success', 'failed'
   TextColumn get backupFilename => text()();
   TextColumn get errorMessage => text().nullable()();
+
+  @override
+  List<String> get customConstraints => [
+    "CHECK (trigger_type IN ('scheduled', 'manual', 'app_close', 'end_day'))",
+    "CHECK (status IN ('running', 'success', 'failed'))",
+  ];
 }
 
 class SystemSettings extends Table {
@@ -213,6 +304,12 @@ class Corrections extends Table {
   TextColumn get correctionType => text()(); // 'void', 'adjustment', 'reversal'
   IntColumn get auditEventId => integer().references(AuditEvents, #id)();
   TextColumn get createdAt => text()();
+
+  @override
+  List<String> get customConstraints => [
+    "CHECK (original_table IN ('sessions', 'product_sales', 'subscriptions', 'debts', 'payments', 'inventory_movements', 'end_day_closes'))",
+    "CHECK (correction_type IN ('void', 'adjustment', 'reversal'))",
+  ];
 }
 
 // --- DATABASE CLASS ---
@@ -245,11 +342,24 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    beforeOpen: (details) async {
+      await customStatement('PRAGMA foreign_keys = ON');
+      await customStatement(
+        'CREATE UNIQUE INDEX IF NOT EXISTS '
+        'idx_sessions_one_open_per_player '
+        'ON sessions(player_id) '
+        "WHERE status IN ('active', 'overdue', 'stale')",
+      );
+    },
+  );
 }
 
 Future<File> getDatabaseFile() async {
   final dbFolder = await getApplicationSupportDirectory();
-  return File(p.join(dbFolder.path, 'gravity_local_v1.db'));
+  return File(p.join(dbFolder.path, 'gravity.db'));
 }
 
 LazyDatabase _openConnection() {

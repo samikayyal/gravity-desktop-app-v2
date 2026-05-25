@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:gravity_desktop_app_v2/core/database/local_database.dart';
+import 'package:gravity_desktop_app_v2/data/repositories/startup_repository.dart';
+import 'package:gravity_desktop_app_v2/domain/entities/startup_state.dart';
 
 void main() {
   late AppDatabase database;
@@ -16,6 +18,44 @@ void main() {
   tearDown(() async {
     await database.close();
   });
+
+  String nowUtc() => DateTime.now().toUtc().toIso8601String();
+
+  Future<void> insertPlayer(String playerId) async {
+    await database
+        .into(database.players)
+        .insert(
+          PlayersCompanion.insert(
+            id: playerId,
+            fullName: 'Schema Test Player',
+            age: 18,
+            createdAt: nowUtc(),
+            updatedAt: nowUtc(),
+            hasActiveSession: false,
+          ),
+        );
+  }
+
+  Future<void> insertSession({
+    required String id,
+    required String playerId,
+    required String status,
+  }) async {
+    await database
+        .into(database.sessions)
+        .insert(
+          SessionsCompanion.insert(
+            id: id,
+            playerId: playerId,
+            entryType: 'open',
+            checkInAt: nowUtc(),
+            status: status,
+            calculatedCharge: 0,
+            finalCharge: 0,
+            discountAmount: 0,
+          ),
+        );
+  }
 
   group('Drift SQLite Baseline Tests', () {
     test('Can insert and retrieve a player profile', () async {
@@ -144,6 +184,82 @@ void main() {
         expect(player.hasActiveSession, isTrue);
       },
     );
+
+    test('Enables SQLite foreign key enforcement', () async {
+      final pragma = await database
+          .customSelect('PRAGMA foreign_keys')
+          .getSingle();
+
+      expect(pragma.read<bool>('foreign_keys'), isTrue);
+      await expectLater(
+        insertSession(
+          id: 'orphan-session',
+          playerId: 'missing-player',
+          status: 'active',
+        ),
+        throwsA(isA<Exception>()),
+      );
+    });
+
+    test('Rejects invalid enum-like values and negative money', () async {
+      await expectLater(
+        database
+            .into(database.payments)
+            .insert(
+              PaymentsCompanion.insert(
+                id: 'invalid-method-payment',
+                paymentGroupId: 'payment-group-1',
+                paymentMethod: 'crypto',
+                amountPaid: 0,
+                tipAmount: 0,
+                status: 'completed',
+                createdAt: nowUtc(),
+              ),
+            ),
+        throwsA(isA<Exception>()),
+      );
+
+      await insertPlayer('debt-player');
+      await expectLater(
+        database
+            .into(database.debts)
+            .insert(
+              DebtsCompanion.insert(
+                id: 'invalid-negative-debt',
+                playerId: 'debt-player',
+                originalAmount: -1,
+                remainingAmount: 0,
+                createdAt: nowUtc(),
+                status: 'active',
+              ),
+            ),
+        throwsA(isA<Exception>()),
+      );
+    });
+
+    test('Prevents multiple open sessions for the same player', () async {
+      const playerId = 'duplicate-active-player';
+      await insertPlayer(playerId);
+      await insertSession(
+        id: 'closed-history-session',
+        playerId: playerId,
+        status: 'closed',
+      );
+      await insertSession(
+        id: 'current-active-session',
+        playerId: playerId,
+        status: 'active',
+      );
+
+      await expectLater(
+        insertSession(
+          id: 'second-overdue-session',
+          playerId: playerId,
+          status: 'overdue',
+        ),
+        throwsA(isA<Exception>()),
+      );
+    });
   });
 
   group('Settings & Export Tables Integrity', () {
@@ -162,6 +278,40 @@ void main() {
         database.systemSettings,
       )..where((tbl) => tbl.key.equals('leeway_minutes'))).getSingle();
       expect(setting.value, '15');
+    });
+  });
+
+  group('Startup setup gate', () {
+    test('Requires setup_complete instead of only admin_password', () async {
+      final repository = StartupRepository(database);
+
+      await database
+          .into(database.systemSettings)
+          .insert(
+            SystemSettingsCompanion.insert(
+              key: 'admin_password',
+              value: 'plaintext-password',
+              updatedAt: nowUtc(),
+            ),
+          );
+
+      expect(await repository.checkStartupState(), StartupState.needsSetup);
+    });
+
+    test('Treats setup_complete value 1 as complete', () async {
+      final repository = StartupRepository(database);
+
+      await database
+          .into(database.systemSettings)
+          .insert(
+            SystemSettingsCompanion.insert(
+              key: 'setup_complete',
+              value: '1',
+              updatedAt: nowUtc(),
+            ),
+          );
+
+      expect(await repository.checkStartupState(), StartupState.complete);
     });
   });
 }

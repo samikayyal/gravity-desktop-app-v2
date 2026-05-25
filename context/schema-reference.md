@@ -6,6 +6,8 @@ This document serves as the single source of truth for the local SQLite database
 
 ## Conventions & Rules
 1. **Source of Truth**: The local SQLite database is the offline-first source of truth.
+   The active production database file is `gravity.db`, and the current Drift
+   baseline schema version is `1`.
 2. **Data Types**:
    - `id` values are typically auto-incrementing integers (`Int`) or UUID strings (`Text`).
    - Timestamps are stored as ISO-8601 UTC strings (`Text`).
@@ -13,6 +15,10 @@ This document serves as the single source of truth for the local SQLite database
    - Durations are stored as integer minutes (`Int`).
    - Booleans are stored as integers (`0` for false, `1` for true) or handled natively by Drift's `Bool` type which maps to SQLite integers.
 3. **No Deletions**: Deletion is prohibited for operational business entities. Instead, use soft-delete fields, void flags, or correction ledgers to adjust balances.
+4. **Foreign Keys**: Runtime connections must enable SQLite foreign key
+   enforcement with `PRAGMA foreign_keys = ON`.
+5. **Active Session Guard**: The schema maintains a partial unique index that
+   allows only one non-closed, non-voided session per player.
 
 ---
 
@@ -68,7 +74,10 @@ Represents customer multi-hour time subscription cards.
 - `purchased_at` (Text): UTC ISO-8601 purchase timestamp.
 - `expires_at` (Text): UTC ISO-8601 expiration timestamp (exactly one calendar month from purchase).
 - `status` (Text): `'active'`, `'expired'`, `'exhausted'`, `'voided'`.
-- `unpaid_debt_id` (Text, Nullable, Foreign Key -> `debts.id`): Links to a debt record if subscription was purchased on credit.
+- `unpaid_debt_id` (Text, Nullable): Logical debt id if subscription was
+  purchased on credit. The enforced relationship is stored from
+  `debts.originating_subscription_id` back to `subscriptions.id` to avoid a
+  circular Drift table graph.
 
 ### 5. `subscription_usage_logs`
 Durable audit logs tracking when subscription minutes were consumed.

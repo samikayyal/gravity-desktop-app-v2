@@ -140,7 +140,7 @@ A unified Drift database class coordinates thread connection lifecycle and trans
   
   Future<File> getDatabaseFile() async {
     final appSupportDir = await getApplicationSupportDirectory();
-    return File(p.join(appSupportDir.path, 'gravity_local_v1.db'));
+    return File(p.join(appSupportDir.path, 'gravity.db'));
   }
   ```
 - Refer to [schema-reference.md](../schema-reference.md) for full schema structure. The foundation scaffold sets up Drift migrations with an initial version schema (`version: 1`).
