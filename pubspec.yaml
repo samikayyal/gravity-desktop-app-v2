@@ -52,3 +52,22 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Outfit
+      fonts:
+        - asset: assets/fonts/outfit/Outfit-Variable.ttf
+          weight: 400
+        - asset: assets/fonts/outfit/Outfit-Variable.ttf
+          weight: 600
+        - asset: assets/fonts/outfit/Outfit-Variable.ttf
+          weight: 700
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/inter/Inter-Variable.ttf
+          weight: 400
+        - asset: assets/fonts/inter/Inter-Variable.ttf
+          weight: 500
+        - asset: assets/fonts/inter/Inter-Variable.ttf
+          weight: 600
+        - asset: assets/fonts/inter/Inter-Variable.ttf
+          weight: 700

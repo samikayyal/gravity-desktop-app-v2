@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gravity_desktop_app_v2/app/theme/color_tokens.dart';
+import 'package:gravity_desktop_app_v2/app/theme/spacing_tokens.dart';
 
 class SplitPanelLayout extends StatefulWidget {
   const SplitPanelLayout({super.key});
@@ -12,10 +14,12 @@ class _SplitPanelLayoutState extends State<SplitPanelLayout> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
       body: Row(
         children: [
-          // 1. Sidebar navigation rail on the far left (thin rail)
           NavigationRail(
             selectedIndex: _selectedIndex,
             onDestinationSelected: (int index) {
@@ -24,19 +28,6 @@ class _SplitPanelLayoutState extends State<SplitPanelLayout> {
               });
             },
             labelType: NavigationRailLabelType.all,
-            backgroundColor: Colors.white,
-            indicatorColor: const Color(0xFFFBF306),
-            selectedIconTheme: const IconThemeData(color: Colors.black),
-            unselectedIconTheme: const IconThemeData(color: Colors.grey),
-            selectedLabelTextStyle: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
-            unselectedLabelTextStyle: const TextStyle(
-              color: Colors.grey,
-              fontSize: 12,
-            ),
             destinations: const [
               NavigationRailDestination(
                 icon: Icon(Icons.dashboard_outlined),
@@ -70,96 +61,30 @@ class _SplitPanelLayoutState extends State<SplitPanelLayout> {
               ),
             ],
           ),
-          const VerticalDivider(
-            thickness: 1,
-            width: 1,
-            color: Color(0xFFE0E0E0),
-          ),
-
-          // 2. Main horizontal split-panel container
+          const VerticalDivider(width: 1, thickness: 1),
           Expanded(
             child: Row(
               children: [
-                // Left Panel: Active Board Panel (60% width, persistent)
                 Expanded(
                   flex: 6,
-                  child: Container(
-                    color: const Color(0xFFF9F9F9),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: theme.scaffoldBackgroundColor,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Panel Header
-                        _buildHeader('Active Board', Icons.timer_outlined),
-                        // List Area
+                        _buildHeader(
+                          context,
+                          'Active Board',
+                          Icons.timer_outlined,
+                        ),
                         Expanded(
                           child: ListView.builder(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(AppSpacing.md),
                             itemCount: 5,
                             itemBuilder: (context, index) {
-                              return Card(
-                                margin: const EdgeInsets.only(bottom: 12),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Row(
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundColor: const Color(
-                                          0xFFFBF306,
-                                        ),
-                                        foregroundColor: Colors.black,
-                                        child: Text('${index + 1}'),
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Player Profile Placeholder ${index + 1}',
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            const Text(
-                                              'Duration: 60 min | Check-in: 14:30',
-                                              style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.green.shade50,
-                                          borderRadius: BorderRadius.circular(
-                                            4,
-                                          ),
-                                          border: Border.all(
-                                            color: Colors.green.shade200,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          'Active',
-                                          style: TextStyle(
-                                            color: Colors.green.shade800,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
+                              return _ActiveSessionPlaceholder(index: index);
                             },
                           ),
                         ),
@@ -167,58 +92,20 @@ class _SplitPanelLayoutState extends State<SplitPanelLayout> {
                     ),
                   ),
                 ),
-                const VerticalDivider(
-                  thickness: 1,
-                  width: 1,
-                  color: Color(0xFFE0E0E0),
-                ),
-
-                // Right Panel: Context & Action Panel (40% width, dynamic)
+                const VerticalDivider(width: 1, thickness: 1),
                 Expanded(
                   flex: 4,
-                  child: Container(
-                    color: Colors.white,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(color: colorScheme.surface),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Panel Header
-                        _buildHeader('Action Panel', Icons.bolt_outlined),
-                        // Empty State Placeholder
-                        const Expanded(
-                          child: Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(24),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.analytics_outlined,
-                                    size: 48,
-                                    color: Colors.grey,
-                                  ),
-                                  SizedBox(height: 16),
-                                  Text(
-                                    'No Active Selection',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    'Select a player session from the Active Board or select a sidebar module to load cashier tasks.',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                        _buildHeader(
+                          context,
+                          'Action Panel',
+                          Icons.bolt_outlined,
                         ),
+                        const Expanded(child: _ActionPanelEmptyState()),
                       ],
                     ),
                   ),
@@ -231,26 +118,139 @@ class _SplitPanelLayoutState extends State<SplitPanelLayout> {
     );
   }
 
-  Widget _buildHeader(String title, IconData icon) {
+  Widget _buildHeader(BuildContext context, String title, IconData icon) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1)),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
+      ),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        border: Border(
+          bottom: BorderSide(color: colorScheme.outline, width: 1),
+        ),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: Colors.black),
-          const SizedBox(width: 12),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
+          Icon(icon, size: 20, color: colorScheme.onSurface),
+          const SizedBox(width: AppSpacing.sm),
+          Text(title, style: theme.textTheme.titleLarge),
         ],
+      ),
+    );
+  }
+}
+
+class _ActiveSessionPlaceholder extends StatelessWidget {
+  const _ActiveSessionPlaceholder({required this.index});
+
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final appColors = context.appColors;
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.onPrimary,
+              child: Text(
+                '${index + 1}',
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: colorScheme.onPrimary,
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Player Profile Placeholder ${index + 1}',
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: AppSpacing.xxs),
+                  Text(
+                    'Duration: 60 min | Check-in: 14:30',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.xs,
+                vertical: AppSpacing.xxs,
+              ),
+              decoration: BoxDecoration(
+                color: appColors.statusSurface(
+                  appColors.statusActive,
+                  alpha: 0.12,
+                ),
+                borderRadius: AppRadius.smBorder,
+                border: Border.all(
+                  color: appColors.statusActive.withValues(alpha: 0.35),
+                ),
+              ),
+              child: Text(
+                'Active',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: appColors.statusActive,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ActionPanelEmptyState extends StatelessWidget {
+  const _ActionPanelEmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.analytics_outlined,
+              size: 48,
+              color: colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              'No Active Selection',
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              'Select a player session from the Active Board or select a sidebar module to load cashier tasks.',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodySmall,
+            ),
+          ],
+        ),
       ),
     );
   }

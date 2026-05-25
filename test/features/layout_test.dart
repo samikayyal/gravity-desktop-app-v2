@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gravity_desktop_app_v2/app/layout/split_panel_layout.dart';
+import 'package:gravity_desktop_app_v2/app/theme/app_theme.dart';
 
 void main() {
   Widget buildTestableWidget() {
-    return const MaterialApp(home: SplitPanelLayout());
+    return MaterialApp(theme: AppTheme.light, home: const SplitPanelLayout());
   }
 
   group('SplitPanelLayout Desktop Sizing Tests', () {

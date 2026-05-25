@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Complete the foundation scaffold verification and begin styling/theme configuration.
+- Start localization infrastructure after completing the baseline UI token and theme layer.
 
 ## Completed
 
@@ -25,14 +25,15 @@ Update this file after every meaningful implementation change.
 - [x] **Feature 01: Foundation Scaffold & Architectural Corrections**: Initialized Flutter app, strict analysis configs, full 17-table Drift database schema, resolved environment security (adaptive local loader supporting app support directories), database path isolation, Riverpod providers, dynamic routing startup flow, first-run wizard layout, repository boundaries with Freezed domain mapping, cashier-calm SplitPanelLayout visual placeholders, and robust database recovery console routing. Fully verified with zero compile warnings, stale codegen checks in CI/CD, and 9 passing unit/widget tests.
 - [x] **Foundation database hardening**: Enabled SQLite foreign key enforcement, aligned startup gating to `setup_complete`, standardized the runtime database filename as `gravity.db`, added DB-level enum/money checks, and added a partial unique index preventing duplicate non-closed sessions per player. Phone cardinality constraints remain deferred by request.
 - [x] **Database diagram documentation**: Added a Mermaid ERD covering the current 17-table Drift SQLite schema, relationship notes, nullable references, and key runtime guards.
+- [x] **Feature 02: UI Tokens and Theme**: Added centralized Modern Cashier Calm color tokens, spacing/radius tokens, `AppTheme.light`, `AppColorsExtension`, Outfit/Inter font assets, light-mode-only app wiring, themed button/input/card/navigation defaults, and contrast/theme-extension regression tests.
 
 ## In Progress
 
-- [/] Transitioning to Feature 02: UI Tokens and Theme.
+- [/] Ready to begin Feature 03: Localization Infrastructure.
 
 ## Next Up
 
-- [ ] Start `02-ui-tokens-and-theme.md`.
+- [ ] Start `03-localization-infrastructure.md`.
 
 ## Open Questions
 
@@ -67,3 +68,5 @@ Update this file after every meaningful implementation change.
 - 2026-05-25: Resolved all 3 Round 2 Quality Gaps. Built startup_state domain entity, StartupRepository to isolate Drift queries, fully styled Database Rescue Screen for unmasked corruption errors, added git diff checks in CI and local verify scripts to prevent stale codegen, and integrated adaptive production .env path loading. Verified 100% test and analysis completion.
 - 2026-05-25: Applied database review fixes except phone cardinality enforcement. Added Drift foreign key PRAGMA, schema check constraints for status and non-negative financial fields, duplicate active-session partial unique index, corrected startup detection to require `setup_complete = '1'`, standardized the runtime DB file to `gravity.db`, and added regression coverage for these database invariants.
 - 2026-05-25: Added `context/database-diagram.md` with a Mermaid ERD for the current 17-table Drift schema and linked it from `context/schema-reference.md`. Verification was documentation-only by targeted file review.
+- 2026-05-25: Implemented Feature 02 UI tokens and theme. Centralized the light-mode Material 3 theme in `lib/app/theme/`, registered all eight cashier status colors through `AppColorsExtension`, added Outfit and Inter variable font assets, replaced local placeholder color styling with theme-derived values, and verified with `dart format --set-exit-if-changed .`, `flutter analyze`, and `flutter test`.
+- 2026-05-25: Applied Feature 02 review fixes. Mapped `ColorScheme.onSurfaceVariant` to the secondary text token and added a central table-number typography token used by dense data tables. Verified with targeted theme tests plus full format, analyze, and test checks.
