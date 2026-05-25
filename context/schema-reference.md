@@ -2,6 +2,9 @@
 
 This document serves as the single source of truth for the local SQLite database schema managed via **Drift**. All feature specifications refer to this schema rather than defining their own tables.
 
+If you _need_ visual entity relationship diagram, see
+[`context/database-diagram.md`](database-diagram.md).
+
 ---
 
 ## Conventions & Rules
