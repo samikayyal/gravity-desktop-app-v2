@@ -1,8 +1,13 @@
+import 'package:drift/drift.dart' hide isNull;
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gravity_desktop_app_v2/app/localization/app_supported_locales.dart';
 import 'package:gravity_desktop_app_v2/app/layout/split_panel_layout.dart';
+import 'package:gravity_desktop_app_v2/app/providers.dart';
 import 'package:gravity_desktop_app_v2/app/theme/app_theme.dart';
+import 'package:gravity_desktop_app_v2/core/database/local_database.dart';
 import 'package:gravity_desktop_app_v2/l10n/app_localizations.dart';
 
 void main() {
@@ -55,5 +60,39 @@ void main() {
         expect(tester.takeException(), isNull);
       },
     );
+
+    testWidgets('fades between action and settings right-panel modes', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(1280, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      final database = AppDatabase.forTesting(
+        DatabaseConnection(NativeDatabase.memory()),
+      );
+      addTearDown(database.close);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [databaseProvider.overrideWithValue(database)],
+          child: buildTestableWidget(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Action Panel'), findsOneWidget);
+
+      await tester.tap(find.text('Settings'));
+      await tester.pump();
+
+      expect(find.text('Action Panel'), findsOneWidget);
+      expect(find.text('Settings'), findsWidgets);
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('Action Panel'), findsNothing);
+      expect(find.text('Settings'), findsWidgets);
+      expect(tester.takeException(), isNull);
+    });
   });
 }

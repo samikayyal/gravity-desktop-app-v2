@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Start shared UI primitives after completing localization infrastructure.
+- Start settings and configuration after completing shared UI primitives.
 
 ## Completed
 
@@ -27,14 +27,16 @@ Update this file after every meaningful implementation change.
 - [x] **Database diagram documentation**: Added a Mermaid ERD covering the current 17-table Drift SQLite schema, relationship notes, nullable references, and key runtime guards.
 - [x] **Feature 02: UI Tokens and Theme**: Added centralized Modern Cashier Calm color tokens, spacing/radius tokens, `AppTheme.light`, `AppColorsExtension`, Outfit/Inter font assets, light-mode-only app wiring, themed button/input/card/navigation defaults, and contrast/theme-extension regression tests.
 - [x] **Feature 03: Localization Infrastructure**: Added Flutter gen-l10n configuration, English/Arabic ARB dictionaries, generated `AppLocalizations`, Arabic Cairo/Tajawal font assets, locale-aware theme switching, app-locale persistence through `system_settings`, RTL split-panel mirroring, Western-digit timer/SYP formatters, and localization regression tests.
+- [x] **Feature 04: Shared UI Primitives**: Added centralized shared widgets for cashier buttons, status chips, dense data tables, blind money/text inputs, dialogs, and the 60/40 split scaffold; refactored the current shell to use the shared split scaffold and active status chip; added shared UI regression tests for token colors, contrast, tabular monetary cells, long-text table density, blind count reveal behavior, and split-panel sizing.
+- [x] **Feature 04 review fixes**: Keyed right-panel mode swaps so the shared split scaffold fade transition runs, constrained shared button labels to single-line ellipsis behavior, and added regression tests for both cases.
 
 ## In Progress
 
-- [/] Ready to begin Feature 04: Shared UI Primitives.
+- [/] Ready to begin Feature 05: Settings and Configuration.
 
 ## Next Up
 
-- [ ] Start `04-shared-ui-primitives.md`.
+- [ ] Start `05-settings-and-configuration.md`.
 
 ## Open Questions
 
@@ -72,3 +74,5 @@ Update this file after every meaningful implementation change.
 - 2026-05-25: Implemented Feature 02 UI tokens and theme. Centralized the light-mode Material 3 theme in `lib/app/theme/`, registered all eight cashier status colors through `AppColorsExtension`, added Outfit and Inter variable font assets, replaced local placeholder color styling with theme-derived values, and verified with `dart format --set-exit-if-changed .`, `flutter analyze`, and `flutter test`.
 - 2026-05-25: Applied Feature 02 review fixes. Mapped `ColorScheme.onSurfaceVariant` to the secondary text token and added a central table-number typography token used by dense data tables. Verified with targeted theme tests plus full format, analyze, and test checks.
 - 2026-05-25: Implemented Feature 03 localization infrastructure. Added `l10n.yaml`, bilingual ARB files, generated localizations, Flutter localization delegates, persistent `app_locale` storage, Cairo/Tajawal font assets, Arabic theme font switching, localized placeholder/setup/rescue strings, a settings-panel language dropdown, RTL split-panel mirroring, and Western-digit cashier formatters. Verified with `flutter gen-l10n`, `dart format --set-exit-if-changed .`, `flutter analyze`, and `flutter test` (26 passing tests).
+- 2026-05-25: Implemented Feature 04 shared UI primitives. Added `GravityButton`, `GravityStatusChip`, `GravityTextField`, `GravityDataTable`, `GravityDialog`, and `GravitySplitScaffold`; wired the main split layout to the shared scaffold/status chip; added shared UI widget tests for primary button colors/contrast, chip status colors, tabular monetary cells, no-overflow dense tables, blind money reveal toggling, and 60/40 split sizing. Verified with `dart format --set-exit-if-changed .`, `flutter analyze`, `flutter test test/features/shared_ui`, and `flutter test` (32 passing tests).
+- 2026-05-27: Applied Feature 04 review fixes. Keyed the split layout right-panel modes so `AnimatedSwitcher` keeps old/new panels during transitions, constrained `GravityButton` labels with single-line ellipsis, and added regression coverage for right-panel transitions and narrow long-label buttons.

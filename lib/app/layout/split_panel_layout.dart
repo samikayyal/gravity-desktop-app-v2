@@ -4,8 +4,9 @@ import 'package:gravity_desktop_app_v2/app/localization/app_supported_locales.da
 import 'package:gravity_desktop_app_v2/app/localization/cashier_formatters.dart';
 import 'package:gravity_desktop_app_v2/app/localization/localization_extensions.dart';
 import 'package:gravity_desktop_app_v2/app/providers.dart';
-import 'package:gravity_desktop_app_v2/app/theme/color_tokens.dart';
 import 'package:gravity_desktop_app_v2/app/theme/spacing_tokens.dart';
+import 'package:gravity_desktop_app_v2/app/widgets/gravity_split_scaffold.dart';
+import 'package:gravity_desktop_app_v2/app/widgets/gravity_status_chip.dart';
 
 class SplitPanelLayout extends StatefulWidget {
   const SplitPanelLayout({super.key});
@@ -26,110 +27,89 @@ class _SplitPanelLayoutState extends State<SplitPanelLayout> {
     final l10n = context.l10n;
     final isSettingsSelected = _selectedIndex == _settingsIndex;
 
-    return Scaffold(
-      body: Row(
-        children: [
-          NavigationRail(
-            key: const Key('mainNavigationRail'),
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: (int index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-            labelType: NavigationRailLabelType.all,
-            destinations: [
-              NavigationRailDestination(
-                icon: const Icon(Icons.dashboard_outlined),
-                selectedIcon: const Icon(Icons.dashboard),
-                label: Text(l10n.labelBoard),
-              ),
-              NavigationRailDestination(
-                icon: const Icon(Icons.people_alt_outlined),
-                selectedIcon: const Icon(Icons.people_alt),
-                label: Text(l10n.labelPlayers),
-              ),
-              NavigationRailDestination(
-                icon: const Icon(Icons.shopping_bag_outlined),
-                selectedIcon: const Icon(Icons.shopping_bag),
-                label: Text(l10n.labelProducts),
-              ),
-              NavigationRailDestination(
-                icon: const Icon(Icons.inventory_2_outlined),
-                selectedIcon: const Icon(Icons.inventory_2),
-                label: Text(l10n.labelInventory),
-              ),
-              NavigationRailDestination(
-                icon: const Icon(Icons.analytics_outlined),
-                selectedIcon: const Icon(Icons.analytics),
-                label: Text(l10n.labelReports),
-              ),
-              NavigationRailDestination(
-                icon: const Icon(Icons.settings_outlined),
-                selectedIcon: const Icon(Icons.settings),
-                label: Text(l10n.labelSettings),
-              ),
-            ],
+    return GravitySplitScaffold(
+      leadingNavigation: NavigationRail(
+        key: const Key('mainNavigationRail'),
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        labelType: NavigationRailLabelType.all,
+        destinations: [
+          NavigationRailDestination(
+            icon: const Icon(Icons.dashboard_outlined),
+            selectedIcon: const Icon(Icons.dashboard),
+            label: Text(l10n.labelBoard),
           ),
-          const VerticalDivider(width: 1, thickness: 1),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 6,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: theme.scaffoldBackgroundColor,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildHeader(
-                          context,
-                          l10n.titleActiveBoard,
-                          Icons.timer_outlined,
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                            padding: const EdgeInsets.all(AppSpacing.md),
-                            itemCount: 5,
-                            itemBuilder: (context, index) {
-                              return _ActiveSessionPlaceholder(index: index);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const VerticalDivider(width: 1, thickness: 1),
-                Expanded(
-                  flex: 4,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(color: colorScheme.surface),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildHeader(
-                          context,
-                          isSettingsSelected
-                              ? l10n.titleSettings
-                              : l10n.titleActionPanel,
-                          Icons.bolt_outlined,
-                        ),
-                        Expanded(
-                          child: isSettingsSelected
-                              ? const _SettingsLocalePanel()
-                              : const _ActionPanelEmptyState(),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          NavigationRailDestination(
+            icon: const Icon(Icons.people_alt_outlined),
+            selectedIcon: const Icon(Icons.people_alt),
+            label: Text(l10n.labelPlayers),
+          ),
+          NavigationRailDestination(
+            icon: const Icon(Icons.shopping_bag_outlined),
+            selectedIcon: const Icon(Icons.shopping_bag),
+            label: Text(l10n.labelProducts),
+          ),
+          NavigationRailDestination(
+            icon: const Icon(Icons.inventory_2_outlined),
+            selectedIcon: const Icon(Icons.inventory_2),
+            label: Text(l10n.labelInventory),
+          ),
+          NavigationRailDestination(
+            icon: const Icon(Icons.analytics_outlined),
+            selectedIcon: const Icon(Icons.analytics),
+            label: Text(l10n.labelReports),
+          ),
+          NavigationRailDestination(
+            icon: const Icon(Icons.settings_outlined),
+            selectedIcon: const Icon(Icons.settings),
+            label: Text(l10n.labelSettings),
           ),
         ],
+      ),
+      leftPanel: DecoratedBox(
+        decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(context, l10n.titleActiveBoard, Icons.timer_outlined),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                itemCount: 5,
+                itemBuilder: (context, index) {
+                  return _ActiveSessionPlaceholder(index: index);
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+      rightPanel: DecoratedBox(
+        key: ValueKey<String>(
+          isSettingsSelected
+              ? 'splitPanel.rightPanel.settings'
+              : 'splitPanel.rightPanel.action',
+        ),
+        decoration: BoxDecoration(color: colorScheme.surface),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(
+              context,
+              isSettingsSelected ? l10n.titleSettings : l10n.titleActionPanel,
+              Icons.bolt_outlined,
+            ),
+            Expanded(
+              child: isSettingsSelected
+                  ? const _SettingsLocalePanel()
+                  : const _ActionPanelEmptyState(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -169,7 +149,6 @@ class _ActiveSessionPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final appColors = context.appColors;
     final l10n = context.l10n;
     final timerText = CashierFormatters.formatTimer(
       Duration(minutes: 60 - (index * 5)),
@@ -218,28 +197,7 @@ class _ActiveSessionPlaceholder extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.xs,
-                vertical: AppSpacing.xxs,
-              ),
-              decoration: BoxDecoration(
-                color: appColors.statusSurface(
-                  appColors.statusActive,
-                  alpha: 0.12,
-                ),
-                borderRadius: AppRadius.smBorder,
-                border: Border.all(
-                  color: appColors.statusActive.withValues(alpha: 0.35),
-                ),
-              ),
-              child: Text(
-                l10n.chipActive,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: appColors.statusActive,
-                ),
-              ),
-            ),
+            GravityStatusChip.active(label: l10n.chipActive),
           ],
         ),
       ),
