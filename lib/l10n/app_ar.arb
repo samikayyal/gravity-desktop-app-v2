@@ -9,6 +9,16 @@
   "titleDatabaseRescueConsole": "وحدة إنقاذ قاعدة البيانات",
   "titleCriticalDatabaseStartupFailure": "فشل حرج في تشغيل قاعدة البيانات",
   "titleManualRestoreGuide": "دليل الاستعادة اليدوية",
+  "titleCashierOptions": "خيارات الكاشير",
+  "titleAdminOperations": "عمليات المدير",
+  "titleAdminSettingsLocked": "إعدادات المدير مقفلة",
+  "titleAdminUnlockDialog": "فتح إعدادات المدير",
+  "titleAdminPassword": "كلمة مرور المدير",
+  "titleLeewayAndStaleTimers": "فترة السماح والجلسات القديمة",
+  "titleJumpPricingMatrix": "أسعار جلسات القفز",
+  "titleFixedBlocks": "المدد الثابتة",
+  "titleOpenTime": "الوقت المفتوح",
+  "titleDefaultInventoryPrices": "أسعار المخزون الافتراضية",
   "labelBoard": "اللوحة",
   "labelPlayers": "اللاعبون",
   "labelProducts": "المنتجات",
@@ -21,6 +31,37 @@
   "labelErrorDetails": "تفاصيل الخطأ:",
   "labelDatabaseFileLocation": "موقع ملف قاعدة البيانات:",
   "labelCopyFilePath": "نسخ مسار الملف",
+  "labelNotificationVolume": "مستوى صوت التنبيهات",
+  "labelPercentValue": "{percent}%",
+  "@labelPercentValue": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "labelMuteOverdueAudios": "كتم صوت تنبيهات التأخير",
+  "labelScreenScale": "تكبير الشاشة",
+  "labelScaleOption": "{scale}x",
+  "@labelScaleOption": {
+    "placeholders": {
+      "scale": {
+        "type": "String"
+      }
+    }
+  },
+  "labelAdminPassword": "كلمة مرور المدير",
+  "labelLeewayGracePeriod": "فترة السماح",
+  "labelStaleThreshold": "حد الجلسة القديمة",
+  "labelFixed30Mins": "30 دقيقة",
+  "labelFixed60Mins": "60 دقيقة",
+  "labelFixed90Mins": "90 دقيقة",
+  "labelFixed120Mins": "120 دقيقة",
+  "labelAdditional30": "كل 30 إضافية",
+  "labelOpenFirstHour": "أول ساعة",
+  "labelOpenExtra30": "30 إضافية",
+  "labelWaterBottlePrice": "عبوة ماء",
+  "labelJumpSocksPrice": "جوارب القفز",
   "labelPlayerProfilePlaceholder": "ملف لاعب تجريبي {playerNumber}",
   "@labelPlayerProfilePlaceholder": {
     "placeholders": {
@@ -48,11 +89,40 @@
   },
   "msgLanguageUpdated": "تم تحديث اللغة.",
   "msgLanguageUpdateFailed": "تعذر تحديث اللغة.",
+  "msgSettingsSaved": "تم حفظ الإعدادات.",
+  "msgSettingsSaveFailed": "تعذر حفظ الإعدادات.",
+  "msgSettingsLoadFailed": "تعذر تحميل الإعدادات.",
+  "msgAdminSettingsLockedDescription": "تعديل الأسعار وفترة السماح وحد الجلسات القديمة وأسعار المخزون وكلمة المرور يحتاج صلاحية المدير.",
+  "msgAdminSettingsUnlocked": "تم فتح إعدادات المدير.",
+  "msgAdminUnlockFailed": "كلمة مرور المدير غير صحيحة.",
+  "msgRequiredField": "مطلوب.",
+  "msgInvalidLeewayRange": "استخدم من 0 إلى 60 دقيقة.",
+  "msgInvalidStaleThreshold": "استخدم {minimumMinutes} دقيقة على الأقل.",
+  "@msgInvalidStaleThreshold": {
+    "placeholders": {
+      "minimumMinutes": {
+        "type": "int"
+      }
+    }
+  },
+  "msgInvalidNonNegativePrice": "استخدم 0 أو أكثر.",
+  "msgInvalidAdminPasswordLength": "استخدم 4 أحرف على الأقل.",
+  "msgInvalidPricingMatrix": "راجع قيم الأسعار قبل الحفظ.",
   "msgLocalizationFallbackSample": "Pending Arabic translation fallback text.",
   "btnRetryConnection": "إعادة المحاولة",
   "btnImportGcpBackup": "استيراد نسخة GCP",
+  "btnRetry": "إعادة المحاولة",
+  "btnCancel": "إلغاء",
+  "btnUnlock": "فتح",
+  "btnSaveChanges": "حفظ التغييرات",
+  "btnTapToEditAdminSettings": "تعديل إعدادات المدير",
+  "btnLockAdminSettings": "قفل إعدادات المدير",
   "btnOk": "موافق",
   "btnLaunchSetupWizard": "بدء معالج الإعداد",
+  "tooltipRevealPassword": "إظهار كلمة المرور",
+  "tooltipHidePassword": "إخفاء كلمة المرور",
+  "helperMinutes": "دقائق",
+  "helperSyp": "ل.س",
   "chipActive": "نشط",
   "prodSocks": "جوارب",
   "prodWaterBottle": "عبوة ماء 0.5 لتر"

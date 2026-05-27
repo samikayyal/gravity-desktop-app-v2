@@ -37,6 +37,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get titleManualRestoreGuide => 'Manual Restore Guide';
 
   @override
+  String get titleCashierOptions => 'Cashier Options';
+
+  @override
+  String get titleAdminOperations => 'Admin Operations';
+
+  @override
+  String get titleAdminSettingsLocked => 'Admin Settings Locked';
+
+  @override
+  String get titleAdminUnlockDialog => 'Unlock Admin Settings';
+
+  @override
+  String get titleAdminPassword => 'Admin Password';
+
+  @override
+  String get titleLeewayAndStaleTimers => 'Leeway & Stale Timers';
+
+  @override
+  String get titleJumpPricingMatrix => 'Jump Sessions Pricing Matrix';
+
+  @override
+  String get titleFixedBlocks => 'Fixed Blocks';
+
+  @override
+  String get titleOpenTime => 'Open Time';
+
+  @override
+  String get titleDefaultInventoryPrices => 'Default Inventory Prices';
+
+  @override
   String get labelBoard => 'Board';
 
   @override
@@ -71,6 +101,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get labelCopyFilePath => 'Copy File Path';
+
+  @override
+  String get labelNotificationVolume => 'Notification Volume';
+
+  @override
+  String labelPercentValue(int percent) {
+    return '$percent%';
+  }
+
+  @override
+  String get labelMuteOverdueAudios => 'Mute overdue audios';
+
+  @override
+  String get labelScreenScale => 'Screen scaling';
+
+  @override
+  String labelScaleOption(String scale) {
+    return '${scale}x';
+  }
+
+  @override
+  String get labelAdminPassword => 'Admin password';
+
+  @override
+  String get labelLeewayGracePeriod => 'Leeway grace period';
+
+  @override
+  String get labelStaleThreshold => 'Stale threshold';
+
+  @override
+  String get labelFixed30Mins => '30 mins';
+
+  @override
+  String get labelFixed60Mins => '60 mins';
+
+  @override
+  String get labelFixed90Mins => '90 mins';
+
+  @override
+  String get labelFixed120Mins => '120 mins';
+
+  @override
+  String get labelAdditional30 => 'Additional 30';
+
+  @override
+  String get labelOpenFirstHour => 'First hour';
+
+  @override
+  String get labelOpenExtra30 => 'Extra 30';
+
+  @override
+  String get labelWaterBottlePrice => 'Water bottle';
+
+  @override
+  String get labelJumpSocksPrice => 'Jump socks';
 
   @override
   String labelPlayerProfilePlaceholder(int playerNumber) {
@@ -112,6 +197,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get msgLanguageUpdateFailed => 'Language could not be updated.';
 
   @override
+  String get msgSettingsSaved => 'Settings saved.';
+
+  @override
+  String get msgSettingsSaveFailed => 'Settings could not be saved.';
+
+  @override
+  String get msgSettingsLoadFailed => 'Settings could not be loaded.';
+
+  @override
+  String get msgAdminSettingsLockedDescription =>
+      'Protected pricing, leeway, stale-session, inventory price, and password settings require admin authorization.';
+
+  @override
+  String get msgAdminSettingsUnlocked => 'Admin settings unlocked.';
+
+  @override
+  String get msgAdminUnlockFailed => 'Admin password did not match.';
+
+  @override
+  String get msgRequiredField => 'Required.';
+
+  @override
+  String get msgInvalidLeewayRange => 'Use 0 to 60 minutes.';
+
+  @override
+  String msgInvalidStaleThreshold(int minimumMinutes) {
+    return 'Use at least $minimumMinutes minutes.';
+  }
+
+  @override
+  String get msgInvalidNonNegativePrice => 'Use 0 or higher.';
+
+  @override
+  String get msgInvalidAdminPasswordLength => 'Use at least 4 characters.';
+
+  @override
+  String get msgInvalidPricingMatrix => 'Check pricing values before saving.';
+
+  @override
   String get msgLocalizationFallbackSample =>
       'Pending Arabic translation fallback text.';
 
@@ -122,10 +246,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get btnImportGcpBackup => 'Import GCP Backup';
 
   @override
+  String get btnRetry => 'Retry';
+
+  @override
+  String get btnCancel => 'Cancel';
+
+  @override
+  String get btnUnlock => 'Unlock';
+
+  @override
+  String get btnSaveChanges => 'Save Changes';
+
+  @override
+  String get btnTapToEditAdminSettings => 'Tap to Edit Admin Settings';
+
+  @override
+  String get btnLockAdminSettings => 'Lock Admin Settings';
+
+  @override
   String get btnOk => 'OK';
 
   @override
   String get btnLaunchSetupWizard => 'Launch Setup Wizard';
+
+  @override
+  String get tooltipRevealPassword => 'Reveal password';
+
+  @override
+  String get tooltipHidePassword => 'Hide password';
+
+  @override
+  String get helperMinutes => 'Minutes';
+
+  @override
+  String get helperSyp => 'SYP';
 
   @override
   String get chipActive => 'Active';

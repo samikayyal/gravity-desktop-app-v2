@@ -1,0 +1,950 @@
+import 'dart:math' as math;
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gravity_desktop_app_v2/app/localization/app_supported_locales.dart';
+import 'package:gravity_desktop_app_v2/app/localization/localization_extensions.dart';
+import 'package:gravity_desktop_app_v2/app/providers.dart';
+import 'package:gravity_desktop_app_v2/app/theme/spacing_tokens.dart';
+import 'package:gravity_desktop_app_v2/app/widgets/gravity_button.dart';
+import 'package:gravity_desktop_app_v2/app/widgets/gravity_dialog.dart';
+import 'package:gravity_desktop_app_v2/app/widgets/gravity_text_field.dart';
+import 'package:gravity_desktop_app_v2/core/config/app_settings.dart';
+import 'package:gravity_desktop_app_v2/core/config/system_settings_provider.dart';
+import 'package:gravity_desktop_app_v2/core/security/admin_auth_notifier.dart';
+
+class SettingsScreen extends ConsumerStatefulWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  double? _volumeDraft;
+  bool _isSavingPublic = false;
+  bool _isSavingAdmin = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final settingsAsync = ref.watch(systemSettingsControllerProvider);
+    final adminAuthState = ref.watch(adminAuthControllerProvider);
+    final isAdminUnlocked = adminAuthState.isAuthenticatedAt(DateTime.now());
+
+    return settingsAsync.when(
+      data: (settings) {
+        _volumeDraft ??= settings.notificationVolumePercent.toDouble();
+
+        return DefaultTabController(
+          length: 2,
+          child: Column(
+            children: [
+              TabBar(
+                tabs: [
+                  Tab(
+                    icon: const Icon(Icons.tune_outlined, size: 18),
+                    text: context.l10n.titleCashierOptions,
+                  ),
+                  Tab(
+                    icon: const Icon(Icons.admin_panel_settings, size: 18),
+                    text: context.l10n.titleAdminOperations,
+                  ),
+                ],
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    _CashierSettingsTab(
+                      settings: settings,
+                      volumeDraft: _volumeDraft!,
+                      isSaving: _isSavingPublic,
+                      onVolumeDraftChanged: (value) {
+                        setState(() {
+                          _volumeDraft = value;
+                        });
+                      },
+                      onSavePublic: _savePublicSettings,
+                    ),
+                    _AdminSettingsTab(
+                      settings: settings,
+                      isUnlocked: isAdminUnlocked,
+                      isSaving: _isSavingAdmin,
+                      onUnlockPressed: _showUnlockDialog,
+                      onLockPressed: () =>
+                          ref.read(adminAuthControllerProvider.notifier).lock(),
+                      onSaveAdmin: _saveAdminSettings,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stackTrace) => _SettingsLoadError(
+        onRetry: () => ref.invalidate(systemSettingsControllerProvider),
+      ),
+    );
+  }
+
+  Future<void> _savePublicSettings({
+    bool? overdueAudioMuted,
+    int? notificationVolumePercent,
+    double? screenScale,
+  }) async {
+    setState(() {
+      _isSavingPublic = true;
+    });
+
+    try {
+      await ref
+          .read(systemSettingsControllerProvider.notifier)
+          .savePublicSettings(
+            overdueAudioMuted: overdueAudioMuted,
+            notificationVolumePercent: notificationVolumePercent,
+            screenScale: screenScale,
+          );
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.l10n.msgSettingsSaved)));
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.msgSettingsSaveFailed)),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSavingPublic = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _saveAdminSettings(AppSettings settings) async {
+    setState(() {
+      _isSavingAdmin = true;
+    });
+
+    try {
+      await ref
+          .read(systemSettingsControllerProvider.notifier)
+          .saveAdminSettings(settings);
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.l10n.msgSettingsSaved)));
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.msgSettingsSaveFailed)),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSavingAdmin = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _showUnlockDialog() async {
+    final unlocked = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => const _AdminUnlockDialog(),
+    );
+
+    if (unlocked == true && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.msgAdminSettingsUnlocked)),
+      );
+    }
+  }
+}
+
+class _AdminUnlockDialog extends ConsumerStatefulWidget {
+  const _AdminUnlockDialog();
+
+  @override
+  ConsumerState<_AdminUnlockDialog> createState() => _AdminUnlockDialogState();
+}
+
+class _AdminUnlockDialogState extends ConsumerState<_AdminUnlockDialog> {
+  final TextEditingController _passwordController = TextEditingController();
+
+  String? _errorText;
+  bool _isChecking = false;
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GravityDialog(
+      title: context.l10n.titleAdminUnlockDialog,
+      icon: Icons.lock_open_outlined,
+      tone: GravityDialogTone.admin,
+      content: GravityTextField.blind(
+        key: const Key('settings.adminUnlockPassword'),
+        label: context.l10n.labelAdminPassword,
+        controller: _passwordController,
+        errorText: _errorText,
+        autofocus: true,
+        revealTooltip: context.l10n.tooltipRevealPassword,
+        hideTooltip: context.l10n.tooltipHidePassword,
+        onFieldSubmitted: (_) => _tryUnlock(),
+      ),
+      actions: [
+        GravityButton.secondary(
+          label: context.l10n.btnCancel,
+          onPressed: _isChecking
+              ? null
+              : () => Navigator.of(context).pop(false),
+        ),
+        GravityButton.primary(
+          label: _isChecking ? '...' : context.l10n.btnUnlock,
+          leadingIcon: Icons.lock_open_outlined,
+          onPressed: _isChecking ? null : _tryUnlock,
+        ),
+      ],
+    );
+  }
+
+  Future<void> _tryUnlock() async {
+    if (_passwordController.text.trim().length < 4) {
+      setState(() {
+        _errorText = context.l10n.msgInvalidAdminPasswordLength;
+      });
+      return;
+    }
+
+    setState(() {
+      _isChecking = true;
+      _errorText = null;
+    });
+
+    final bool isValidPassword;
+    try {
+      isValidPassword = await ref
+          .read(adminAuthControllerProvider.notifier)
+          .unlockWithPassword(_passwordController.text);
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _isChecking = false;
+        _errorText = context.l10n.msgAdminUnlockFailed;
+      });
+      return;
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    if (isValidPassword) {
+      Navigator.of(context).pop(true);
+      return;
+    }
+
+    setState(() {
+      _isChecking = false;
+      _errorText = context.l10n.msgAdminUnlockFailed;
+    });
+  }
+}
+
+class _CashierSettingsTab extends ConsumerWidget {
+  const _CashierSettingsTab({
+    required this.settings,
+    required this.volumeDraft,
+    required this.isSaving,
+    required this.onVolumeDraftChanged,
+    required this.onSavePublic,
+  });
+
+  final AppSettings settings;
+  final double volumeDraft;
+  final bool isSaving;
+  final ValueChanged<double> onVolumeDraftChanged;
+  final Future<void> Function({
+    bool? overdueAudioMuted,
+    int? notificationVolumePercent,
+    double? screenScale,
+  })
+  onSavePublic;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+    final localeAsync = ref.watch(appLocaleControllerProvider);
+    final selectedLocale = AppSupportedLocales.normalize(
+      localeAsync.valueOrNull ?? Localizations.localeOf(context),
+    );
+    final volumePercent = volumeDraft.round();
+
+    return ListView(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      children: [
+        Text(l10n.titleCashierOptions, style: theme.textTheme.titleLarge),
+        const SizedBox(height: AppSpacing.md),
+        DropdownButtonFormField<Locale>(
+          key: ValueKey<String>(
+            'settings.language.${selectedLocale.languageCode}',
+          ),
+          initialValue: selectedLocale,
+          isExpanded: true,
+          decoration: InputDecoration(labelText: l10n.labelLanguage),
+          items: [
+            DropdownMenuItem<Locale>(
+              value: AppSupportedLocales.english,
+              child: Text(l10n.labelEnglishUs),
+            ),
+            DropdownMenuItem<Locale>(
+              value: AppSupportedLocales.arabic,
+              child: Text(l10n.labelArabicSyria),
+            ),
+          ],
+          onChanged: isSaving
+              ? null
+              : (locale) async {
+                  if (locale == null) {
+                    return;
+                  }
+
+                  try {
+                    await ref
+                        .read(appLocaleControllerProvider.notifier)
+                        .setLocale(locale);
+                    if (!context.mounted) {
+                      return;
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(context.l10n.msgLanguageUpdated)),
+                    );
+                  } catch (_) {
+                    if (!context.mounted) {
+                      return;
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(context.l10n.msgLanguageUpdateFailed),
+                      ),
+                    );
+                  }
+                },
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        _SectionHeader(
+          icon: Icons.notifications_active_outlined,
+          title: l10n.labelNotificationVolume,
+          trailing: l10n.labelPercentValue(volumePercent),
+        ),
+        Slider(
+          value: volumeDraft,
+          min: 0,
+          max: 100,
+          divisions: 10,
+          label: l10n.labelPercentValue(volumePercent),
+          onChanged: isSaving || settings.overdueAudioMuted
+              ? null
+              : onVolumeDraftChanged,
+          onChangeEnd: isSaving || settings.overdueAudioMuted
+              ? null
+              : (value) async {
+                  await onSavePublic(notificationVolumePercent: value.round());
+                },
+        ),
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          title: Text(l10n.labelMuteOverdueAudios),
+          value: settings.overdueAudioMuted,
+          onChanged: isSaving
+              ? null
+              : (value) async {
+                  await onSavePublic(overdueAudioMuted: value);
+                },
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        _SectionHeader(
+          icon: Icons.display_settings_outlined,
+          title: l10n.labelScreenScale,
+        ),
+        SegmentedButton<double>(
+          segments: [
+            for (final scale in AppSettings.allowedScreenScales)
+              ButtonSegment<double>(
+                value: scale,
+                label: Text(l10n.labelScaleOption(scale.toStringAsFixed(1))),
+              ),
+          ],
+          selected: {settings.screenScale},
+          onSelectionChanged: isSaving
+              ? null
+              : (selection) async {
+                  await onSavePublic(screenScale: selection.single);
+                },
+        ),
+      ],
+    );
+  }
+}
+
+class _AdminSettingsTab extends StatelessWidget {
+  const _AdminSettingsTab({
+    required this.settings,
+    required this.isUnlocked,
+    required this.isSaving,
+    required this.onUnlockPressed,
+    required this.onLockPressed,
+    required this.onSaveAdmin,
+  });
+
+  final AppSettings settings;
+  final bool isUnlocked;
+  final bool isSaving;
+  final VoidCallback onUnlockPressed;
+  final VoidCallback onLockPressed;
+  final Future<void> Function(AppSettings settings) onSaveAdmin;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!isUnlocked) {
+      return _LockedAdminSettings(onUnlockPressed: onUnlockPressed);
+    }
+
+    return _AdminSettingsForm(
+      key: ValueKey<int>(settings.hashCode),
+      settings: settings,
+      isSaving: isSaving,
+      onLockPressed: onLockPressed,
+      onSave: onSaveAdmin,
+    );
+  }
+}
+
+class _LockedAdminSettings extends StatelessWidget {
+  const _LockedAdminSettings({required this.onUnlockPressed});
+
+  final VoidCallback onUnlockPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
+
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 480),
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            border: Border.all(color: colorScheme.outline),
+            borderRadius: AppRadius.mdBorder,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.lock_outline,
+                size: 42,
+                color: colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                l10n.titleAdminSettingsLocked,
+                style: theme.textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                l10n.msgAdminSettingsLockedDescription,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodySmall,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              GravityButton.primary(
+                label: l10n.btnTapToEditAdminSettings,
+                leadingIcon: Icons.lock_open_outlined,
+                onPressed: onUnlockPressed,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AdminSettingsForm extends StatefulWidget {
+  const _AdminSettingsForm({
+    super.key,
+    required this.settings,
+    required this.isSaving,
+    required this.onLockPressed,
+    required this.onSave,
+  });
+
+  final AppSettings settings;
+  final bool isSaving;
+  final VoidCallback onLockPressed;
+  final Future<void> Function(AppSettings settings) onSave;
+
+  @override
+  State<_AdminSettingsForm> createState() => _AdminSettingsFormState();
+}
+
+class _AdminSettingsFormState extends State<_AdminSettingsForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  late final TextEditingController _adminPasswordController;
+  late final TextEditingController _leewayController;
+  late final TextEditingController _staleThresholdController;
+  late final TextEditingController _fixed30Controller;
+  late final TextEditingController _fixed60Controller;
+  late final TextEditingController _fixed90Controller;
+  late final TextEditingController _fixed120Controller;
+  late final TextEditingController _fixedAdditionalController;
+  late final TextEditingController _openFirstHourController;
+  late final TextEditingController _openAdditionalController;
+  late final TextEditingController _socksPriceController;
+  late final TextEditingController _waterPriceController;
+
+  @override
+  void initState() {
+    super.initState();
+    _adminPasswordController = TextEditingController();
+    _leewayController = TextEditingController();
+    _staleThresholdController = TextEditingController();
+    _fixed30Controller = TextEditingController();
+    _fixed60Controller = TextEditingController();
+    _fixed90Controller = TextEditingController();
+    _fixed120Controller = TextEditingController();
+    _fixedAdditionalController = TextEditingController();
+    _openFirstHourController = TextEditingController();
+    _openAdditionalController = TextEditingController();
+    _socksPriceController = TextEditingController();
+    _waterPriceController = TextEditingController();
+    _resetControllers();
+  }
+
+  @override
+  void dispose() {
+    _adminPasswordController.dispose();
+    _leewayController.dispose();
+    _staleThresholdController.dispose();
+    _fixed30Controller.dispose();
+    _fixed60Controller.dispose();
+    _fixed90Controller.dispose();
+    _fixed120Controller.dispose();
+    _fixedAdditionalController.dispose();
+    _openFirstHourController.dispose();
+    _openAdditionalController.dispose();
+    _socksPriceController.dispose();
+    _waterPriceController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+
+    return Form(
+      key: _formKey,
+      child: ListView(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.titleAdminOperations,
+                  style: theme.textTheme.titleLarge,
+                ),
+              ),
+              GravityButton.icon(
+                icon: Icons.lock_outline,
+                tooltip: l10n.btnLockAdminSettings,
+                onPressed: widget.isSaving ? null : widget.onLockPressed,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          _SectionHeader(
+            icon: Icons.password_outlined,
+            title: l10n.titleAdminPassword,
+          ),
+          GravityTextField.blind(
+            key: const Key('settings.adminPassword'),
+            label: l10n.labelAdminPassword,
+            controller: _adminPasswordController,
+            enabled: !widget.isSaving,
+            revealTooltip: l10n.tooltipRevealPassword,
+            hideTooltip: l10n.tooltipHidePassword,
+            validator: _adminPasswordValidator,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          _SectionHeader(
+            icon: Icons.timer_outlined,
+            title: l10n.titleLeewayAndStaleTimers,
+          ),
+          _SettingsFieldGrid(
+            children: [
+              GravityTextField(
+                key: const Key('settings.leewayMinutes'),
+                label: l10n.labelLeewayGracePeriod,
+                controller: _leewayController,
+                enabled: !widget.isSaving,
+                helperText: l10n.helperMinutes,
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.end,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                validator: _leewayValidator,
+              ),
+              GravityTextField(
+                key: const Key('settings.staleThresholdMinutes'),
+                label: l10n.labelStaleThreshold,
+                controller: _staleThresholdController,
+                enabled: !widget.isSaving,
+                helperText: l10n.helperMinutes,
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.end,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                validator: _staleThresholdValidator,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          _SectionHeader(
+            icon: Icons.confirmation_number_outlined,
+            title: l10n.titleJumpPricingMatrix,
+          ),
+          Text(l10n.titleFixedBlocks, style: theme.textTheme.titleSmall),
+          const SizedBox(height: AppSpacing.sm),
+          _SettingsFieldGrid(
+            children: [
+              _moneyField(
+                'settings.fixed30Mins',
+                l10n.labelFixed30Mins,
+                _fixed30Controller,
+              ),
+              _moneyField(
+                'settings.fixed60Mins',
+                l10n.labelFixed60Mins,
+                _fixed60Controller,
+              ),
+              _moneyField(
+                'settings.fixed90Mins',
+                l10n.labelFixed90Mins,
+                _fixed90Controller,
+              ),
+              _moneyField(
+                'settings.fixed120Mins',
+                l10n.labelFixed120Mins,
+                _fixed120Controller,
+              ),
+              _moneyField(
+                'settings.fixedAdditional30',
+                l10n.labelAdditional30,
+                _fixedAdditionalController,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(l10n.titleOpenTime, style: theme.textTheme.titleSmall),
+          const SizedBox(height: AppSpacing.sm),
+          _SettingsFieldGrid(
+            children: [
+              _moneyField(
+                'settings.openFirstHour',
+                l10n.labelOpenFirstHour,
+                _openFirstHourController,
+              ),
+              _moneyField(
+                'settings.openExtra30',
+                l10n.labelOpenExtra30,
+                _openAdditionalController,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          _SectionHeader(
+            icon: Icons.inventory_2_outlined,
+            title: l10n.titleDefaultInventoryPrices,
+          ),
+          _SettingsFieldGrid(
+            children: [
+              _moneyField(
+                'settings.jumpSocksPrice',
+                l10n.labelJumpSocksPrice,
+                _socksPriceController,
+              ),
+              _moneyField(
+                'settings.waterBottlePrice',
+                l10n.labelWaterBottlePrice,
+                _waterPriceController,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GravityButton.secondary(
+                label: l10n.btnCancel,
+                onPressed: widget.isSaving ? null : _resetControllers,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              GravityButton.primary(
+                label: l10n.btnSaveChanges,
+                leadingIcon: Icons.save_outlined,
+                onPressed: widget.isSaving ? null : _submit,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _moneyField(
+    String keyName,
+    String label,
+    TextEditingController controller,
+  ) {
+    return GravityTextField.money(
+      key: Key(keyName),
+      label: label,
+      controller: controller,
+      enabled: !widget.isSaving,
+      helperText: context.l10n.helperSyp,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      validator: _moneyValidator,
+    );
+  }
+
+  void _resetControllers() {
+    final settings = widget.settings;
+    final pricing = settings.pricingMatrix;
+    final fixed = pricing.fixedDurationRates;
+    final open = pricing.openTimeRates;
+
+    _adminPasswordController.text = settings.adminPassword;
+    _leewayController.text = settings.leewayMinutes.toString();
+    _staleThresholdController.text = settings.staleThresholdMinutes.toString();
+    _fixed30Controller.text = fixed.block30Min.toString();
+    _fixed60Controller.text = fixed.block60Min.toString();
+    _fixed90Controller.text = fixed.block90Min.toString();
+    _fixed120Controller.text = fixed.block120Min.toString();
+    _fixedAdditionalController.text = fixed.additionalBlockRate.toString();
+    _openFirstHourController.text = open.firstHourRate.toString();
+    _openAdditionalController.text = open.additional30MinRate.toString();
+    _socksPriceController.text = settings.defaultSocksPriceSyp.toString();
+    _waterPriceController.text = settings.defaultWaterPriceSyp.toString();
+  }
+
+  Future<void> _submit() async {
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      return;
+    }
+
+    final updatedSettings = widget.settings.copyWith(
+      adminPassword: _adminPasswordController.text.trim(),
+      leewayMinutes: int.parse(_leewayController.text),
+      staleThresholdMinutes: int.parse(_staleThresholdController.text),
+      defaultSocksPriceSyp: int.parse(_socksPriceController.text),
+      defaultWaterPriceSyp: int.parse(_waterPriceController.text),
+      pricingMatrix: PricingMatrix(
+        currency: 'SYP',
+        fixedDurationRates: FixedDurationRates(
+          block30Min: int.parse(_fixed30Controller.text),
+          block60Min: int.parse(_fixed60Controller.text),
+          block90Min: int.parse(_fixed90Controller.text),
+          block120Min: int.parse(_fixed120Controller.text),
+          additionalBlockRate: int.parse(_fixedAdditionalController.text),
+        ),
+        openTimeRates: OpenTimeRates(
+          firstHourRate: int.parse(_openFirstHourController.text),
+          additional30MinRate: int.parse(_openAdditionalController.text),
+        ),
+      ),
+    );
+
+    final validation = updatedSettings.validate();
+    if (!validation.isValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.msgInvalidPricingMatrix)),
+      );
+      return;
+    }
+
+    await widget.onSave(updatedSettings);
+  }
+
+  String? _adminPasswordValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return context.l10n.msgRequiredField;
+    }
+    if (value.trim().length < 4) {
+      return context.l10n.msgInvalidAdminPasswordLength;
+    }
+    return null;
+  }
+
+  String? _leewayValidator(String? value) {
+    final parsed = _parseRequiredInt(value);
+    if (parsed == null) {
+      return context.l10n.msgRequiredField;
+    }
+    if (parsed < 0 || parsed > 60) {
+      return context.l10n.msgInvalidLeewayRange;
+    }
+    return null;
+  }
+
+  String? _staleThresholdValidator(String? value) {
+    final parsed = _parseRequiredInt(value);
+    if (parsed == null) {
+      return context.l10n.msgRequiredField;
+    }
+    final leeway = int.tryParse(_leewayController.text) ?? 10;
+    final minimumThreshold = math.max(60, leeway * 3);
+    if (parsed < minimumThreshold) {
+      return context.l10n.msgInvalidStaleThreshold(minimumThreshold);
+    }
+    return null;
+  }
+
+  String? _moneyValidator(String? value) {
+    final parsed = _parseRequiredInt(value);
+    if (parsed == null) {
+      return context.l10n.msgRequiredField;
+    }
+    if (parsed < 0) {
+      return context.l10n.msgInvalidNonNegativePrice;
+    }
+    return null;
+  }
+
+  int? _parseRequiredInt(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null;
+    }
+    return int.tryParse(value);
+  }
+}
+
+class _SettingsFieldGrid extends StatelessWidget {
+  const _SettingsFieldGrid({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isTwoColumn = constraints.maxWidth >= 720;
+        final itemWidth = isTwoColumn
+            ? (constraints.maxWidth - AppSpacing.md) / 2
+            : constraints.maxWidth;
+
+        return Wrap(
+          spacing: AppSpacing.md,
+          runSpacing: AppSpacing.sm,
+          children: [
+            for (final child in children)
+              SizedBox(width: itemWidth, child: child),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({
+    required this.icon,
+    required this.title,
+    this.trailing,
+  });
+
+  final IconData icon;
+  final String title;
+  final String? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: colorScheme.onSurfaceVariant),
+          const SizedBox(width: AppSpacing.xs),
+          Expanded(child: Text(title, style: theme.textTheme.titleMedium)),
+          if (trailing != null)
+            Text(trailing!, style: theme.textTheme.labelLarge),
+        ],
+      ),
+    );
+  }
+}
+
+class _SettingsLoadError extends StatelessWidget {
+  const _SettingsLoadError({required this.onRetry});
+
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.error_outline, size: 36, color: theme.colorScheme.error),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              l10n.msgSettingsLoadFailed,
+              style: theme.textTheme.titleMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            GravityButton.secondary(
+              label: l10n.btnRetry,
+              leadingIcon: Icons.refresh,
+              onPressed: onRetry,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

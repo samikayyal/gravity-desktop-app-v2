@@ -9,6 +9,16 @@
   "titleDatabaseRescueConsole": "Database Rescue Console",
   "titleCriticalDatabaseStartupFailure": "Critical Database Startup Failure",
   "titleManualRestoreGuide": "Manual Restore Guide",
+  "titleCashierOptions": "Cashier Options",
+  "titleAdminOperations": "Admin Operations",
+  "titleAdminSettingsLocked": "Admin Settings Locked",
+  "titleAdminUnlockDialog": "Unlock Admin Settings",
+  "titleAdminPassword": "Admin Password",
+  "titleLeewayAndStaleTimers": "Leeway & Stale Timers",
+  "titleJumpPricingMatrix": "Jump Sessions Pricing Matrix",
+  "titleFixedBlocks": "Fixed Blocks",
+  "titleOpenTime": "Open Time",
+  "titleDefaultInventoryPrices": "Default Inventory Prices",
   "labelBoard": "Board",
   "labelPlayers": "Players",
   "labelProducts": "Products",
@@ -21,6 +31,37 @@
   "labelErrorDetails": "Error Details:",
   "labelDatabaseFileLocation": "Database File Location:",
   "labelCopyFilePath": "Copy File Path",
+  "labelNotificationVolume": "Notification Volume",
+  "labelPercentValue": "{percent}%",
+  "@labelPercentValue": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "labelMuteOverdueAudios": "Mute overdue audios",
+  "labelScreenScale": "Screen scaling",
+  "labelScaleOption": "{scale}x",
+  "@labelScaleOption": {
+    "placeholders": {
+      "scale": {
+        "type": "String"
+      }
+    }
+  },
+  "labelAdminPassword": "Admin password",
+  "labelLeewayGracePeriod": "Leeway grace period",
+  "labelStaleThreshold": "Stale threshold",
+  "labelFixed30Mins": "30 mins",
+  "labelFixed60Mins": "60 mins",
+  "labelFixed90Mins": "90 mins",
+  "labelFixed120Mins": "120 mins",
+  "labelAdditional30": "Additional 30",
+  "labelOpenFirstHour": "First hour",
+  "labelOpenExtra30": "Extra 30",
+  "labelWaterBottlePrice": "Water bottle",
+  "labelJumpSocksPrice": "Jump socks",
   "labelPlayerProfilePlaceholder": "Player Profile Placeholder {playerNumber}",
   "@labelPlayerProfilePlaceholder": {
     "placeholders": {
@@ -48,11 +89,40 @@
   },
   "msgLanguageUpdated": "Language updated.",
   "msgLanguageUpdateFailed": "Language could not be updated.",
+  "msgSettingsSaved": "Settings saved.",
+  "msgSettingsSaveFailed": "Settings could not be saved.",
+  "msgSettingsLoadFailed": "Settings could not be loaded.",
+  "msgAdminSettingsLockedDescription": "Protected pricing, leeway, stale-session, inventory price, and password settings require admin authorization.",
+  "msgAdminSettingsUnlocked": "Admin settings unlocked.",
+  "msgAdminUnlockFailed": "Admin password did not match.",
+  "msgRequiredField": "Required.",
+  "msgInvalidLeewayRange": "Use 0 to 60 minutes.",
+  "msgInvalidStaleThreshold": "Use at least {minimumMinutes} minutes.",
+  "@msgInvalidStaleThreshold": {
+    "placeholders": {
+      "minimumMinutes": {
+        "type": "int"
+      }
+    }
+  },
+  "msgInvalidNonNegativePrice": "Use 0 or higher.",
+  "msgInvalidAdminPasswordLength": "Use at least 4 characters.",
+  "msgInvalidPricingMatrix": "Check pricing values before saving.",
   "msgLocalizationFallbackSample": "Pending Arabic translation fallback text.",
   "btnRetryConnection": "Retry Connection",
   "btnImportGcpBackup": "Import GCP Backup",
+  "btnRetry": "Retry",
+  "btnCancel": "Cancel",
+  "btnUnlock": "Unlock",
+  "btnSaveChanges": "Save Changes",
+  "btnTapToEditAdminSettings": "Tap to Edit Admin Settings",
+  "btnLockAdminSettings": "Lock Admin Settings",
   "btnOk": "OK",
   "btnLaunchSetupWizard": "Launch Setup Wizard",
+  "tooltipRevealPassword": "Reveal password",
+  "tooltipHidePassword": "Hide password",
+  "helperMinutes": "Minutes",
+  "helperSyp": "SYP",
   "chipActive": "Active",
   "prodSocks": "Socks",
   "prodWaterBottle": "Water Bottle (0.5L)"

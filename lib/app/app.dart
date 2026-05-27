@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gravity_desktop_app_v2/app/layout/scaled_app_shell.dart';
 import 'package:gravity_desktop_app_v2/app/layout/split_panel_layout.dart';
 import 'package:gravity_desktop_app_v2/app/localization/app_supported_locales.dart';
 import 'package:gravity_desktop_app_v2/app/localization/localization_extensions.dart';
@@ -10,6 +11,7 @@ import 'package:gravity_desktop_app_v2/app/providers.dart';
 import 'package:gravity_desktop_app_v2/app/theme/app_theme.dart';
 import 'package:gravity_desktop_app_v2/app/theme/color_tokens.dart';
 import 'package:gravity_desktop_app_v2/app/theme/spacing_tokens.dart';
+import 'package:gravity_desktop_app_v2/core/config/system_settings_provider.dart';
 import 'package:gravity_desktop_app_v2/core/database/local_database.dart';
 import 'package:gravity_desktop_app_v2/domain/entities/startup_state.dart';
 import 'package:gravity_desktop_app_v2/features/setup/presentation/first_run_setup_placeholder.dart';
@@ -22,6 +24,7 @@ class GravityApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final startupAsync = ref.watch(startupStateProvider);
     final localeAsync = ref.watch(appLocaleControllerProvider);
+    final settingsAsync = ref.watch(systemSettingsControllerProvider);
     final locale = localeAsync.valueOrNull ?? AppSupportedLocales.defaultLocale;
     final theme = AppTheme.lightForLocale(locale);
 
@@ -38,7 +41,15 @@ class GravityApp extends ConsumerWidget {
         data: (state) {
           switch (state) {
             case StartupState.complete:
-              return const SplitPanelLayout();
+              return settingsAsync.when(
+                data: (settings) => ScaledAppShell(
+                  scale: settings.screenScale,
+                  child: const SplitPanelLayout(),
+                ),
+                loading: () => const _StartupLoadingScreen(),
+                error: (error, stackTrace) =>
+                    _DatabaseRescueScreen(error: error),
+              );
             case StartupState.needsSetup:
               return const FirstRunSetupPlaceholder();
           }

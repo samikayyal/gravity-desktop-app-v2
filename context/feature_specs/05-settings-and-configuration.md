@@ -126,10 +126,13 @@ Admin forms enforce structural limits to prevent operational or accounting error
 1. **Transactional Cache-Safety**:
    - Because check-in active board timers recompute charges in real time, settings are cached in memory on app startup using a Riverpod `StateNotifierProvider`.
    - **Rule**: Mutating settings via the UI must update SQLite using an atomic Drift database transaction. The in-memory Riverpod cache must only be updated **after** a successful SQLite database write confirms completion.
+   - **Rule**: Protected admin settings must also require an active short-lived admin authorization session at the mutation boundary, not only through widget visibility.
 2. **First-Run Price Injection**:
    - If the `system_settings` table contains empty configurations on startup (new installation), default fallback prices and matrices are injected during initialization before cashier login is allowed.
 3. **Change Verification audit**:
-   - Modifying any admin setting (prices, leeway, password) generates a mandatory audit ledger entry including metadata of the changed keys, old values, and new values.
+   - Modifying protected admin settings generates mandatory audit ledger entries using the standard `audit_events` catalog from Feature 06.
+   - Pricing matrix and default product price changes are recorded as `price_change`; leeway, stale threshold, and password changes are recorded as `settings_update`.
+   - Audit metadata uses a field-oriented `changed_fields` object with `old` and `new` values plus `target_records.setting_keys`.
 
 ---
 
@@ -156,7 +159,7 @@ Admin forms enforce structural limits to prevent operational or accounting error
 - [ ] SQLite `system_settings` table loaded, mapped, and queried through a dedicated Drift repository boundary.
 - [ ] Admin password edit form blocks blank, null, or empty string values.
 - [ ] Leeway duration limited to integer ranges between `0` and `60` minutes.
-- [ ] Stale thresholds constrained to values greater than `60` minutes.
+- [ ] Stale thresholds constrained to values greater than or equal to `60` minutes.
 - [ ] App settings cached in memory at startup to support hot timer calculations.
 - [ ] Modifying settings triggers atomic SQLite database transactions with zero risk of dirty in-memory reads.
 - [ ] Unlocking admin configuration panels requires short-lived authentication session authorization.

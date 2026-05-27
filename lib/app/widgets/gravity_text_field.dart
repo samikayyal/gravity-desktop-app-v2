@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class GravityTextField extends StatefulWidget {
   const GravityTextField({
@@ -16,11 +17,34 @@ class GravityTextField extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.onFieldSubmitted,
+    this.inputFormatters,
     this.textAlign = TextAlign.start,
   }) : isMoney = false,
        isBlind = false,
        revealTooltip = null,
        hideTooltip = null;
+
+  const GravityTextField.blind({
+    super.key,
+    required this.label,
+    required this.revealTooltip,
+    required this.hideTooltip,
+    this.controller,
+    this.focusNode,
+    this.hintText,
+    this.helperText,
+    this.errorText,
+    this.enabled = true,
+    this.autofocus = false,
+    this.keyboardType,
+    this.textInputAction,
+    this.validator,
+    this.onChanged,
+    this.onFieldSubmitted,
+    this.inputFormatters,
+    this.textAlign = TextAlign.start,
+  }) : isMoney = false,
+       isBlind = true;
 
   const GravityTextField.money({
     super.key,
@@ -36,6 +60,7 @@ class GravityTextField extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.onFieldSubmitted,
+    this.inputFormatters,
   }) : keyboardType = TextInputType.number,
        textAlign = TextAlign.end,
        isMoney = true,
@@ -59,6 +84,7 @@ class GravityTextField extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.onFieldSubmitted,
+    this.inputFormatters,
   }) : keyboardType = TextInputType.number,
        textAlign = TextAlign.end,
        isMoney = true,
@@ -77,6 +103,7 @@ class GravityTextField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onFieldSubmitted;
+  final List<TextInputFormatter>? inputFormatters;
   final TextAlign textAlign;
   final bool isMoney;
   final bool isBlind;
@@ -109,6 +136,7 @@ class _GravityTextFieldState extends State<GravityTextField> {
       validator: widget.validator,
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onFieldSubmitted,
+      inputFormatters: widget.inputFormatters,
       textAlign: widget.textAlign,
       style: textStyle,
       obscureText: widget.isBlind && _isHidden,

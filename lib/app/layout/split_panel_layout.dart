@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gravity_desktop_app_v2/app/localization/app_supported_locales.dart';
 import 'package:gravity_desktop_app_v2/app/localization/cashier_formatters.dart';
 import 'package:gravity_desktop_app_v2/app/localization/localization_extensions.dart';
-import 'package:gravity_desktop_app_v2/app/providers.dart';
 import 'package:gravity_desktop_app_v2/app/theme/spacing_tokens.dart';
 import 'package:gravity_desktop_app_v2/app/widgets/gravity_split_scaffold.dart';
 import 'package:gravity_desktop_app_v2/app/widgets/gravity_status_chip.dart';
+import 'package:gravity_desktop_app_v2/features/settings/presentation/settings_screen.dart';
 
 class SplitPanelLayout extends StatefulWidget {
   const SplitPanelLayout({super.key});
@@ -105,7 +103,7 @@ class _SplitPanelLayoutState extends State<SplitPanelLayout> {
             ),
             Expanded(
               child: isSettingsSelected
-                  ? const _SettingsLocalePanel()
+                  ? const SettingsScreen()
                   : const _ActionPanelEmptyState(),
             ),
           ],
@@ -241,68 +239,6 @@ class _ActionPanelEmptyState extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _SettingsLocalePanel extends ConsumerWidget {
-  const _SettingsLocalePanel();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final l10n = context.l10n;
-    final localeAsync = ref.watch(appLocaleControllerProvider);
-    final selectedLocale = AppSupportedLocales.normalize(
-      localeAsync.valueOrNull ?? Localizations.localeOf(context),
-    );
-
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      children: [
-        Text(l10n.titleSettings, style: theme.textTheme.titleLarge),
-        const SizedBox(height: AppSpacing.md),
-        DropdownButtonFormField<Locale>(
-          key: ValueKey<String>(selectedLocale.languageCode),
-          initialValue: selectedLocale,
-          isExpanded: true,
-          decoration: InputDecoration(labelText: l10n.labelLanguage),
-          items: [
-            DropdownMenuItem<Locale>(
-              value: AppSupportedLocales.english,
-              child: Text(l10n.labelEnglishUs),
-            ),
-            DropdownMenuItem<Locale>(
-              value: AppSupportedLocales.arabic,
-              child: Text(l10n.labelArabicSyria),
-            ),
-          ],
-          onChanged: (locale) async {
-            if (locale == null) {
-              return;
-            }
-
-            try {
-              await ref
-                  .read(appLocaleControllerProvider.notifier)
-                  .setLocale(locale);
-              if (!context.mounted) {
-                return;
-              }
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.l10n.msgLanguageUpdated)),
-              );
-            } catch (_) {
-              if (!context.mounted) {
-                return;
-              }
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.l10n.msgLanguageUpdateFailed)),
-              );
-            }
-          },
-        ),
-      ],
     );
   }
 }

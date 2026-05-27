@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Start settings and configuration after completing shared UI primitives.
+- Start admin auth and audit infrastructure after completing settings and configuration.
 
 ## Completed
 
@@ -29,14 +29,15 @@ Update this file after every meaningful implementation change.
 - [x] **Feature 03: Localization Infrastructure**: Added Flutter gen-l10n configuration, English/Arabic ARB dictionaries, generated `AppLocalizations`, Arabic Cairo/Tajawal font assets, locale-aware theme switching, app-locale persistence through `system_settings`, RTL split-panel mirroring, Western-digit timer/SYP formatters, and localization regression tests.
 - [x] **Feature 04: Shared UI Primitives**: Added centralized shared widgets for cashier buttons, status chips, dense data tables, blind money/text inputs, dialogs, and the 60/40 split scaffold; refactored the current shell to use the shared split scaffold and active status chip; added shared UI regression tests for token colors, contrast, tabular monetary cells, long-text table density, blind count reveal behavior, and split-panel sizing.
 - [x] **Feature 04 review fixes**: Keyed right-panel mode swaps so the shared split scaffold fade transition runs, constrained shared button labels to single-line ellipsis behavior, and added regression tests for both cases.
+- [x] **Feature 05: Settings and Configuration**: Added typed cached app settings, default `system_settings` injection, protected admin settings persistence with validation and audit ledger entries, public cashier settings persistence, settings screen tabs for cashier/admin controls, admin unlock dialog, localized settings copy, and validation/repository/widget regression tests.
 
 ## In Progress
 
-- [/] Ready to begin Feature 05: Settings and Configuration.
+- [/] Ready to begin Feature 06: Admin Auth and Audit Infrastructure.
 
 ## Next Up
 
-- [ ] Start `05-settings-and-configuration.md`.
+- [ ] Start `06-admin-auth-and-audit-infrastructure.md`.
 
 ## Open Questions
 
@@ -76,3 +77,5 @@ Update this file after every meaningful implementation change.
 - 2026-05-25: Implemented Feature 03 localization infrastructure. Added `l10n.yaml`, bilingual ARB files, generated localizations, Flutter localization delegates, persistent `app_locale` storage, Cairo/Tajawal font assets, Arabic theme font switching, localized placeholder/setup/rescue strings, a settings-panel language dropdown, RTL split-panel mirroring, and Western-digit cashier formatters. Verified with `flutter gen-l10n`, `dart format --set-exit-if-changed .`, `flutter analyze`, and `flutter test` (26 passing tests).
 - 2026-05-25: Implemented Feature 04 shared UI primitives. Added `GravityButton`, `GravityStatusChip`, `GravityTextField`, `GravityDataTable`, `GravityDialog`, and `GravitySplitScaffold`; wired the main split layout to the shared scaffold/status chip; added shared UI widget tests for primary button colors/contrast, chip status colors, tabular monetary cells, no-overflow dense tables, blind money reveal toggling, and 60/40 split sizing. Verified with `dart format --set-exit-if-changed .`, `flutter analyze`, `flutter test test/features/shared_ui`, and `flutter test` (32 passing tests).
 - 2026-05-27: Applied Feature 04 review fixes. Keyed the split layout right-panel modes so `AnimatedSwitcher` keeps old/new panels during transitions, constrained `GravityButton` labels with single-line ellipsis, and added regression coverage for right-panel transitions and narrow long-label buttons.
+- 2026-05-27: Implemented Feature 05 settings and configuration. Added `AppSettings` typed defaults/validation, `SettingsRepository` transactional `system_settings` persistence, default setting seeding, redacted `settings_update` audit metadata for protected changes, `SystemSettingsController` Riverpod cache, public cashier options, admin settings tabs/unlock flow, admin password editing, pricing/leeway/stale/default-product fields, localized English/Arabic settings strings, and focused validation/repository/widget tests. Verified with `flutter gen-l10n`, `dart format .`, `flutter analyze`, targeted settings tests, and full `flutter test` (44 passing tests).
+- 2026-05-27: Applied Feature 05 review fixes. Runtime now applies persisted screen scaling to the cashier shell, protected settings saves require an active shared admin authorization session at the provider/repository mutation boundary, pricing/product-base edits emit `price_change` audit rows with field-oriented metadata, non-price protected edits emit `settings_update`, the settings unlock flow uses the Feature 06 five-minute session duration, and the stale-threshold spec now consistently allows values greater than or equal to 60 minutes.

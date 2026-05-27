@@ -152,6 +152,66 @@ abstract class AppLocalizations {
   /// **'Manual Restore Guide'**
   String get titleManualRestoreGuide;
 
+  /// No description provided for @titleCashierOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashier Options'**
+  String get titleCashierOptions;
+
+  /// No description provided for @titleAdminOperations.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Operations'**
+  String get titleAdminOperations;
+
+  /// No description provided for @titleAdminSettingsLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Settings Locked'**
+  String get titleAdminSettingsLocked;
+
+  /// No description provided for @titleAdminUnlockDialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Admin Settings'**
+  String get titleAdminUnlockDialog;
+
+  /// No description provided for @titleAdminPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Password'**
+  String get titleAdminPassword;
+
+  /// No description provided for @titleLeewayAndStaleTimers.
+  ///
+  /// In en, this message translates to:
+  /// **'Leeway & Stale Timers'**
+  String get titleLeewayAndStaleTimers;
+
+  /// No description provided for @titleJumpPricingMatrix.
+  ///
+  /// In en, this message translates to:
+  /// **'Jump Sessions Pricing Matrix'**
+  String get titleJumpPricingMatrix;
+
+  /// No description provided for @titleFixedBlocks.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed Blocks'**
+  String get titleFixedBlocks;
+
+  /// No description provided for @titleOpenTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Time'**
+  String get titleOpenTime;
+
+  /// No description provided for @titleDefaultInventoryPrices.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Inventory Prices'**
+  String get titleDefaultInventoryPrices;
+
   /// No description provided for @labelBoard.
   ///
   /// In en, this message translates to:
@@ -224,6 +284,108 @@ abstract class AppLocalizations {
   /// **'Copy File Path'**
   String get labelCopyFilePath;
 
+  /// No description provided for @labelNotificationVolume.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Volume'**
+  String get labelNotificationVolume;
+
+  /// No description provided for @labelPercentValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}%'**
+  String labelPercentValue(int percent);
+
+  /// No description provided for @labelMuteOverdueAudios.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute overdue audios'**
+  String get labelMuteOverdueAudios;
+
+  /// No description provided for @labelScreenScale.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen scaling'**
+  String get labelScreenScale;
+
+  /// No description provided for @labelScaleOption.
+  ///
+  /// In en, this message translates to:
+  /// **'{scale}x'**
+  String labelScaleOption(String scale);
+
+  /// No description provided for @labelAdminPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin password'**
+  String get labelAdminPassword;
+
+  /// No description provided for @labelLeewayGracePeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Leeway grace period'**
+  String get labelLeewayGracePeriod;
+
+  /// No description provided for @labelStaleThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Stale threshold'**
+  String get labelStaleThreshold;
+
+  /// No description provided for @labelFixed30Mins.
+  ///
+  /// In en, this message translates to:
+  /// **'30 mins'**
+  String get labelFixed30Mins;
+
+  /// No description provided for @labelFixed60Mins.
+  ///
+  /// In en, this message translates to:
+  /// **'60 mins'**
+  String get labelFixed60Mins;
+
+  /// No description provided for @labelFixed90Mins.
+  ///
+  /// In en, this message translates to:
+  /// **'90 mins'**
+  String get labelFixed90Mins;
+
+  /// No description provided for @labelFixed120Mins.
+  ///
+  /// In en, this message translates to:
+  /// **'120 mins'**
+  String get labelFixed120Mins;
+
+  /// No description provided for @labelAdditional30.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional 30'**
+  String get labelAdditional30;
+
+  /// No description provided for @labelOpenFirstHour.
+  ///
+  /// In en, this message translates to:
+  /// **'First hour'**
+  String get labelOpenFirstHour;
+
+  /// No description provided for @labelOpenExtra30.
+  ///
+  /// In en, this message translates to:
+  /// **'Extra 30'**
+  String get labelOpenExtra30;
+
+  /// No description provided for @labelWaterBottlePrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Water bottle'**
+  String get labelWaterBottlePrice;
+
+  /// No description provided for @labelJumpSocksPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Jump socks'**
+  String get labelJumpSocksPrice;
+
   /// No description provided for @labelPlayerProfilePlaceholder.
   ///
   /// In en, this message translates to:
@@ -284,6 +446,78 @@ abstract class AppLocalizations {
   /// **'Language could not be updated.'**
   String get msgLanguageUpdateFailed;
 
+  /// No description provided for @msgSettingsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings saved.'**
+  String get msgSettingsSaved;
+
+  /// No description provided for @msgSettingsSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings could not be saved.'**
+  String get msgSettingsSaveFailed;
+
+  /// No description provided for @msgSettingsLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings could not be loaded.'**
+  String get msgSettingsLoadFailed;
+
+  /// No description provided for @msgAdminSettingsLockedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Protected pricing, leeway, stale-session, inventory price, and password settings require admin authorization.'**
+  String get msgAdminSettingsLockedDescription;
+
+  /// No description provided for @msgAdminSettingsUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin settings unlocked.'**
+  String get msgAdminSettingsUnlocked;
+
+  /// No description provided for @msgAdminUnlockFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin password did not match.'**
+  String get msgAdminUnlockFailed;
+
+  /// No description provided for @msgRequiredField.
+  ///
+  /// In en, this message translates to:
+  /// **'Required.'**
+  String get msgRequiredField;
+
+  /// No description provided for @msgInvalidLeewayRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Use 0 to 60 minutes.'**
+  String get msgInvalidLeewayRange;
+
+  /// No description provided for @msgInvalidStaleThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least {minimumMinutes} minutes.'**
+  String msgInvalidStaleThreshold(int minimumMinutes);
+
+  /// No description provided for @msgInvalidNonNegativePrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Use 0 or higher.'**
+  String get msgInvalidNonNegativePrice;
+
+  /// No description provided for @msgInvalidAdminPasswordLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least 4 characters.'**
+  String get msgInvalidAdminPasswordLength;
+
+  /// No description provided for @msgInvalidPricingMatrix.
+  ///
+  /// In en, this message translates to:
+  /// **'Check pricing values before saving.'**
+  String get msgInvalidPricingMatrix;
+
   /// No description provided for @msgLocalizationFallbackSample.
   ///
   /// In en, this message translates to:
@@ -302,6 +536,42 @@ abstract class AppLocalizations {
   /// **'Import GCP Backup'**
   String get btnImportGcpBackup;
 
+  /// No description provided for @btnRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get btnRetry;
+
+  /// No description provided for @btnCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get btnCancel;
+
+  /// No description provided for @btnUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock'**
+  String get btnUnlock;
+
+  /// No description provided for @btnSaveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get btnSaveChanges;
+
+  /// No description provided for @btnTapToEditAdminSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to Edit Admin Settings'**
+  String get btnTapToEditAdminSettings;
+
+  /// No description provided for @btnLockAdminSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock Admin Settings'**
+  String get btnLockAdminSettings;
+
   /// No description provided for @btnOk.
   ///
   /// In en, this message translates to:
@@ -313,6 +583,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Launch Setup Wizard'**
   String get btnLaunchSetupWizard;
+
+  /// No description provided for @tooltipRevealPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reveal password'**
+  String get tooltipRevealPassword;
+
+  /// No description provided for @tooltipHidePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get tooltipHidePassword;
+
+  /// No description provided for @helperMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get helperMinutes;
+
+  /// No description provided for @helperSyp.
+  ///
+  /// In en, this message translates to:
+  /// **'SYP'**
+  String get helperSyp;
 
   /// No description provided for @chipActive.
   ///
