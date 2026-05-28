@@ -19,6 +19,7 @@
   "titleFixedBlocks": "Fixed Blocks",
   "titleOpenTime": "Open Time",
   "titleDefaultInventoryPrices": "Default Inventory Prices",
+  "titleAuditEvents": "Recent Audit Events",
   "labelBoard": "Board",
   "labelPlayers": "Players",
   "labelProducts": "Products",
@@ -70,6 +71,31 @@
       }
     }
   },
+  "labelAdminModeActive": "Admin Mode Active - {remainingTime}",
+  "@labelAdminModeActive": {
+    "placeholders": {
+      "remainingTime": {
+        "type": "String"
+      }
+    }
+  },
+  "labelChecking": "Checking...",
+  "labelAuditTimestamp": "Timestamp",
+  "labelAuditActionType": "Action Type",
+  "labelAuditTargetRecord": "Targeted Record / ID",
+  "labelAuditReason": "Reason",
+  "labelAuditChangedDetails": "Changed Details",
+  "labelAuditPage": "Page {pageNumber} of {totalPages}",
+  "@labelAuditPage": {
+    "placeholders": {
+      "pageNumber": {
+        "type": "int"
+      },
+      "totalPages": {
+        "type": "int"
+      }
+    }
+  },
   "msgNoActiveSelectionInstructions": "Select a player session from the Active Board or select a sidebar module to load cashier tasks.",
   "msgFirstRunSetupIntro": "Welcome to Gravity Cashier. Initialize your local administrator password, verify backup bucket configurations, and seed the default product catalogs.",
   "msgDatabaseStartupFailure": "The local SQLite database failed to initialize. This error usually occurs due to file corruption, file locking, or incorrect folder write permissions.",
@@ -95,6 +121,8 @@
   "msgAdminSettingsLockedDescription": "Protected pricing, leeway, stale-session, inventory price, and password settings require admin authorization.",
   "msgAdminSettingsUnlocked": "Admin settings unlocked.",
   "msgAdminUnlockFailed": "Admin password did not match.",
+  "msgNoAuditEvents": "No audit events recorded yet.",
+  "msgAuditEventsLoadFailed": "Audit events could not be loaded.",
   "msgRequiredField": "Required.",
   "msgInvalidLeewayRange": "Use 0 to 60 minutes.",
   "msgInvalidStaleThreshold": "Use at least {minimumMinutes} minutes.",
@@ -117,10 +145,14 @@
   "btnSaveChanges": "Save Changes",
   "btnTapToEditAdminSettings": "Tap to Edit Admin Settings",
   "btnLockAdminSettings": "Lock Admin Settings",
+  "btnLockSystem": "Lock System",
+  "btnPreviousPage": "Previous",
+  "btnNextPage": "Next",
   "btnOk": "OK",
   "btnLaunchSetupWizard": "Launch Setup Wizard",
   "tooltipRevealPassword": "Reveal password",
   "tooltipHidePassword": "Hide password",
+  "helperEnterPassword": "Enter Password",
   "helperMinutes": "Minutes",
   "helperSyp": "SYP",
   "chipActive": "Active",

@@ -3,16 +3,22 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gravity_desktop_app_v2/app/localization/cashier_formatters.dart';
 import 'package:gravity_desktop_app_v2/app/localization/app_supported_locales.dart';
 import 'package:gravity_desktop_app_v2/app/localization/localization_extensions.dart';
 import 'package:gravity_desktop_app_v2/app/providers.dart';
+import 'package:gravity_desktop_app_v2/app/theme/color_tokens.dart';
 import 'package:gravity_desktop_app_v2/app/theme/spacing_tokens.dart';
 import 'package:gravity_desktop_app_v2/app/widgets/gravity_button.dart';
-import 'package:gravity_desktop_app_v2/app/widgets/gravity_dialog.dart';
+import 'package:gravity_desktop_app_v2/app/widgets/gravity_data_table.dart';
 import 'package:gravity_desktop_app_v2/app/widgets/gravity_text_field.dart';
+import 'package:gravity_desktop_app_v2/core/audit/audit_providers.dart';
 import 'package:gravity_desktop_app_v2/core/config/app_settings.dart';
 import 'package:gravity_desktop_app_v2/core/config/system_settings_provider.dart';
+import 'package:gravity_desktop_app_v2/core/security/admin_authorization.dart';
 import 'package:gravity_desktop_app_v2/core/security/admin_auth_notifier.dart';
+import 'package:gravity_desktop_app_v2/core/security/admin_password_dialog.dart';
+import 'package:gravity_desktop_app_v2/data/repositories/audit_repository.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -30,7 +36,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget build(BuildContext context) {
     final settingsAsync = ref.watch(systemSettingsControllerProvider);
     final adminAuthState = ref.watch(adminAuthControllerProvider);
-    final isAdminUnlocked = adminAuthState.isAuthenticatedAt(DateTime.now());
+    final adminAuthorization = adminAuthState.authorization;
+    final isAdminUnlocked =
+        adminAuthorization?.isActiveAt(DateTime.now()) ?? false;
 
     return settingsAsync.when(
       data: (settings) {
@@ -69,6 +77,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     _AdminSettingsTab(
                       settings: settings,
                       isUnlocked: isAdminUnlocked,
+                      authorization: isAdminUnlocked
+                          ? adminAuthorization
+                          : null,
                       isSaving: _isSavingAdmin,
                       onUnlockPressed: _showUnlockDialog,
                       onLockPressed: () =>
@@ -163,7 +174,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final unlocked = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) => const _AdminUnlockDialog(),
+      builder: (dialogContext) => const AdminPasswordDialog(),
     );
 
     if (unlocked == true && mounted) {
@@ -171,102 +182,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         SnackBar(content: Text(context.l10n.msgAdminSettingsUnlocked)),
       );
     }
-  }
-}
-
-class _AdminUnlockDialog extends ConsumerStatefulWidget {
-  const _AdminUnlockDialog();
-
-  @override
-  ConsumerState<_AdminUnlockDialog> createState() => _AdminUnlockDialogState();
-}
-
-class _AdminUnlockDialogState extends ConsumerState<_AdminUnlockDialog> {
-  final TextEditingController _passwordController = TextEditingController();
-
-  String? _errorText;
-  bool _isChecking = false;
-
-  @override
-  void dispose() {
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GravityDialog(
-      title: context.l10n.titleAdminUnlockDialog,
-      icon: Icons.lock_open_outlined,
-      tone: GravityDialogTone.admin,
-      content: GravityTextField.blind(
-        key: const Key('settings.adminUnlockPassword'),
-        label: context.l10n.labelAdminPassword,
-        controller: _passwordController,
-        errorText: _errorText,
-        autofocus: true,
-        revealTooltip: context.l10n.tooltipRevealPassword,
-        hideTooltip: context.l10n.tooltipHidePassword,
-        onFieldSubmitted: (_) => _tryUnlock(),
-      ),
-      actions: [
-        GravityButton.secondary(
-          label: context.l10n.btnCancel,
-          onPressed: _isChecking
-              ? null
-              : () => Navigator.of(context).pop(false),
-        ),
-        GravityButton.primary(
-          label: _isChecking ? '...' : context.l10n.btnUnlock,
-          leadingIcon: Icons.lock_open_outlined,
-          onPressed: _isChecking ? null : _tryUnlock,
-        ),
-      ],
-    );
-  }
-
-  Future<void> _tryUnlock() async {
-    if (_passwordController.text.trim().length < 4) {
-      setState(() {
-        _errorText = context.l10n.msgInvalidAdminPasswordLength;
-      });
-      return;
-    }
-
-    setState(() {
-      _isChecking = true;
-      _errorText = null;
-    });
-
-    final bool isValidPassword;
-    try {
-      isValidPassword = await ref
-          .read(adminAuthControllerProvider.notifier)
-          .unlockWithPassword(_passwordController.text);
-    } catch (_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _isChecking = false;
-        _errorText = context.l10n.msgAdminUnlockFailed;
-      });
-      return;
-    }
-
-    if (!mounted) {
-      return;
-    }
-
-    if (isValidPassword) {
-      Navigator.of(context).pop(true);
-      return;
-    }
-
-    setState(() {
-      _isChecking = false;
-      _errorText = context.l10n.msgAdminUnlockFailed;
-    });
   }
 }
 
@@ -411,6 +326,7 @@ class _AdminSettingsTab extends StatelessWidget {
   const _AdminSettingsTab({
     required this.settings,
     required this.isUnlocked,
+    required this.authorization,
     required this.isSaving,
     required this.onUnlockPressed,
     required this.onLockPressed,
@@ -419,6 +335,7 @@ class _AdminSettingsTab extends StatelessWidget {
 
   final AppSettings settings;
   final bool isUnlocked;
+  final AdminAuthorization? authorization;
   final bool isSaving;
   final VoidCallback onUnlockPressed;
   final VoidCallback onLockPressed;
@@ -426,13 +343,15 @@ class _AdminSettingsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!isUnlocked) {
+    final activeAuthorization = authorization;
+    if (!isUnlocked || activeAuthorization == null) {
       return _LockedAdminSettings(onUnlockPressed: onUnlockPressed);
     }
 
     return _AdminSettingsForm(
       key: ValueKey<int>(settings.hashCode),
       settings: settings,
+      authorization: activeAuthorization,
       isSaving: isSaving,
       onLockPressed: onLockPressed,
       onSave: onSaveAdmin,
@@ -500,12 +419,14 @@ class _AdminSettingsForm extends StatefulWidget {
   const _AdminSettingsForm({
     super.key,
     required this.settings,
+    required this.authorization,
     required this.isSaving,
     required this.onLockPressed,
     required this.onSave,
   });
 
   final AppSettings settings;
+  final AdminAuthorization authorization;
   final bool isSaving;
   final VoidCallback onLockPressed;
   final Future<void> Function(AppSettings settings) onSave;
@@ -576,6 +497,7 @@ class _AdminSettingsFormState extends State<_AdminSettingsForm> {
         padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: Text(
@@ -583,10 +505,19 @@ class _AdminSettingsFormState extends State<_AdminSettingsForm> {
                   style: theme.textTheme.titleLarge,
                 ),
               ),
-              GravityButton.icon(
-                icon: Icons.lock_outline,
-                tooltip: l10n.btnLockAdminSettings,
-                onPressed: widget.isSaving ? null : widget.onLockPressed,
+              Wrap(
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.xs,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                alignment: WrapAlignment.end,
+                children: [
+                  _AdminSessionBadge(authorization: widget.authorization),
+                  GravityButton.secondary(
+                    label: l10n.btnLockSystem,
+                    leadingIcon: Icons.lock_outline,
+                    onPressed: widget.isSaving ? null : widget.onLockPressed,
+                  ),
+                ],
               ),
             ],
           ),
@@ -707,6 +638,8 @@ class _AdminSettingsFormState extends State<_AdminSettingsForm> {
               ),
             ],
           ),
+          const SizedBox(height: AppSpacing.xl),
+          const _AuditEventsPanel(),
           const SizedBox(height: AppSpacing.xl),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -855,6 +788,176 @@ class _AdminSettingsFormState extends State<_AdminSettingsForm> {
   }
 }
 
+class _AdminSessionBadge extends StatelessWidget {
+  const _AdminSessionBadge({required this.authorization});
+
+  final AdminAuthorization authorization;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<DateTime>(
+      stream: Stream<DateTime>.periodic(
+        const Duration(seconds: 1),
+        (_) => DateTime.now(),
+      ),
+      initialData: DateTime.now(),
+      builder: (context, snapshot) {
+        final now = (snapshot.data ?? DateTime.now()).toUtc();
+        final remaining = authorization.expiresAt.difference(now);
+        final colors = context.appColors;
+        final statusColor = colors.statusActive;
+
+        return Container(
+          constraints: const BoxConstraints(minHeight: 36),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.xs,
+          ),
+          decoration: BoxDecoration(
+            color: colors.statusSurface(statusColor),
+            border: Border.all(color: statusColor),
+            borderRadius: AppRadius.smBorder,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.verified_user_outlined, size: 16, color: statusColor),
+              const SizedBox(width: AppSpacing.xs),
+              Text(
+                context.l10n.labelAdminModeActive(
+                  _formatSessionCountdown(remaining),
+                ),
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _AuditEventsPanel extends ConsumerStatefulWidget {
+  const _AuditEventsPanel();
+
+  @override
+  ConsumerState<_AuditEventsPanel> createState() => _AuditEventsPanelState();
+}
+
+class _AuditEventsPanelState extends ConsumerState<_AuditEventsPanel> {
+  static const int _pageSize = 10;
+
+  int _pageIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final auditPage = ref.watch(
+      auditEventsPageProvider(
+        AuditEventsPageRequest(pageIndex: _pageIndex, pageSize: _pageSize),
+      ),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SectionHeader(
+          icon: Icons.manage_search_outlined,
+          title: l10n.titleAuditEvents,
+        ),
+        auditPage.when(
+          data: _buildAuditTable,
+          loading: () => const Padding(
+            padding: EdgeInsets.all(AppSpacing.md),
+            child: LinearProgressIndicator(),
+          ),
+          error: (error, stackTrace) => Text(l10n.msgAuditEventsLoadFailed),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAuditTable(AuditEventPage page) {
+    final l10n = context.l10n;
+
+    if (page.records.isEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          border: Border.all(color: Theme.of(context).colorScheme.outline),
+          borderRadius: AppRadius.mdBorder,
+        ),
+        child: Text(l10n.msgNoAuditEvents),
+      );
+    }
+
+    return Column(
+      children: [
+        GravityDataTable(
+          rowHeight: 42,
+          headingHeight: 36,
+          columns: [
+            GravityTableColumn(label: l10n.labelAuditTimestamp, flex: 2),
+            GravityTableColumn(label: l10n.labelAuditActionType, flex: 2),
+            GravityTableColumn(label: l10n.labelAuditTargetRecord, flex: 3),
+            GravityTableColumn(label: l10n.labelAuditReason, flex: 3),
+            GravityTableColumn(label: l10n.labelAuditChangedDetails, flex: 4),
+          ],
+          rows: [
+            for (final record in page.records)
+              GravityTableRow(
+                cells: [
+                  GravityTableCell.text(
+                    _formatDamascusTimestamp(record.triggeredAt),
+                  ),
+                  GravityTableCell.text(record.eventType.storageValue),
+                  GravityTableCell.text(
+                    record.targetSummary,
+                    tooltip: record.targetSummary,
+                  ),
+                  GravityTableCell.text(record.reason, tooltip: record.reason),
+                  GravityTableCell.text(
+                    record.changedDetails,
+                    tooltip: record.changedDetails,
+                  ),
+                ],
+              ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              l10n.labelAuditPage(page.pageIndex + 1, page.totalPages),
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            GravityButton.secondary(
+              label: l10n.btnPreviousPage,
+              onPressed: page.hasPreviousPage
+                  ? () => setState(() {
+                      _pageIndex -= 1;
+                    })
+                  : null,
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            GravityButton.secondary(
+              label: l10n.btnNextPage,
+              onPressed: page.hasNextPage
+                  ? () => setState(() {
+                      _pageIndex += 1;
+                    })
+                  : null,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 class _SettingsFieldGrid extends StatelessWidget {
   const _SettingsFieldGrid({required this.children});
 
@@ -947,4 +1050,24 @@ class _SettingsLoadError extends StatelessWidget {
       ),
     );
   }
+}
+
+String _formatSessionCountdown(Duration remaining) {
+  final safeRemaining = remaining.isNegative ? Duration.zero : remaining;
+  final minutes = safeRemaining.inMinutes.toString().padLeft(2, '0');
+  final seconds = (safeRemaining.inSeconds % 60).toString().padLeft(2, '0');
+  return CashierFormatters.forceWesternDigits('$minutes:$seconds');
+}
+
+String _formatDamascusTimestamp(DateTime utcTimestamp) {
+  final damascusTime = utcTimestamp.toUtc().add(const Duration(hours: 3));
+  final year = damascusTime.year.toString().padLeft(4, '0');
+  final month = damascusTime.month.toString().padLeft(2, '0');
+  final day = damascusTime.day.toString().padLeft(2, '0');
+  final hour = damascusTime.hour.toString().padLeft(2, '0');
+  final minute = damascusTime.minute.toString().padLeft(2, '0');
+  final second = damascusTime.second.toString().padLeft(2, '0');
+  return CashierFormatters.forceWesternDigits(
+    '$year-$month-$day $hour:$minute:$second',
+  );
 }

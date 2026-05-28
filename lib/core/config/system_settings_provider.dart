@@ -1,11 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gravity_desktop_app_v2/app/providers.dart';
+import 'package:gravity_desktop_app_v2/core/audit/audit_providers.dart';
 import 'package:gravity_desktop_app_v2/core/config/app_settings.dart';
 import 'package:gravity_desktop_app_v2/core/security/admin_auth_notifier.dart';
 import 'package:gravity_desktop_app_v2/data/repositories/settings_repository.dart';
 
 final settingsRepositoryProvider = Provider<SettingsRepository>((ref) {
-  return SettingsRepository(ref.watch(databaseProvider));
+  return SettingsRepository(
+    ref.watch(databaseProvider),
+    auditRepository: ref.watch(auditRepositoryProvider),
+  );
 });
 
 final systemSettingsControllerProvider =
@@ -52,6 +56,7 @@ class SystemSettingsController extends AsyncNotifier<AppSettings> {
           authorization: authorization,
         );
     adminAuth.refreshSession(authorization);
+    ref.invalidate(auditEventsPageProvider);
     state = AsyncData(savedSettings);
   }
 }

@@ -67,6 +67,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get titleDefaultInventoryPrices => 'أسعار المخزون الافتراضية';
 
   @override
+  String get titleAuditEvents => 'أحداث التدقيق الأخيرة';
+
+  @override
   String get labelBoard => 'اللوحة';
 
   @override
@@ -163,6 +166,34 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String labelAdminModeActive(String remainingTime) {
+    return 'وضع المدير نشط - $remainingTime';
+  }
+
+  @override
+  String get labelChecking => 'جار التحقق...';
+
+  @override
+  String get labelAuditTimestamp => 'الوقت';
+
+  @override
+  String get labelAuditActionType => 'نوع الإجراء';
+
+  @override
+  String get labelAuditTargetRecord => 'السجل / المعرف';
+
+  @override
+  String get labelAuditReason => 'السبب';
+
+  @override
+  String get labelAuditChangedDetails => 'تفاصيل التغيير';
+
+  @override
+  String labelAuditPage(int pageNumber, int totalPages) {
+    return 'صفحة $pageNumber من $totalPages';
+  }
+
+  @override
   String get msgNoActiveSelectionInstructions =>
       'اختر جلسة لاعب من لوحة اللاعبين أو اختر وحدة من الشريط الجانبي لتحميل مهام الكاشير.';
 
@@ -216,6 +247,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get msgAdminUnlockFailed => 'كلمة مرور المدير غير صحيحة.';
 
   @override
+  String get msgNoAuditEvents => 'لا توجد أحداث تدقيق مسجلة بعد.';
+
+  @override
+  String get msgAuditEventsLoadFailed => 'تعذر تحميل أحداث التدقيق.';
+
+  @override
   String get msgRequiredField => 'مطلوب.';
 
   @override
@@ -264,6 +301,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get btnLockAdminSettings => 'قفل إعدادات المدير';
 
   @override
+  String get btnLockSystem => 'قفل النظام';
+
+  @override
+  String get btnPreviousPage => 'السابق';
+
+  @override
+  String get btnNextPage => 'التالي';
+
+  @override
   String get btnOk => 'موافق';
 
   @override
@@ -274,6 +320,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get tooltipHidePassword => 'إخفاء كلمة المرور';
+
+  @override
+  String get helperEnterPassword => 'أدخل كلمة المرور';
 
   @override
   String get helperMinutes => 'دقائق';

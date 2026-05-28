@@ -1,16 +1,26 @@
-import 'dart:convert';
-
-import 'package:drift/drift.dart';
+import 'package:gravity_desktop_app_v2/core/audit/audit_service.dart';
 import 'package:gravity_desktop_app_v2/core/config/app_settings.dart';
 import 'package:gravity_desktop_app_v2/core/database/local_database.dart';
-import 'package:gravity_desktop_app_v2/core/security/admin_auth_notifier.dart';
+import 'package:gravity_desktop_app_v2/core/security/admin_authorization.dart';
+import 'package:gravity_desktop_app_v2/data/repositories/audit_repository.dart';
 
 class SettingsRepository {
-  SettingsRepository(this._database, {DateTime Function()? now})
-    : _now = now ?? DateTime.now;
+  SettingsRepository(
+    AppDatabase database, {
+    DateTime Function()? now,
+    AuditRepository? auditRepository,
+    AuditService auditService = const AuditService(),
+  }) : _database = database,
+       _now = now ?? DateTime.now,
+       _auditService = auditService,
+       _auditRepository =
+           auditRepository ??
+           AuditRepository(database, now: now, auditService: auditService);
 
   final AppDatabase _database;
   final DateTime Function() _now;
+  final AuditService _auditService;
+  final AuditRepository _auditRepository;
 
   Future<AppSettings> loadOrSeedSettings() async {
     return _database.transaction(_loadOrSeedSettingsInTransaction);
@@ -119,68 +129,13 @@ class SettingsRepository {
     required AppSettings previousSettings,
     required Map<String, String> changedValues,
   }) async {
-    await _insertAuditEventForKeys(
-      eventType: 'price_change',
-      descriptionPrefix: 'Updated protected prices',
-      keys: _changedKeysForGroup(changedValues, _priceChangeKeys),
+    final drafts = _auditService.protectedSettingsDrafts(
       previousSettings: previousSettings,
       changedValues: changedValues,
     );
-    await _insertAuditEventForKeys(
-      eventType: 'settings_update',
-      descriptionPrefix: 'Updated protected settings',
-      keys: _changedKeysForGroup(changedValues, _settingsUpdateKeys),
-      previousSettings: previousSettings,
-      changedValues: changedValues,
-    );
-  }
-
-  Future<void> _insertAuditEventForKeys({
-    required String eventType,
-    required String descriptionPrefix,
-    required List<String> keys,
-    required AppSettings previousSettings,
-    required Map<String, String> changedValues,
-  }) async {
-    if (keys.isEmpty) {
-      return;
+    for (final draft in drafts) {
+      await _auditRepository.insertAuditEvent(draft);
     }
-
-    final previousValues = previousSettings.toStorageMap();
-
-    await _database
-        .into(_database.auditEvents)
-        .insert(
-          AuditEventsCompanion.insert(
-            eventType: eventType,
-            description: '$descriptionPrefix: ${keys.join(', ')}',
-            triggeredAt: _now().toUtc().toIso8601String(),
-            metadata: Value(
-              jsonEncode({
-                'reason': 'Protected settings save',
-                'actor': 'Admin',
-                'changed_fields': {
-                  for (final key in keys)
-                    key: {
-                      'old': _auditValue(key, previousValues[key]!),
-                      'new': _auditValue(key, changedValues[key]!),
-                    },
-                },
-                'target_records': {'setting_keys': keys},
-              }),
-            ),
-          ),
-        );
-  }
-
-  List<String> _changedKeysForGroup(
-    Map<String, String> changedValues,
-    Set<String> groupKeys,
-  ) {
-    return [
-      for (final key in SettingKeys.adminKeys)
-        if (groupKeys.contains(key) && changedValues.containsKey(key)) key,
-    ];
   }
 
   Map<String, String> _changedValues(
@@ -193,24 +148,6 @@ class SettingsRepository {
     };
   }
 
-  Object _auditValue(String key, String value) {
-    if (key == SettingKeys.adminPassword) {
-      return '<redacted>';
-    }
-    if (key == SettingKeys.pricingMatrixJson) {
-      final decoded = jsonDecode(value);
-      if (decoded is Map<String, dynamic>) {
-        return decoded;
-      }
-      return value;
-    }
-    final parsedInt = int.tryParse(value);
-    if (parsedInt != null) {
-      return parsedInt;
-    }
-    return value;
-  }
-
   void _throwIfInvalid(AppSettings settings) {
     final validation = settings.validate();
     if (!validation.isValid) {
@@ -218,15 +155,3 @@ class SettingsRepository {
     }
   }
 }
-
-const Set<String> _priceChangeKeys = {
-  SettingKeys.pricingMatrixJson,
-  SettingKeys.defaultSocksPriceSyp,
-  SettingKeys.defaultWaterPriceSyp,
-};
-
-const Set<String> _settingsUpdateKeys = {
-  SettingKeys.adminPassword,
-  SettingKeys.leewayMinutes,
-  SettingKeys.staleThresholdMinutes,
-};

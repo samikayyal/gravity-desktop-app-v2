@@ -212,6 +212,12 @@ abstract class AppLocalizations {
   /// **'Default Inventory Prices'**
   String get titleDefaultInventoryPrices;
 
+  /// No description provided for @titleAuditEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Audit Events'**
+  String get titleAuditEvents;
+
   /// No description provided for @labelBoard.
   ///
   /// In en, this message translates to:
@@ -392,6 +398,54 @@ abstract class AppLocalizations {
   /// **'Player Profile Placeholder {playerNumber}'**
   String labelPlayerProfilePlaceholder(int playerNumber);
 
+  /// No description provided for @labelAdminModeActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Mode Active - {remainingTime}'**
+  String labelAdminModeActive(String remainingTime);
+
+  /// No description provided for @labelChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking...'**
+  String get labelChecking;
+
+  /// No description provided for @labelAuditTimestamp.
+  ///
+  /// In en, this message translates to:
+  /// **'Timestamp'**
+  String get labelAuditTimestamp;
+
+  /// No description provided for @labelAuditActionType.
+  ///
+  /// In en, this message translates to:
+  /// **'Action Type'**
+  String get labelAuditActionType;
+
+  /// No description provided for @labelAuditTargetRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Targeted Record / ID'**
+  String get labelAuditTargetRecord;
+
+  /// No description provided for @labelAuditReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get labelAuditReason;
+
+  /// No description provided for @labelAuditChangedDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Changed Details'**
+  String get labelAuditChangedDetails;
+
+  /// No description provided for @labelAuditPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {pageNumber} of {totalPages}'**
+  String labelAuditPage(int pageNumber, int totalPages);
+
   /// No description provided for @msgNoActiveSelectionInstructions.
   ///
   /// In en, this message translates to:
@@ -481,6 +535,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Admin password did not match.'**
   String get msgAdminUnlockFailed;
+
+  /// No description provided for @msgNoAuditEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'No audit events recorded yet.'**
+  String get msgNoAuditEvents;
+
+  /// No description provided for @msgAuditEventsLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Audit events could not be loaded.'**
+  String get msgAuditEventsLoadFailed;
 
   /// No description provided for @msgRequiredField.
   ///
@@ -572,6 +638,24 @@ abstract class AppLocalizations {
   /// **'Lock Admin Settings'**
   String get btnLockAdminSettings;
 
+  /// No description provided for @btnLockSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock System'**
+  String get btnLockSystem;
+
+  /// No description provided for @btnPreviousPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get btnPreviousPage;
+
+  /// No description provided for @btnNextPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get btnNextPage;
+
   /// No description provided for @btnOk.
   ///
   /// In en, this message translates to:
@@ -595,6 +679,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hide password'**
   String get tooltipHidePassword;
+
+  /// No description provided for @helperEnterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Password'**
+  String get helperEnterPassword;
 
   /// No description provided for @helperMinutes.
   ///

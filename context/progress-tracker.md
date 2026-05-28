@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Start admin auth and audit infrastructure after completing settings and configuration.
+- Start first-run setup and restore after completing admin auth and audit infrastructure.
 
 ## Completed
 
@@ -30,14 +30,15 @@ Update this file after every meaningful implementation change.
 - [x] **Feature 04: Shared UI Primitives**: Added centralized shared widgets for cashier buttons, status chips, dense data tables, blind money/text inputs, dialogs, and the 60/40 split scaffold; refactored the current shell to use the shared split scaffold and active status chip; added shared UI regression tests for token colors, contrast, tabular monetary cells, long-text table density, blind count reveal behavior, and split-panel sizing.
 - [x] **Feature 04 review fixes**: Keyed right-panel mode swaps so the shared split scaffold fade transition runs, constrained shared button labels to single-line ellipsis behavior, and added regression tests for both cases.
 - [x] **Feature 05: Settings and Configuration**: Added typed cached app settings, default `system_settings` injection, protected admin settings persistence with validation and audit ledger entries, public cashier settings persistence, settings screen tabs for cashier/admin controls, admin unlock dialog, localized settings copy, and validation/repository/widget regression tests.
+- [x] **Feature 06: Admin Auth and Audit Infrastructure**: Added reusable plaintext admin password verification through a repository boundary, five-minute sliding admin authorization sessions with injectable clock/timer tests, shared masked admin password dialog with Enter-submit support, audit event catalog/draft/service infrastructure, audit repository page reads, transactional protected settings audit writes with rollback-on-audit-failure coverage, active admin countdown badge with Lock System action, and a recent audit events grid in the admin settings panel.
 
 ## In Progress
 
-- [/] Ready to begin Feature 06: Admin Auth and Audit Infrastructure.
+- [/] Ready to begin Feature 07: First-Run Setup and Restore.
 
 ## Next Up
 
-- [ ] Start `06-admin-auth-and-audit-infrastructure.md`.
+- [ ] Start `07-first-run-setup-and-restore.md`.
 
 ## Open Questions
 
@@ -79,3 +80,5 @@ Update this file after every meaningful implementation change.
 - 2026-05-27: Applied Feature 04 review fixes. Keyed the split layout right-panel modes so `AnimatedSwitcher` keeps old/new panels during transitions, constrained `GravityButton` labels with single-line ellipsis, and added regression coverage for right-panel transitions and narrow long-label buttons.
 - 2026-05-27: Implemented Feature 05 settings and configuration. Added `AppSettings` typed defaults/validation, `SettingsRepository` transactional `system_settings` persistence, default setting seeding, redacted `settings_update` audit metadata for protected changes, `SystemSettingsController` Riverpod cache, public cashier options, admin settings tabs/unlock flow, admin password editing, pricing/leeway/stale/default-product fields, localized English/Arabic settings strings, and focused validation/repository/widget tests. Verified with `flutter gen-l10n`, `dart format .`, `flutter analyze`, targeted settings tests, and full `flutter test` (44 passing tests).
 - 2026-05-27: Applied Feature 05 review fixes. Runtime now applies persisted screen scaling to the cashier shell, protected settings saves require an active shared admin authorization session at the provider/repository mutation boundary, pricing/product-base edits emit `price_change` audit rows with field-oriented metadata, non-price protected edits emit `settings_update`, the settings unlock flow uses the Feature 06 five-minute session duration, and the stale-threshold spec now consistently allows values greater than or equal to 60 minutes.
+- 2026-05-27: Implemented Feature 06 admin auth and audit infrastructure. Moved authorization tokens into `core/security`, routed plaintext password checks through `AdminAuthRepository`, added injectable session clock/timer behavior for exact five-minute sliding expiry tests, added shared `AdminPasswordDialog`, added `AuditService`/`AuditRepository`/audit providers, rendered active admin countdown plus Lock System and paged recent audit events in settings, and verified transactional rollback when an audit insert fails. Verified with `flutter gen-l10n`, `dart format --set-exit-if-changed .`, `flutter analyze`, targeted settings repository/screen tests, and full `flutter test` (51 passing tests).
+- 2026-05-28: Applied Feature 06 review fixes. Admin auth now requires an explicit `system_settings.admin_password` row instead of falling back to the hard-coded default, and the audit event display summary now recursively expands nested pricing matrix diffs so changed prices such as `block_60_min: 18000 -> 19000` are visible in the admin audit grid. Added regression coverage for missing password rows and visible nested price diffs.

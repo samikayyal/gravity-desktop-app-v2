@@ -67,6 +67,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get titleDefaultInventoryPrices => 'Default Inventory Prices';
 
   @override
+  String get titleAuditEvents => 'Recent Audit Events';
+
+  @override
   String get labelBoard => 'Board';
 
   @override
@@ -163,6 +166,34 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String labelAdminModeActive(String remainingTime) {
+    return 'Admin Mode Active - $remainingTime';
+  }
+
+  @override
+  String get labelChecking => 'Checking...';
+
+  @override
+  String get labelAuditTimestamp => 'Timestamp';
+
+  @override
+  String get labelAuditActionType => 'Action Type';
+
+  @override
+  String get labelAuditTargetRecord => 'Targeted Record / ID';
+
+  @override
+  String get labelAuditReason => 'Reason';
+
+  @override
+  String get labelAuditChangedDetails => 'Changed Details';
+
+  @override
+  String labelAuditPage(int pageNumber, int totalPages) {
+    return 'Page $pageNumber of $totalPages';
+  }
+
+  @override
   String get msgNoActiveSelectionInstructions =>
       'Select a player session from the Active Board or select a sidebar module to load cashier tasks.';
 
@@ -216,6 +247,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get msgAdminUnlockFailed => 'Admin password did not match.';
 
   @override
+  String get msgNoAuditEvents => 'No audit events recorded yet.';
+
+  @override
+  String get msgAuditEventsLoadFailed => 'Audit events could not be loaded.';
+
+  @override
   String get msgRequiredField => 'Required.';
 
   @override
@@ -264,6 +301,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get btnLockAdminSettings => 'Lock Admin Settings';
 
   @override
+  String get btnLockSystem => 'Lock System';
+
+  @override
+  String get btnPreviousPage => 'Previous';
+
+  @override
+  String get btnNextPage => 'Next';
+
+  @override
   String get btnOk => 'OK';
 
   @override
@@ -274,6 +320,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tooltipHidePassword => 'Hide password';
+
+  @override
+  String get helperEnterPassword => 'Enter Password';
 
   @override
   String get helperMinutes => 'Minutes';

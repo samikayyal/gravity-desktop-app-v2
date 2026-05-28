@@ -49,7 +49,7 @@ void main() {
   testWidgets('unlocks admin settings, saves edits, and audits changes', (
     tester,
   ) async {
-    await tester.binding.setSurfaceSize(const Size(1000, 1000));
+    await tester.binding.setSurfaceSize(const Size(1000, 1400));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
     await tester.pumpWidget(buildHarness());
@@ -70,10 +70,15 @@ void main() {
       editableTextByFieldKey('settings.adminUnlockPassword'),
       'admin123',
     );
-    await tester.tap(find.text('Unlock'));
+    await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
 
     expect(find.text('Leeway & Stale Timers'), findsOneWidget);
+    expect(find.textContaining('Admin Mode Active -'), findsOneWidget);
+    expect(find.text('Lock System'), findsOneWidget);
+    expect(find.text('Recent Audit Events'), findsOneWidget);
+    expect(find.text('No audit events recorded yet.'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 4));
 
     await tester.enterText(
       editableTextByFieldKey('settings.leewayMinutes'),
@@ -85,6 +90,8 @@ void main() {
     );
 
     await tester.ensureVisible(find.text('Save Changes'));
+    await tester.drag(find.byType(ListView), const Offset(0, -220));
+    await tester.pump();
     await tester.tap(find.text('Save Changes'));
     await tester.pumpAndSettle();
 
@@ -105,6 +112,15 @@ void main() {
     expect(
       auditRows.map((row) => row.eventType),
       containsAll(['price_change', 'settings_update']),
+    );
+    expect(find.text('price_change'), findsOneWidget);
+    expect(find.text('settings_update'), findsOneWidget);
+    expect(
+      find.textContaining(
+        'pricing_matrix_json.fixed_duration_rates.block_60_min: '
+        '18000 -> 19000',
+      ),
+      findsOneWidget,
     );
     expect(tester.takeException(), isNull);
   });

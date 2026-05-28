@@ -19,6 +19,7 @@
   "titleFixedBlocks": "المدد الثابتة",
   "titleOpenTime": "الوقت المفتوح",
   "titleDefaultInventoryPrices": "أسعار المخزون الافتراضية",
+  "titleAuditEvents": "أحداث التدقيق الأخيرة",
   "labelBoard": "اللوحة",
   "labelPlayers": "اللاعبون",
   "labelProducts": "المنتجات",
@@ -70,6 +71,31 @@
       }
     }
   },
+  "labelAdminModeActive": "وضع المدير نشط - {remainingTime}",
+  "@labelAdminModeActive": {
+    "placeholders": {
+      "remainingTime": {
+        "type": "String"
+      }
+    }
+  },
+  "labelChecking": "جار التحقق...",
+  "labelAuditTimestamp": "الوقت",
+  "labelAuditActionType": "نوع الإجراء",
+  "labelAuditTargetRecord": "السجل / المعرف",
+  "labelAuditReason": "السبب",
+  "labelAuditChangedDetails": "تفاصيل التغيير",
+  "labelAuditPage": "صفحة {pageNumber} من {totalPages}",
+  "@labelAuditPage": {
+    "placeholders": {
+      "pageNumber": {
+        "type": "int"
+      },
+      "totalPages": {
+        "type": "int"
+      }
+    }
+  },
   "msgNoActiveSelectionInstructions": "اختر جلسة لاعب من لوحة اللاعبين أو اختر وحدة من الشريط الجانبي لتحميل مهام الكاشير.",
   "msgFirstRunSetupIntro": "Welcome to Gravity Cashier. Initialize your local administrator password, verify backup bucket configurations, and seed the default product catalogs.",
   "msgDatabaseStartupFailure": "تعذر تشغيل قاعدة بيانات SQLite المحلية. يحدث هذا عادة بسبب تلف الملف أو قفل الملف أو صلاحيات كتابة غير صحيحة.",
@@ -95,6 +121,8 @@
   "msgAdminSettingsLockedDescription": "تعديل الأسعار وفترة السماح وحد الجلسات القديمة وأسعار المخزون وكلمة المرور يحتاج صلاحية المدير.",
   "msgAdminSettingsUnlocked": "تم فتح إعدادات المدير.",
   "msgAdminUnlockFailed": "كلمة مرور المدير غير صحيحة.",
+  "msgNoAuditEvents": "لا توجد أحداث تدقيق مسجلة بعد.",
+  "msgAuditEventsLoadFailed": "تعذر تحميل أحداث التدقيق.",
   "msgRequiredField": "مطلوب.",
   "msgInvalidLeewayRange": "استخدم من 0 إلى 60 دقيقة.",
   "msgInvalidStaleThreshold": "استخدم {minimumMinutes} دقيقة على الأقل.",
@@ -117,10 +145,14 @@
   "btnSaveChanges": "حفظ التغييرات",
   "btnTapToEditAdminSettings": "تعديل إعدادات المدير",
   "btnLockAdminSettings": "قفل إعدادات المدير",
+  "btnLockSystem": "قفل النظام",
+  "btnPreviousPage": "السابق",
+  "btnNextPage": "التالي",
   "btnOk": "موافق",
   "btnLaunchSetupWizard": "بدء معالج الإعداد",
   "tooltipRevealPassword": "إظهار كلمة المرور",
   "tooltipHidePassword": "إخفاء كلمة المرور",
+  "helperEnterPassword": "أدخل كلمة المرور",
   "helperMinutes": "دقائق",
   "helperSyp": "ل.س",
   "chipActive": "نشط",

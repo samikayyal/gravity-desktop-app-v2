@@ -3,12 +3,28 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gravity_desktop_app_v2/app/providers.dart';
-import 'package:gravity_desktop_app_v2/core/config/app_settings.dart';
+import 'package:gravity_desktop_app_v2/core/security/admin_authorization.dart';
+import 'package:gravity_desktop_app_v2/data/repositories/admin_auth_repository.dart';
+
+typedef AdminAuthTimerFactory =
+    Timer Function(Duration duration, void Function() callback);
 
 final adminAuthControllerProvider =
     NotifierProvider<AdminAuthController, AdminAuthState>(
       AdminAuthController.new,
     );
+
+final adminAuthRepositoryProvider = Provider<AdminAuthRepository>((ref) {
+  return AdminAuthRepository(ref.watch(databaseProvider));
+});
+
+final adminAuthClockProvider = Provider<DateTime Function()>((ref) {
+  return DateTime.now;
+});
+
+final adminAuthTimerFactoryProvider = Provider<AdminAuthTimerFactory>((ref) {
+  return (duration, callback) => Timer(duration, callback);
+});
 
 @immutable
 class AdminAuthState {
@@ -31,7 +47,11 @@ class AdminAuthController extends Notifier<AdminAuthState> {
 
   Timer? _expiryTimer;
 
-  DateTime Function() get _now => DateTime.now;
+  DateTime Function() get _now => ref.read(adminAuthClockProvider);
+
+  AdminAuthTimerFactory get _timerFactory {
+    return ref.read(adminAuthTimerFactoryProvider);
+  }
 
   @override
   AdminAuthState build() {
@@ -40,13 +60,15 @@ class AdminAuthController extends Notifier<AdminAuthState> {
   }
 
   Future<bool> unlockWithPassword(String password) async {
-    final isValidPassword = await _verifyAdminPassword(password);
+    final isValidPassword = await ref
+        .read(adminAuthRepositoryProvider)
+        .verifyPlaintextPassword(password);
     if (!isValidPassword) {
       lock();
       return false;
     }
 
-    final authorization = AdminAuthorization._issue(
+    final authorization = AdminAuthorization.issue(
       now: _now(),
       lifetime: sessionDuration,
     );
@@ -70,8 +92,8 @@ class AdminAuthController extends Notifier<AdminAuthState> {
       throw const AdminAuthorizationException();
     }
 
-    authorization._revoke();
-    final refreshedAuthorization = authorization._refresh(
+    authorization.revoke();
+    final refreshedAuthorization = authorization.refresh(
       now: _now(),
       lifetime: sessionDuration,
     );
@@ -82,7 +104,7 @@ class AdminAuthController extends Notifier<AdminAuthState> {
   void lock() {
     _expiryTimer?.cancel();
     _expiryTimer = null;
-    state.authorization?._revoke();
+    state.authorization?.revoke();
     state = const AdminAuthState.locked();
   }
 
@@ -96,66 +118,6 @@ class AdminAuthController extends Notifier<AdminAuthState> {
       return;
     }
 
-    _expiryTimer = Timer(delay, lock);
+    _expiryTimer = _timerFactory(delay, lock);
   }
-
-  Future<bool> _verifyAdminPassword(String password) async {
-    final database = ref.read(databaseProvider);
-    final setting =
-        await (database.select(database.systemSettings)
-              ..where((table) => table.key.equals(SettingKeys.adminPassword)))
-            .getSingleOrNull();
-
-    return (setting?.value ?? AppSettings.defaults.adminPassword) == password;
-  }
-}
-
-@immutable
-class AdminAuthorization {
-  const AdminAuthorization._({
-    required this.issuedAt,
-    required this.expiresAt,
-    required _AdminAuthorizationLease lease,
-  }) : _lease = lease;
-
-  factory AdminAuthorization._issue({
-    required DateTime now,
-    required Duration lifetime,
-  }) {
-    return AdminAuthorization._(
-      issuedAt: now.toUtc(),
-      expiresAt: now.toUtc().add(lifetime),
-      lease: _AdminAuthorizationLease(),
-    );
-  }
-
-  final DateTime issuedAt;
-  final DateTime expiresAt;
-  final _AdminAuthorizationLease _lease;
-
-  bool isActiveAt(DateTime now) {
-    return !_lease.isRevoked && now.toUtc().isBefore(expiresAt);
-  }
-
-  AdminAuthorization _refresh({
-    required DateTime now,
-    required Duration lifetime,
-  }) {
-    return AdminAuthorization._issue(now: now, lifetime: lifetime);
-  }
-
-  void _revoke() {
-    _lease.isRevoked = true;
-  }
-}
-
-class _AdminAuthorizationLease {
-  bool isRevoked = false;
-}
-
-class AdminAuthorizationException implements Exception {
-  const AdminAuthorizationException();
-
-  @override
-  String toString() => 'AdminAuthorizationException()';
 }

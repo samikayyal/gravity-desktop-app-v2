@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:drift/drift.dart' hide isNull;
@@ -5,10 +6,13 @@ import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gravity_desktop_app_v2/app/providers.dart';
+import 'package:gravity_desktop_app_v2/core/audit/audit_service.dart';
 import 'package:gravity_desktop_app_v2/core/config/app_settings.dart';
 import 'package:gravity_desktop_app_v2/core/config/system_settings_provider.dart';
 import 'package:gravity_desktop_app_v2/core/database/local_database.dart';
+import 'package:gravity_desktop_app_v2/core/security/admin_authorization.dart';
 import 'package:gravity_desktop_app_v2/core/security/admin_auth_notifier.dart';
+import 'package:gravity_desktop_app_v2/data/repositories/audit_repository.dart';
 import 'package:gravity_desktop_app_v2/data/repositories/settings_repository.dart';
 
 void main() {
@@ -152,6 +156,21 @@ void main() {
         settingsChangedFields.keys,
         isNot(contains(SettingKeys.pricingMatrixJson)),
       );
+
+      final auditPage = await AuditRepository(
+        database,
+      ).fetchAuditEventsPage(pageIndex: 0, pageSize: 10);
+      final priceRecord = auditPage.records.singleWhere(
+        (record) => record.eventType == AuditEventType.priceChange,
+      );
+
+      expect(
+        priceRecord.changedDetails,
+        contains(
+          'pricing_matrix_json.fixed_duration_rates.block_60_min: '
+          '18000 -> 19000',
+        ),
+      );
     });
 
     test('saves public settings without creating audit rows', () async {
@@ -194,6 +213,82 @@ void main() {
         container
             .read(adminAuthControllerProvider)
             .isAuthenticatedAt(DateTime.now()),
+        isFalse,
+      );
+    });
+
+    test(
+      'admin auth controller requires a stored admin password row',
+      () async {
+        final container = ProviderContainer(
+          overrides: [databaseProvider.overrideWithValue(database)],
+        );
+        addTearDown(container.dispose);
+
+        final unlocked = await container
+            .read(adminAuthControllerProvider.notifier)
+            .unlockWithPassword(AppSettings.defaults.adminPassword);
+
+        final rows = await database.select(database.systemSettings).get();
+        expect(unlocked, isFalse);
+        expect(rows, isEmpty);
+      },
+    );
+
+    test('admin auth controller uses five-minute sliding sessions', () async {
+      await repository.loadOrSeedSettings();
+      var now = DateTime.utc(2026, 5, 27, 12, 0);
+      void Function()? expiryCallback;
+      final container = ProviderContainer(
+        overrides: [
+          databaseProvider.overrideWithValue(database),
+          adminAuthClockProvider.overrideWithValue(() => now),
+          adminAuthTimerFactoryProvider.overrideWithValue((duration, callback) {
+            expect(duration, AdminAuthController.sessionDuration);
+            expiryCallback = callback;
+            return _TestTimer();
+          }),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final unlocked = await container
+          .read(adminAuthControllerProvider.notifier)
+          .unlockWithPassword('admin123');
+      final authorization = container
+          .read(adminAuthControllerProvider)
+          .authorization!;
+
+      expect(unlocked, isTrue);
+      expect(authorization.expiresAt, DateTime.utc(2026, 5, 27, 12, 5));
+      expect(
+        container
+            .read(adminAuthControllerProvider)
+            .isAuthenticatedAt(DateTime.utc(2026, 5, 27, 12, 4, 59)),
+        isTrue,
+      );
+
+      now = DateTime.utc(2026, 5, 27, 12, 1);
+      container
+          .read(adminAuthControllerProvider.notifier)
+          .refreshSession(authorization);
+      final refreshedAuthorization = container
+          .read(adminAuthControllerProvider)
+          .authorization!;
+
+      expect(
+        refreshedAuthorization.expiresAt,
+        DateTime.utc(2026, 5, 27, 12, 6),
+      );
+      expect(authorization.isActiveAt(now), isFalse);
+
+      now = DateTime.utc(2026, 5, 27, 12, 6, 1);
+      expiryCallback!();
+
+      expect(
+        container
+            .read(adminAuthControllerProvider)
+            .isAuthenticatedAt(DateTime.utc(2026, 5, 27, 12, 6, 1)),
         isFalse,
       );
     });
@@ -265,6 +360,36 @@ void main() {
     });
 
     test(
+      'rolls back protected settings mutation when audit write fails',
+      () async {
+        final initial = await repository.loadOrSeedSettings();
+        final failingRepository = SettingsRepository(
+          database,
+          now: fixedNow,
+          auditRepository: _FailingAuditRepository(database),
+        );
+
+        await expectLater(
+          failingRepository.saveAdminSettings(
+            requestedSettings: initial.copyWith(leewayMinutes: 22),
+            authorization: await unlockAdmin(),
+          ),
+          throwsA(isA<AuditWriteException>()),
+        );
+
+        final leewayRow =
+            await (database.select(database.systemSettings)..where(
+                  (table) => table.key.equals(SettingKeys.leewayMinutes),
+                ))
+                .getSingle();
+        final auditRows = await database.select(database.auditEvents).get();
+
+        expect(leewayRow.value, '10');
+        expect(auditRows, isEmpty);
+      },
+    );
+
+    test(
       'settings controller does not bypass admin password verification',
       () async {
         final container = ProviderContainer(
@@ -295,4 +420,28 @@ void main() {
       },
     );
   });
+}
+
+class _FailingAuditRepository extends AuditRepository {
+  _FailingAuditRepository(super.database);
+
+  @override
+  Future<int> insertAuditEvent(AuditEventDraft draft) {
+    throw const AuditWriteException('forced audit failure');
+  }
+}
+
+class _TestTimer implements Timer {
+  bool _isActive = true;
+
+  @override
+  bool get isActive => _isActive;
+
+  @override
+  int get tick => 0;
+
+  @override
+  void cancel() {
+    _isActive = false;
+  }
 }
