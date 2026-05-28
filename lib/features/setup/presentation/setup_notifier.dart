@@ -22,26 +22,23 @@ class SetupCatalogDraft {
   const SetupCatalogDraft({
     required this.enabled,
     required this.name,
-    required this.sku,
     required this.unitPriceText,
     required this.stockText,
   });
 
-  factory SetupCatalogDraft.grippySocks() {
+  factory SetupCatalogDraft.socks() {
     return const SetupCatalogDraft(
       enabled: true,
-      name: 'Grippy Socks',
-      sku: 'SOCKS-GRIP',
+      name: 'Socks',
       unitPriceText: '12000',
       stockText: '100',
     );
   }
 
-  factory SetupCatalogDraft.bottledWater() {
+  factory SetupCatalogDraft.water() {
     return const SetupCatalogDraft(
       enabled: true,
-      name: 'Bottled Water',
-      sku: 'WATER-500',
+      name: 'Water',
       unitPriceText: '2000',
       stockText: '50',
     );
@@ -49,21 +46,20 @@ class SetupCatalogDraft {
 
   final bool enabled;
   final String name;
-  final String sku;
   final String unitPriceText;
   final String stockText;
+
+  String get sku => name.trim().toUpperCase();
 
   SetupCatalogDraft copyWith({
     bool? enabled,
     String? name,
-    String? sku,
     String? unitPriceText,
     String? stockText,
   }) {
     return SetupCatalogDraft(
       enabled: enabled ?? this.enabled,
       name: name ?? this.name,
-      sku: sku ?? this.sku,
       unitPriceText: unitPriceText ?? this.unitPriceText,
       stockText: stockText ?? this.stockText,
     );
@@ -76,7 +72,7 @@ class SetupCatalogDraft {
     final unitPrice = int.tryParse(unitPriceText.trim());
     final stock = int.tryParse(stockText.trim());
     return name.trim().isNotEmpty &&
-        sku.trim().isNotEmpty &&
+        sku.isNotEmpty &&
         unitPrice != null &&
         unitPrice >= 0 &&
         stock != null &&
@@ -86,7 +82,7 @@ class SetupCatalogDraft {
   InitialCatalogProduct toInitialProduct() {
     return InitialCatalogProduct(
       name: name.trim(),
-      sku: sku.trim(),
+      sku: sku,
       unitPriceSyp: int.parse(unitPriceText.trim()),
       initialStock: int.parse(stockText.trim()),
     );
@@ -115,10 +111,7 @@ class SetupState {
       confirmPassword: '',
       cloudStatus: SetupCloudStatus.notTested,
       restoreStatus: SetupRestoreStatus.idle,
-      catalogDrafts: [
-        SetupCatalogDraft.grippySocks(),
-        SetupCatalogDraft.bottledWater(),
-      ],
+      catalogDrafts: [SetupCatalogDraft.socks(), SetupCatalogDraft.water()],
     );
   }
 
@@ -182,8 +175,8 @@ class SetupState {
 }
 
 String? validateAdminPassword(String password, String confirmation) {
-  if (password.trim().length < 6) {
-    return 'admin_password_min_6';
+  if (password.isEmpty) {
+    return 'admin_password_empty';
   }
   if (password != confirmation) {
     return 'admin_password_mismatch';

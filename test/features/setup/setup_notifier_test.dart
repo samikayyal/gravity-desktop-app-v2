@@ -42,8 +42,8 @@ void main() {
     expect(state.confirmPassword, 'AdminGravity');
   });
 
-  test('validates admin password length and confirmation match', () {
-    expect(validateAdminPassword('short', 'short'), 'admin_password_min_6');
+  test('validates admin password and confirmation match', () {
+    expect(validateAdminPassword('', ''), 'admin_password_empty');
     expect(
       validateAdminPassword('AdminGravity', 'AdminGravity2'),
       'admin_password_mismatch',
@@ -57,7 +57,7 @@ void main() {
 
     notifier.updateCatalogDraft(
       1,
-      state.catalogDrafts[1].copyWith(sku: ' socks-grip '),
+      state.catalogDrafts[1].copyWith(name: ' socks '),
     );
 
     final updated = container.read(setupNotifierProvider);

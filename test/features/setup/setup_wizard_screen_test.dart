@@ -68,7 +68,7 @@ void main() {
 
     await tester.enterText(
       editableTextByFieldKey('setup.adminPassword'),
-      'AdminGravity',
+      'abc',
     );
     await tester.enterText(
       editableTextByFieldKey('setup.confirmPassword'),
@@ -79,7 +79,7 @@ void main() {
 
     await tester.enterText(
       editableTextByFieldKey('setup.confirmPassword'),
-      'AdminGravity',
+      'abc',
     );
     await tester.pump();
     expect(nextButton().onPressed, isNotNull);
@@ -118,7 +118,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Initial Product Catalog'), findsOneWidget);
-    expect(find.text('Grippy Socks'), findsOneWidget);
-    expect(find.text('Bottled Water'), findsOneWidget);
+    expect(find.text('Socks'), findsOneWidget);
+    expect(find.text('Water'), findsOneWidget);
   });
 }

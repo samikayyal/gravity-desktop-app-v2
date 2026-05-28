@@ -19,6 +19,7 @@ class GravityTextField extends StatefulWidget {
     this.onFieldSubmitted,
     this.inputFormatters,
     this.textAlign = TextAlign.start,
+    this.suffixText,
   }) : isMoney = false,
        isBlind = false,
        revealTooltip = null,
@@ -43,6 +44,7 @@ class GravityTextField extends StatefulWidget {
     this.onFieldSubmitted,
     this.inputFormatters,
     this.textAlign = TextAlign.start,
+    this.suffixText,
   }) : isMoney = false,
        isBlind = true;
 
@@ -61,6 +63,7 @@ class GravityTextField extends StatefulWidget {
     this.onChanged,
     this.onFieldSubmitted,
     this.inputFormatters,
+    this.suffixText,
   }) : keyboardType = TextInputType.number,
        textAlign = TextAlign.end,
        isMoney = true,
@@ -85,6 +88,7 @@ class GravityTextField extends StatefulWidget {
     this.onChanged,
     this.onFieldSubmitted,
     this.inputFormatters,
+    this.suffixText,
   }) : keyboardType = TextInputType.number,
        textAlign = TextAlign.end,
        isMoney = true,
@@ -109,6 +113,7 @@ class GravityTextField extends StatefulWidget {
   final bool isBlind;
   final String? revealTooltip;
   final String? hideTooltip;
+  final String? suffixText;
 
   @override
   State<GravityTextField> createState() => _GravityTextFieldState();
@@ -145,6 +150,7 @@ class _GravityTextFieldState extends State<GravityTextField> {
         hintText: widget.hintText,
         helperText: widget.helperText,
         errorText: widget.errorText,
+        suffixText: widget.suffixText,
         suffixIcon: widget.isBlind ? _buildRevealButton() : null,
       ),
     );

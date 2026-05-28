@@ -32,14 +32,14 @@ void main() {
         gcpEnabled: false,
         products: const [
           InitialCatalogProduct(
-            name: 'Grippy Socks',
-            sku: 'SOCKS-GRIP',
+            name: 'Socks',
+            sku: 'SOCKS',
             unitPriceSyp: 12000,
             initialStock: 100,
           ),
           InitialCatalogProduct(
-            name: 'Bottled Water',
-            sku: 'WATER-500',
+            name: 'Water',
+            sku: 'WATER',
             unitPriceSyp: 2000,
             initialStock: 50,
           ),
@@ -54,12 +54,9 @@ void main() {
 
       final products = await database.select(database.products).get();
       expect(products, hasLength(2));
-      expect(products.map((product) => product.sku), {
-        'SOCKS-GRIP',
-        'WATER-500',
-      });
+      expect(products.map((product) => product.sku), {'SOCKS', 'WATER'});
       expect(
-        products.firstWhere((product) => product.sku == 'SOCKS-GRIP').unitPrice,
+        products.firstWhere((product) => product.sku == 'SOCKS').unitPrice,
         12000,
       );
 
@@ -87,13 +84,13 @@ void main() {
         gcpEnabled: false,
         products: const [
           InitialCatalogProduct(
-            name: 'Grippy Socks',
+            name: 'Socks',
             sku: 'DUPLICATE',
             unitPriceSyp: 12000,
             initialStock: 100,
           ),
           InitialCatalogProduct(
-            name: 'Bottled Water',
+            name: 'Water',
             sku: ' duplicate ',
             unitPriceSyp: 2000,
             initialStock: 50,

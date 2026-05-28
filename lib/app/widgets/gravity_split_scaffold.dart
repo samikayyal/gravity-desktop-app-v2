@@ -6,7 +6,7 @@ class GravitySplitScaffold extends StatelessWidget {
     super.key,
     required this.leftPanel,
     required this.rightPanel,
-    this.leadingNavigation,
+    this.navigationRail,
     this.leftFlex = 6,
     this.rightFlex = 4,
     this.transitionDuration = AppMotion.standard,
@@ -22,7 +22,7 @@ class GravitySplitScaffold extends StatelessWidget {
 
   final Widget leftPanel;
   final Widget rightPanel;
-  final Widget? leadingNavigation;
+  final Widget? navigationRail;
   final int leftFlex;
   final int rightFlex;
   final Duration transitionDuration;
@@ -34,10 +34,6 @@ class GravitySplitScaffold extends StatelessWidget {
     return Scaffold(
       body: Row(
         children: [
-          if (leadingNavigation != null) ...[
-            leadingNavigation!,
-            const VerticalDivider(width: 1, thickness: 1),
-          ],
           Expanded(
             child: Row(
               children: [
@@ -66,6 +62,10 @@ class GravitySplitScaffold extends StatelessWidget {
               ],
             ),
           ),
+          if (navigationRail != null) ...[
+            const VerticalDivider(width: 1, thickness: 1),
+            navigationRail!,
+          ],
         ],
       ),
     );

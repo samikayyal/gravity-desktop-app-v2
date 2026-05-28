@@ -90,7 +90,7 @@ void main() {
       );
 
       expect(capturedDirection, TextDirection.rtl);
-      expect(railCenter.dx, greaterThan(1800));
+      expect(railCenter.dx, lessThan(200));
       expect(tester.takeException(), isNull);
     });
 

@@ -26,7 +26,7 @@ class _SplitPanelLayoutState extends State<SplitPanelLayout> {
     final isSettingsSelected = _selectedIndex == _settingsIndex;
 
     return GravitySplitScaffold(
-      leadingNavigation: NavigationRail(
+      navigationRail: NavigationRail(
         key: const Key('mainNavigationRail'),
         selectedIndex: _selectedIndex,
         onDestinationSelected: (int index) {

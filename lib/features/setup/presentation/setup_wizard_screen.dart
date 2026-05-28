@@ -151,25 +151,29 @@ class _SetupHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          ClipRRect(
-            borderRadius: AppRadius.smBorder,
-            child: LinearProgressIndicator(
-              minHeight: 8,
-              value: (state.stepIndex + 1) / SetupWizardStep.values.length,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
           Wrap(
             spacing: AppSpacing.sm,
             runSpacing: AppSpacing.xs,
             children: [
               for (var i = 0; i < labels.length; i++)
-                GravityStatusChip.sync(
-                  label: labels[i],
-                  tone: i == state.stepIndex
-                      ? GravityStatusTone.cloudOk
-                      : GravityStatusTone.neutral,
-                ),
+                if (i < state.stepIndex)
+                  GravityStatusChip(
+                    key: Key('setup.step.chip.$i'),
+                    label: labels[i],
+                    tone: GravityStatusTone.active,
+                    icon: Icons.check,
+                    filled: false,
+                    compact: true,
+                    showDot: false,
+                  )
+                else
+                  GravityStatusChip.sync(
+                    key: Key('setup.step.chip.$i'),
+                    label: labels[i],
+                    tone: i == state.stepIndex
+                        ? GravityStatusTone.cloudOk
+                        : GravityStatusTone.neutral,
+                  ),
             ],
           ),
         ],
@@ -463,41 +467,23 @@ class _CatalogDraftRow extends ConsumerWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Checkbox(
-              key: Key('setup.catalog.enabled.$index'),
-              value: draft.enabled,
-              onChanged: (value) => update(draft.copyWith(enabled: value)),
-            ),
-            const SizedBox(width: AppSpacing.sm),
             Expanded(
-              flex: 3,
+              flex: 4,
               child: GravityTextField(
                 key: Key('setup.catalog.name.$index'),
                 controller: controllers.name,
                 label: l10n.labelProductName,
-                enabled: draft.enabled,
                 onChanged: (value) => update(draft.copyWith(name: value)),
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
             Expanded(
-              flex: 2,
-              child: GravityTextField(
-                key: Key('setup.catalog.sku.$index'),
-                controller: controllers.sku,
-                label: l10n.labelProductSku,
-                enabled: draft.enabled,
-                onChanged: (value) => update(draft.copyWith(sku: value)),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              flex: 2,
+              flex: 3,
               child: GravityTextField.money(
                 key: Key('setup.catalog.price.$index'),
                 controller: controllers.price,
                 label: l10n.labelProductPrice,
-                enabled: draft.enabled,
+                suffixText: 'SYP',
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 onChanged: (value) =>
                     update(draft.copyWith(unitPriceText: value)),
@@ -505,12 +491,11 @@ class _CatalogDraftRow extends ConsumerWidget {
             ),
             const SizedBox(width: AppSpacing.sm),
             Expanded(
-              flex: 1,
+              flex: 2,
               child: GravityTextField(
                 key: Key('setup.catalog.stock.$index'),
                 controller: controllers.stock,
                 label: l10n.labelProductStock,
-                enabled: draft.enabled,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 textAlign: TextAlign.end,
@@ -521,6 +506,32 @@ class _CatalogDraftRow extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class _CatalogRowControllers {
+  _CatalogRowControllers({
+    required this.name,
+    required this.price,
+    required this.stock,
+  });
+
+  factory _CatalogRowControllers.fromDraft(SetupCatalogDraft draft) {
+    return _CatalogRowControllers(
+      name: TextEditingController(text: draft.name),
+      price: TextEditingController(text: draft.unitPriceText),
+      stock: TextEditingController(text: draft.stockText),
+    );
+  }
+
+  final TextEditingController name;
+  final TextEditingController price;
+  final TextEditingController stock;
+
+  void dispose() {
+    name.dispose();
+    price.dispose();
+    stock.dispose();
   }
 }
 
@@ -620,35 +631,5 @@ class _StepBody extends StatelessWidget {
         child,
       ],
     );
-  }
-}
-
-class _CatalogRowControllers {
-  _CatalogRowControllers({
-    required this.name,
-    required this.sku,
-    required this.price,
-    required this.stock,
-  });
-
-  factory _CatalogRowControllers.fromDraft(SetupCatalogDraft draft) {
-    return _CatalogRowControllers(
-      name: TextEditingController(text: draft.name),
-      sku: TextEditingController(text: draft.sku),
-      price: TextEditingController(text: draft.unitPriceText),
-      stock: TextEditingController(text: draft.stockText),
-    );
-  }
-
-  final TextEditingController name;
-  final TextEditingController sku;
-  final TextEditingController price;
-  final TextEditingController stock;
-
-  void dispose() {
-    name.dispose();
-    sku.dispose();
-    price.dispose();
-    stock.dispose();
   }
 }
