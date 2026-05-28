@@ -298,20 +298,35 @@ void main() {
       expect(await repository.checkStartupState(), StartupState.needsSetup);
     });
 
-    test('Treats setup_complete value 1 as complete', () async {
-      final repository = StartupRepository(database);
+    test(
+      'Requires setup_complete and explicit admin_password to be complete',
+      () async {
+        final repository = StartupRepository(database);
 
-      await database
-          .into(database.systemSettings)
-          .insert(
-            SystemSettingsCompanion.insert(
-              key: 'setup_complete',
-              value: '1',
-              updatedAt: nowUtc(),
-            ),
-          );
+        await database
+            .into(database.systemSettings)
+            .insert(
+              SystemSettingsCompanion.insert(
+                key: 'setup_complete',
+                value: '1',
+                updatedAt: nowUtc(),
+              ),
+            );
 
-      expect(await repository.checkStartupState(), StartupState.complete);
-    });
+        expect(await repository.checkStartupState(), StartupState.needsSetup);
+
+        await database
+            .into(database.systemSettings)
+            .insert(
+              SystemSettingsCompanion.insert(
+                key: 'admin_password',
+                value: 'AdminGravity',
+                updatedAt: nowUtc(),
+              ),
+            );
+
+        expect(await repository.checkStartupState(), StartupState.complete);
+      },
+    );
   });
 }

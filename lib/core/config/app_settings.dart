@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 
 abstract final class SettingKeys {
   static const String adminPassword = 'admin_password';
+  static const String setupComplete = 'setup_complete';
+  static const String gcpEnabled = 'gcp_enabled';
   static const String leewayMinutes = 'leeway_minutes';
   static const String staleThresholdMinutes = 'stale_threshold_minutes';
   static const String defaultSocksPriceSyp = 'default_socks_price_syp';

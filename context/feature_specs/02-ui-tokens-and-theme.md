@@ -87,14 +87,14 @@ To combine modern branding with high numeric legibility, we utilize a two-family
 
 | Style Name | Font Family | Size (px) | Weight | Line Height | Case Usage |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Header Large** | Outfit | 24 | Bold (700) | 1.2 | Screen main titles (e.g. Active Board) |
-| **Header Medium**| Outfit | 18 | Semi-Bold (600) | 1.3 | Panel subheaders, dialog titles |
-| **Timer Counter** | Outfit | 36 | Bold (700) | 1.0 | Active countdown time digits |
-| **Body Primary** | Inter | 14 | Regular (400) | 1.4 | Standard body paragraphs, descriptions |
-| **Body Semibold**| Inter | 14 | Semi-Bold (600) | 1.4 | Important table data, text selections |
-| **Table Number** | Inter | 13 | Medium (500) | 1.2 | Financial SYP listings, item quantity cells |
-| **Input Label** | Inter | 12 | Semi-Bold (600) | 1.2 | Form input headers (e.g. Full Name) |
-| **Status Chip** | Inter | 11 | Bold (700) | 1.1 | Text badges inside status containers |
+| **Header Large** | Outfit | 26 | Bold (700) | 1.2 | Screen main titles (e.g. Active Board) |
+| **Header Medium**| Outfit | 20 | Semi-Bold (600) | 1.3 | Panel subheaders, dialog titles |
+| **Timer Counter** | Outfit | 40 | Bold (700) | 1.0 | Active countdown time digits |
+| **Body Primary** | Inter | 16 | Regular (400) | 1.4 | Standard body paragraphs, descriptions |
+| **Body Semibold**| Inter | 16 | Semi-Bold (600) | 1.4 | Important table data, text selections |
+| **Table Number** | Inter | 15 | Medium (500) | 1.2 | Financial SYP listings, item quantity cells |
+| **Input Label** | Inter | 14 | Semi-Bold (600) | 1.2 | Form input headers (e.g. Full Name) |
+| **Status Chip** | Inter | 13 | Bold (700) | 1.1 | Text badges inside status containers |
 
 ### Spacing Grid & Border Radius Scales
 The spacing scale relies on an `8dp` baseline to maximize density without creating clutter on standard 1080p monitors.

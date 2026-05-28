@@ -70,6 +70,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get titleAuditEvents => 'Recent Audit Events';
 
   @override
+  String get titleSetupPasswordStep => 'Create Administrator Password';
+
+  @override
+  String get titleSetupRestoreStep => 'Restore Existing Database';
+
+  @override
+  String get titleSetupCloudStep => 'Cloud Config Check';
+
+  @override
+  String get titleSetupCatalogStep => 'Initial Product Catalog';
+
+  @override
   String get labelBoard => 'Board';
 
   @override
@@ -126,6 +138,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get labelAdminPassword => 'Admin password';
+
+  @override
+  String get labelConfirmAdminPassword => 'Confirm admin password';
 
   @override
   String get labelLeewayGracePeriod => 'Leeway grace period';
@@ -189,6 +204,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labelAuditChangedDetails => 'Changed Details';
 
   @override
+  String get labelSetupStepPassword => '1. Password';
+
+  @override
+  String get labelSetupStepRestore => '2. Restore';
+
+  @override
+  String get labelSetupStepCloud => '3. Cloud Config';
+
+  @override
+  String get labelSetupStepCatalog => '4. Catalog';
+
+  @override
+  String get labelOptional => 'Optional';
+
+  @override
+  String get labelRestoring => 'Restoring...';
+
+  @override
+  String get labelSqliteDatabaseFile => 'SQLite database';
+
+  @override
+  String get labelEditableDefaults => 'Editable defaults';
+
+  @override
+  String get labelProductName => 'Name';
+
+  @override
+  String get labelProductSku => 'SKU';
+
+  @override
+  String get labelProductPrice => 'Price';
+
+  @override
+  String get labelProductStock => 'Stock';
+
+  @override
   String labelAuditPage(int pageNumber, int totalPages) {
     return 'Page $pageNumber of $totalPages';
   }
@@ -199,7 +250,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get msgFirstRunSetupIntro =>
-      'Welcome to Gravity Cashier. Initialize your local administrator password, verify backup bucket configurations, and seed the default product catalogs.';
+      'Welcome to Gravity Cashier. Initialize your local administrator password, check local backup configuration, and seed the default product catalogs.';
+
+  @override
+  String get msgSetupPasswordIntro =>
+      'Create the local admin password used for protected setup, restore, price, and correction actions.';
+
+  @override
+  String get msgSetupRestoreIntro =>
+      'Optionally replace this fresh database with a known-good Gravity SQLite backup. The app verifies the file and creates a local safety copy before replacing anything.';
+
+  @override
+  String get msgRestoreSkipHint =>
+      'Skip this step for a new installation. Restores are intentional and never automatic.';
+
+  @override
+  String get msgSetupCloudIntro =>
+      'GCP bucket and service-account values are read from the gitignored .env file in the app directory. This setup check only confirms that local configuration is present; cloud backup stays disabled until the backup service performs a real bucket verification.';
+
+  @override
+  String get msgSetupCatalogIntro =>
+      'Review the baseline stock rows before opening cashier operations. Enabled rows seed products and their initial stock ledger movements.';
 
   @override
   String get msgDatabaseStartupFailure =>
@@ -270,11 +341,63 @@ class AppLocalizationsEn extends AppLocalizations {
   String get msgInvalidAdminPasswordLength => 'Use at least 4 characters.';
 
   @override
+  String get msgInvalidSetupPasswordLength => 'Use at least 6 characters.';
+
+  @override
+  String get msgAdminPasswordMismatch => 'Passwords must match.';
+
+  @override
+  String get msgInvalidCatalogRow =>
+      'Enabled rows need a name, SKU, non-negative price, and non-negative stock.';
+
+  @override
+  String get msgDuplicateCatalogSku =>
+      'Enabled product rows must use unique SKUs.';
+
+  @override
+  String get msgRestoreSuccess => 'Restore verified';
+
+  @override
+  String get msgRestoreFailed =>
+      'Restore failed. The active database was left unchanged.';
+
+  @override
+  String get msgCloudTestSuccess => 'Local cloud config found';
+
+  @override
+  String get msgCloudTestFailed =>
+      'Cloud config was not detected. Make sure your .env file contains GCP bucket and service-account parameters.';
+
+  @override
+  String get msgCloudSetupSkipped => 'Cloud setup skipped';
+
+  @override
   String get msgInvalidPricingMatrix => 'Check pricing values before saving.';
+
+  @override
+  String get msgSetupFinishFailed => 'Setup could not be completed.';
 
   @override
   String get msgLocalizationFallbackSample =>
       'Pending Arabic translation fallback text.';
+
+  @override
+  String get btnBack => 'Back';
+
+  @override
+  String get btnNext => 'Next';
+
+  @override
+  String get btnFinish => 'Finish';
+
+  @override
+  String get btnSelectDbFile => 'Choose SQLite .db File';
+
+  @override
+  String get btnTestGcp => 'Check Cloud Config';
+
+  @override
+  String get btnSkipGcp => 'Skip Cloud Setup';
 
   @override
   String get btnRetryConnection => 'Retry Connection';

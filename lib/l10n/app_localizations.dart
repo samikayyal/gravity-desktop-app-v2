@@ -218,6 +218,30 @@ abstract class AppLocalizations {
   /// **'Recent Audit Events'**
   String get titleAuditEvents;
 
+  /// No description provided for @titleSetupPasswordStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Administrator Password'**
+  String get titleSetupPasswordStep;
+
+  /// No description provided for @titleSetupRestoreStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Existing Database'**
+  String get titleSetupRestoreStep;
+
+  /// No description provided for @titleSetupCloudStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud Config Check'**
+  String get titleSetupCloudStep;
+
+  /// No description provided for @titleSetupCatalogStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Initial Product Catalog'**
+  String get titleSetupCatalogStep;
+
   /// No description provided for @labelBoard.
   ///
   /// In en, this message translates to:
@@ -325,6 +349,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Admin password'**
   String get labelAdminPassword;
+
+  /// No description provided for @labelConfirmAdminPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm admin password'**
+  String get labelConfirmAdminPassword;
 
   /// No description provided for @labelLeewayGracePeriod.
   ///
@@ -440,6 +470,78 @@ abstract class AppLocalizations {
   /// **'Changed Details'**
   String get labelAuditChangedDetails;
 
+  /// No description provided for @labelSetupStepPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Password'**
+  String get labelSetupStepPassword;
+
+  /// No description provided for @labelSetupStepRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Restore'**
+  String get labelSetupStepRestore;
+
+  /// No description provided for @labelSetupStepCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Cloud Config'**
+  String get labelSetupStepCloud;
+
+  /// No description provided for @labelSetupStepCatalog.
+  ///
+  /// In en, this message translates to:
+  /// **'4. Catalog'**
+  String get labelSetupStepCatalog;
+
+  /// No description provided for @labelOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get labelOptional;
+
+  /// No description provided for @labelRestoring.
+  ///
+  /// In en, this message translates to:
+  /// **'Restoring...'**
+  String get labelRestoring;
+
+  /// No description provided for @labelSqliteDatabaseFile.
+  ///
+  /// In en, this message translates to:
+  /// **'SQLite database'**
+  String get labelSqliteDatabaseFile;
+
+  /// No description provided for @labelEditableDefaults.
+  ///
+  /// In en, this message translates to:
+  /// **'Editable defaults'**
+  String get labelEditableDefaults;
+
+  /// No description provided for @labelProductName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get labelProductName;
+
+  /// No description provided for @labelProductSku.
+  ///
+  /// In en, this message translates to:
+  /// **'SKU'**
+  String get labelProductSku;
+
+  /// No description provided for @labelProductPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get labelProductPrice;
+
+  /// No description provided for @labelProductStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock'**
+  String get labelProductStock;
+
   /// No description provided for @labelAuditPage.
   ///
   /// In en, this message translates to:
@@ -455,8 +557,38 @@ abstract class AppLocalizations {
   /// No description provided for @msgFirstRunSetupIntro.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Gravity Cashier. Initialize your local administrator password, verify backup bucket configurations, and seed the default product catalogs.'**
+  /// **'Welcome to Gravity Cashier. Initialize your local administrator password, check local backup configuration, and seed the default product catalogs.'**
   String get msgFirstRunSetupIntro;
+
+  /// No description provided for @msgSetupPasswordIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Create the local admin password used for protected setup, restore, price, and correction actions.'**
+  String get msgSetupPasswordIntro;
+
+  /// No description provided for @msgSetupRestoreIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Optionally replace this fresh database with a known-good Gravity SQLite backup. The app verifies the file and creates a local safety copy before replacing anything.'**
+  String get msgSetupRestoreIntro;
+
+  /// No description provided for @msgRestoreSkipHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip this step for a new installation. Restores are intentional and never automatic.'**
+  String get msgRestoreSkipHint;
+
+  /// No description provided for @msgSetupCloudIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'GCP bucket and service-account values are read from the gitignored .env file in the app directory. This setup check only confirms that local configuration is present; cloud backup stays disabled until the backup service performs a real bucket verification.'**
+  String get msgSetupCloudIntro;
+
+  /// No description provided for @msgSetupCatalogIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Review the baseline stock rows before opening cashier operations. Enabled rows seed products and their initial stock ledger movements.'**
+  String get msgSetupCatalogIntro;
 
   /// No description provided for @msgDatabaseStartupFailure.
   ///
@@ -578,17 +710,113 @@ abstract class AppLocalizations {
   /// **'Use at least 4 characters.'**
   String get msgInvalidAdminPasswordLength;
 
+  /// No description provided for @msgInvalidSetupPasswordLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least 6 characters.'**
+  String get msgInvalidSetupPasswordLength;
+
+  /// No description provided for @msgAdminPasswordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords must match.'**
+  String get msgAdminPasswordMismatch;
+
+  /// No description provided for @msgInvalidCatalogRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled rows need a name, SKU, non-negative price, and non-negative stock.'**
+  String get msgInvalidCatalogRow;
+
+  /// No description provided for @msgDuplicateCatalogSku.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled product rows must use unique SKUs.'**
+  String get msgDuplicateCatalogSku;
+
+  /// No description provided for @msgRestoreSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore verified'**
+  String get msgRestoreSuccess;
+
+  /// No description provided for @msgRestoreFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore failed. The active database was left unchanged.'**
+  String get msgRestoreFailed;
+
+  /// No description provided for @msgCloudTestSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Local cloud config found'**
+  String get msgCloudTestSuccess;
+
+  /// No description provided for @msgCloudTestFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud config was not detected. Make sure your .env file contains GCP bucket and service-account parameters.'**
+  String get msgCloudTestFailed;
+
+  /// No description provided for @msgCloudSetupSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud setup skipped'**
+  String get msgCloudSetupSkipped;
+
   /// No description provided for @msgInvalidPricingMatrix.
   ///
   /// In en, this message translates to:
   /// **'Check pricing values before saving.'**
   String get msgInvalidPricingMatrix;
 
+  /// No description provided for @msgSetupFinishFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup could not be completed.'**
+  String get msgSetupFinishFailed;
+
   /// No description provided for @msgLocalizationFallbackSample.
   ///
   /// In en, this message translates to:
   /// **'Pending Arabic translation fallback text.'**
   String get msgLocalizationFallbackSample;
+
+  /// No description provided for @btnBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get btnBack;
+
+  /// No description provided for @btnNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get btnNext;
+
+  /// No description provided for @btnFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get btnFinish;
+
+  /// No description provided for @btnSelectDbFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose SQLite .db File'**
+  String get btnSelectDbFile;
+
+  /// No description provided for @btnTestGcp.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Cloud Config'**
+  String get btnTestGcp;
+
+  /// No description provided for @btnSkipGcp.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Cloud Setup'**
+  String get btnSkipGcp;
 
   /// No description provided for @btnRetryConnection.
   ///

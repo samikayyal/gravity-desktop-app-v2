@@ -63,7 +63,7 @@ spec filenames are numbered in the intended implementation order.
 | [`04-shared-ui-primitives.md`](feature_specs/04-shared-ui-primitives.md) | Shared widgets (buttons, tables, chips, dialogs) derived from UI tokens |
 | [`05-settings-and-configuration.md`](feature_specs/05-settings-and-configuration.md) | Price defaults, leeway, stale thresholds, and protected settings |
 | [`06-admin-auth-and-audit-infrastructure.md`](feature_specs/06-admin-auth-and-audit-infrastructure.md) | Admin password and short-lived authorization, audit events ledger |
-| [`07-first-run-setup-and-restore.md`](feature_specs/07-first-run-setup-and-restore.md) | First-run setup (admin pwd, skip-able GCP connectivity test, configurable products) |
+| [`07-first-run-setup-and-restore.md`](feature_specs/07-first-run-setup-and-restore.md) | First-run setup (admin pwd, safe restore, skip-able local GCP config check, configurable products) |
 | [`08-player-profiles-and-search.md`](feature_specs/08-player-profiles-and-search.md) | Player identity, profiles, multiple phones, search, and snapshots |
 | [`09-product-sales.md`](feature_specs/09-product-sales.md) | Product catalog and sales snapshots (anonymous or player-attached) |
 | [`10-inventory.md`](feature_specs/10-inventory.md) | Inventory stock ledger, stock movements, and low stock warnings |

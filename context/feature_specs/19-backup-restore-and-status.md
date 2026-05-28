@@ -207,7 +207,7 @@ graph TD
 | **BAC-05** | Restore requires admin password entry, displaying a full structural preview of records. | [ ] |
 | **BAC-06** | Restore process takes a local safety copy `gravity.db.bak` before making any file swaps. | [ ] |
 | **BAC-07** | Automated database rollback is executed if the restored file fails initial verification or Drift loading. | [ ] |
-| **BAC-08** | Setup screen allows skipping the cloud connectivity test gracefully. | [ ] |
+| **BAC-08** | Setup screen allows skipping the local cloud config check gracefully; real bucket verification is handled by the backup service before cloud backup is enabled. | [ ] |
 
 ---
 

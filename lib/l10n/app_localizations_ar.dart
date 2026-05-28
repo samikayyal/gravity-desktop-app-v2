@@ -70,6 +70,18 @@ class AppLocalizationsAr extends AppLocalizations {
   String get titleAuditEvents => 'أحداث التدقيق الأخيرة';
 
   @override
+  String get titleSetupPasswordStep => 'إنشاء كلمة مرور المدير';
+
+  @override
+  String get titleSetupRestoreStep => 'استعادة قاعدة بيانات موجودة';
+
+  @override
+  String get titleSetupCloudStep => 'فحص إعدادات السحابة';
+
+  @override
+  String get titleSetupCatalogStep => 'كتالوج المنتجات الأولي';
+
+  @override
   String get labelBoard => 'اللوحة';
 
   @override
@@ -126,6 +138,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get labelAdminPassword => 'كلمة مرور المدير';
+
+  @override
+  String get labelConfirmAdminPassword => 'تأكيد كلمة مرور المدير';
 
   @override
   String get labelLeewayGracePeriod => 'فترة السماح';
@@ -189,6 +204,42 @@ class AppLocalizationsAr extends AppLocalizations {
   String get labelAuditChangedDetails => 'تفاصيل التغيير';
 
   @override
+  String get labelSetupStepPassword => '1. كلمة المرور';
+
+  @override
+  String get labelSetupStepRestore => '2. الاستعادة';
+
+  @override
+  String get labelSetupStepCloud => '3. إعدادات السحابة';
+
+  @override
+  String get labelSetupStepCatalog => '4. الكتالوج';
+
+  @override
+  String get labelOptional => 'اختياري';
+
+  @override
+  String get labelRestoring => 'جار الاستعادة...';
+
+  @override
+  String get labelSqliteDatabaseFile => 'قاعدة بيانات SQLite';
+
+  @override
+  String get labelEditableDefaults => 'قيم قابلة للتعديل';
+
+  @override
+  String get labelProductName => 'الاسم';
+
+  @override
+  String get labelProductSku => 'SKU';
+
+  @override
+  String get labelProductPrice => 'السعر';
+
+  @override
+  String get labelProductStock => 'المخزون';
+
+  @override
   String labelAuditPage(int pageNumber, int totalPages) {
     return 'صفحة $pageNumber من $totalPages';
   }
@@ -200,6 +251,26 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get msgFirstRunSetupIntro =>
       'Welcome to Gravity Cashier. Initialize your local administrator password, verify backup bucket configurations, and seed the default product catalogs.';
+
+  @override
+  String get msgSetupPasswordIntro =>
+      'أنشئ كلمة مرور المدير المحلية للإعداد والاستعادة وتعديل الأسعار والتصحيحات المحمية.';
+
+  @override
+  String get msgSetupRestoreIntro =>
+      'يمكنك اختياريا استبدال قاعدة البيانات الجديدة بنسخة Gravity SQLite سليمة. يتحقق التطبيق من الملف وينشئ نسخة أمان محلية قبل أي استبدال.';
+
+  @override
+  String get msgRestoreSkipHint =>
+      'تجاوز هذه الخطوة للتثبيت الجديد. الاستعادة مقصودة ولا تتم تلقائيا.';
+
+  @override
+  String get msgSetupCloudIntro =>
+      'تقرأ قيم GCP bucket وحساب الخدمة من ملف .env غير المتتبع داخل مجلد التطبيق. هذا الفحص يتأكد فقط من وجود الإعدادات المحلية؛ يبقى النسخ السحابي غير مفعل حتى تتحقق خدمة النسخ من bucket فعليا.';
+
+  @override
+  String get msgSetupCatalogIntro =>
+      'راجع صفوف المخزون الأساسية قبل فتح عمليات الكاشير. الصفوف المفعلة تنشئ المنتجات وحركات المخزون الأولية.';
 
   @override
   String get msgDatabaseStartupFailure =>
@@ -270,11 +341,63 @@ class AppLocalizationsAr extends AppLocalizations {
   String get msgInvalidAdminPasswordLength => 'استخدم 4 أحرف على الأقل.';
 
   @override
+  String get msgInvalidSetupPasswordLength => 'استخدم 6 أحرف على الأقل.';
+
+  @override
+  String get msgAdminPasswordMismatch => 'يجب أن تتطابق كلمتا المرور.';
+
+  @override
+  String get msgInvalidCatalogRow =>
+      'الصفوف المفعلة تحتاج اسما و SKU وسعرا ومخزونا بقيم غير سالبة.';
+
+  @override
+  String get msgDuplicateCatalogSku =>
+      'يجب أن تستخدم صفوف المنتجات المفعلة رموز SKU فريدة.';
+
+  @override
+  String get msgRestoreSuccess => 'تم التحقق من الاستعادة';
+
+  @override
+  String get msgRestoreFailed =>
+      'فشلت الاستعادة. بقيت قاعدة البيانات الحالية بدون تغيير.';
+
+  @override
+  String get msgCloudTestSuccess => 'تم العثور على إعدادات السحابة المحلية';
+
+  @override
+  String get msgCloudTestFailed =>
+      'لم يتم العثور على إعدادات السحابة. تأكد أن ملف .env يحتوي bucket ومعاملات حساب الخدمة.';
+
+  @override
+  String get msgCloudSetupSkipped => 'تم تجاوز إعداد السحابة';
+
+  @override
   String get msgInvalidPricingMatrix => 'راجع قيم الأسعار قبل الحفظ.';
+
+  @override
+  String get msgSetupFinishFailed => 'تعذر إكمال الإعداد.';
 
   @override
   String get msgLocalizationFallbackSample =>
       'Pending Arabic translation fallback text.';
+
+  @override
+  String get btnBack => 'رجوع';
+
+  @override
+  String get btnNext => 'التالي';
+
+  @override
+  String get btnFinish => 'إنهاء';
+
+  @override
+  String get btnSelectDbFile => 'اختر ملف SQLite .db';
+
+  @override
+  String get btnTestGcp => 'فحص إعدادات السحابة';
+
+  @override
+  String get btnSkipGcp => 'تجاوز إعداد السحابة';
 
   @override
   String get btnRetryConnection => 'إعادة المحاولة';

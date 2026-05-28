@@ -8,9 +8,16 @@ abstract final class AppTheme {
   static const String interFontFamily = 'Inter';
   static const String cairoFontFamily = 'Cairo';
   static const String tajawalFontFamily = 'Tajawal';
+  static const double timerFontSize = 40;
+  static const double headerLargeFontSize = 26;
+  static const double headerMediumFontSize = 20;
+  static const double bodyFontSize = 16;
+  static const double tableNumberFontSize = 15;
+  static const double helperFontSize = 14;
+  static const double statusChipFontSize = 13;
   static const TextStyle tableNumberStyle = TextStyle(
     fontFamily: interFontFamily,
-    fontSize: 13,
+    fontSize: tableNumberFontSize,
     fontWeight: FontWeight.w500,
     height: 1.2,
     color: AppColorTokens.textPrimary,
@@ -45,7 +52,7 @@ abstract final class AppTheme {
   }) {
     final tableNumberStyle = TextStyle(
       fontFamily: numberFontFamily,
-      fontSize: 13,
+      fontSize: tableNumberFontSize,
       fontWeight: FontWeight.w500,
       height: 1.2,
       color: AppColorTokens.textPrimary,
@@ -54,70 +61,70 @@ abstract final class AppTheme {
     final textTheme = TextTheme(
       displayLarge: TextStyle(
         fontFamily: headingFontFamily,
-        fontSize: 36,
+        fontSize: timerFontSize,
         fontWeight: FontWeight.w700,
         height: 1,
         color: AppColorTokens.textPrimary,
       ),
       headlineLarge: TextStyle(
         fontFamily: headingFontFamily,
-        fontSize: 24,
+        fontSize: headerLargeFontSize,
         fontWeight: FontWeight.w700,
         height: 1.2,
         color: AppColorTokens.textPrimary,
       ),
       titleLarge: TextStyle(
         fontFamily: headingFontFamily,
-        fontSize: 18,
+        fontSize: headerMediumFontSize,
         fontWeight: FontWeight.w600,
         height: 1.3,
         color: AppColorTokens.textPrimary,
       ),
       titleMedium: TextStyle(
         fontFamily: bodyFontFamily,
-        fontSize: 14,
+        fontSize: bodyFontSize,
         fontWeight: FontWeight.w600,
         height: 1.4,
         color: AppColorTokens.textPrimary,
       ),
       bodyLarge: TextStyle(
         fontFamily: bodyFontFamily,
-        fontSize: 14,
+        fontSize: bodyFontSize,
         fontWeight: FontWeight.w400,
         height: 1.4,
         color: AppColorTokens.textPrimary,
       ),
       bodyMedium: TextStyle(
         fontFamily: bodyFontFamily,
-        fontSize: 14,
+        fontSize: bodyFontSize,
         fontWeight: FontWeight.w400,
         height: 1.4,
         color: AppColorTokens.textPrimary,
       ),
       bodySmall: TextStyle(
         fontFamily: bodyFontFamily,
-        fontSize: 12,
+        fontSize: helperFontSize,
         fontWeight: FontWeight.w400,
         height: 1.3,
         color: AppColorTokens.textSecondary,
       ),
       labelLarge: TextStyle(
         fontFamily: bodyFontFamily,
-        fontSize: 14,
+        fontSize: bodyFontSize,
         fontWeight: FontWeight.w600,
         height: 1.2,
         color: AppColorTokens.textPrimary,
       ),
       labelMedium: TextStyle(
         fontFamily: bodyFontFamily,
-        fontSize: 12,
+        fontSize: helperFontSize,
         fontWeight: FontWeight.w600,
         height: 1.2,
         color: AppColorTokens.textSecondary,
       ),
       labelSmall: TextStyle(
         fontFamily: bodyFontFamily,
-        fontSize: 11,
+        fontSize: statusChipFontSize,
         fontWeight: FontWeight.w700,
         height: 1.1,
         color: AppColorTokens.textSecondary,
@@ -167,7 +174,7 @@ abstract final class AppTheme {
         ),
         titleTextStyle: TextStyle(
           fontFamily: headingFontFamily,
-          fontSize: 18,
+          fontSize: headerMediumFontSize,
           fontWeight: FontWeight.w600,
           color: AppColorTokens.textPrimary,
         ),
@@ -242,13 +249,13 @@ abstract final class AppTheme {
           fontFamily: bodyFontFamily,
           color: AppColorTokens.textPrimary,
           fontWeight: FontWeight.w700,
-          fontSize: 12,
+          fontSize: helperFontSize,
         ),
         unselectedLabelTextStyle: TextStyle(
           fontFamily: bodyFontFamily,
           color: AppColorTokens.textSecondary,
           fontWeight: FontWeight.w400,
-          fontSize: 12,
+          fontSize: helperFontSize,
         ),
       ),
       listTileTheme: ListTileThemeData(
@@ -391,7 +398,7 @@ abstract final class AppTheme {
       textStyle: WidgetStatePropertyAll(
         TextStyle(
           fontFamily: fontFamily,
-          fontSize: 14,
+          fontSize: bodyFontSize,
           fontWeight: FontWeight.w700,
           height: 1.2,
         ),
@@ -458,7 +465,7 @@ abstract final class AppTheme {
       textStyle: WidgetStatePropertyAll(
         TextStyle(
           fontFamily: fontFamily,
-          fontSize: 14,
+          fontSize: bodyFontSize,
           fontWeight: FontWeight.w600,
           height: 1.2,
         ),
@@ -502,7 +509,7 @@ abstract final class AppTheme {
       textStyle: WidgetStatePropertyAll(
         TextStyle(
           fontFamily: fontFamily,
-          fontSize: 14,
+          fontSize: bodyFontSize,
           fontWeight: FontWeight.w600,
           height: 1.2,
         ),

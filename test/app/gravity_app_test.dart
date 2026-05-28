@@ -43,6 +43,7 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
     await insertSetting('setup_complete', '1');
+    await insertSetting(SettingKeys.adminPassword, 'AdminGravity');
     await insertSetting(SettingKeys.screenScale, '1.2');
 
     await tester.pumpWidget(

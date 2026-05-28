@@ -70,7 +70,7 @@ The application implements a dense, high-efficiency layout designed for a 1080p 
 | `lib/features/corrections/` | Admin void/reversal UI, adjustments log |
 | `lib/features/reports/` | End Day cashier close, frozen snapshot lists, shift reports, and graphs |
 | `lib/features/settings/` | Price updates, leeway adjustments, stale timers, system controls |
-| `lib/features/setup/` | First-run setup wizard (admin password, GCP connectivity test, product setup) |
+| `lib/features/setup/` | First-run setup wizard (admin password, safe restore, local GCP config check, product setup) |
 | `test/domain/` | Unit tests for business rules |
 | `test/data/` | Repository, transaction, and migration tests |
 | `test/features/` | Functional widget/view-model tests |
@@ -172,7 +172,10 @@ deterministic business logic.
 19. Cash/card payment records preserve method and amount for reconciliation.
 20. Money, debt, subscription usage, inventory, and closed-day changes are
    transactional.
-21. New installations require admin password setup, verification of GCP connection settings (via gitignored `.env`), and initial product catalog setup (socks/water pre-filled but editable) before cashier operations.
+21. New installations require admin password setup, optional safe restore, a
+local GCP `.env` configuration check that does not enable cloud backup by
+itself, and initial product catalog setup (socks/water pre-filled but editable)
+before cashier operations.
 22. Backup upload failure is recorded and shown as an operational warning, but does not block offline cashier work.
 23. Backup packages include only the database and validation manifest.
 24. Restore validates manifest/checksum and creates a local safety copy before

@@ -29,6 +29,24 @@ void main() {
       expect(theme.textTheme.labelMedium?.fontFamily, AppTheme.interFontFamily);
     });
 
+    test('uses enlarged cashier-readable text sizes', () {
+      final theme = AppTheme.light;
+
+      expect(theme.textTheme.displayLarge?.fontSize, AppTheme.timerFontSize);
+      expect(
+        theme.textTheme.headlineLarge?.fontSize,
+        AppTheme.headerLargeFontSize,
+      );
+      expect(
+        theme.textTheme.titleLarge?.fontSize,
+        AppTheme.headerMediumFontSize,
+      );
+      expect(theme.textTheme.bodyMedium?.fontSize, AppTheme.bodyFontSize);
+      expect(theme.textTheme.bodySmall?.fontSize, AppTheme.helperFontSize);
+      expect(theme.textTheme.labelMedium?.fontSize, AppTheme.helperFontSize);
+      expect(theme.textTheme.labelSmall?.fontSize, AppTheme.statusChipFontSize);
+    });
+
     test('keeps brand yellow paired with dark navy text for contrast', () {
       final ratio = _contrastRatio(
         AppColorTokens.brandPrimary,
@@ -87,7 +105,10 @@ void main() {
         theme.dataTableTheme.dataTextStyle?.fontFamily,
         AppTheme.interFontFamily,
       );
-      expect(theme.dataTableTheme.dataTextStyle?.fontSize, 13);
+      expect(
+        theme.dataTableTheme.dataTextStyle?.fontSize,
+        AppTheme.tableNumberFontSize,
+      );
       expect(theme.dataTableTheme.dataTextStyle?.fontWeight, FontWeight.w500);
       expect(theme.dataTableTheme.dataTextStyle?.height, 1.2);
     });

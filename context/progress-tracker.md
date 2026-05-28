@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Start first-run setup and restore after completing admin auth and audit infrastructure.
+- Start the next implementation unit after Feature 07.
 
 ## Completed
 
@@ -31,14 +31,15 @@ Update this file after every meaningful implementation change.
 - [x] **Feature 04 review fixes**: Keyed right-panel mode swaps so the shared split scaffold fade transition runs, constrained shared button labels to single-line ellipsis behavior, and added regression tests for both cases.
 - [x] **Feature 05: Settings and Configuration**: Added typed cached app settings, default `system_settings` injection, protected admin settings persistence with validation and audit ledger entries, public cashier settings persistence, settings screen tabs for cashier/admin controls, admin unlock dialog, localized settings copy, and validation/repository/widget regression tests.
 - [x] **Feature 06: Admin Auth and Audit Infrastructure**: Added reusable plaintext admin password verification through a repository boundary, five-minute sliding admin authorization sessions with injectable clock/timer tests, shared masked admin password dialog with Enter-submit support, audit event catalog/draft/service infrastructure, audit repository page reads, transactional protected settings audit writes with rollback-on-audit-failure coverage, active admin countdown badge with Lock System action, and a recent audit events grid in the admin settings panel.
+- [x] **Feature 07: First-Run Setup and Restore**: Replaced the setup placeholder with a full-screen first-run wizard for admin password setup, optional safe SQLite restore, optional `.env`-based cloud configuration check, and editable socks/water product seeding. Added transactional setup persistence, initial product stock ledger writes, safe restore validation/rollback helper, localized setup copy, and focused setup/restore/widget tests.
 
 ## In Progress
 
-- [/] Ready to begin Feature 07: First-Run Setup and Restore.
+- None.
 
 ## Next Up
 
-- [ ] Start `07-first-run-setup-and-restore.md`.
+- [ ] Review Feature 07 results and start `08-player-profiles-and-search.md` follow-up work only after current verification is clean.
 
 ## Open Questions
 
@@ -53,7 +54,7 @@ Update this file after every meaningful implementation change.
 - **Hybrid Side Navigation**: Persistent thin side rail for switching modules (Players, Products, Inventory, Reports, Settings).
 - **Check-In Entry Redesign**: Entry type selection is either Open Time or Fixed Duration (30-minute block increments via +/- buttons).
 - **Auto-Detected Subscriptions**: Active subscriptions are automatically detected at check-in. Subscription holders must enter using their subscription.
-- **Simplified Setup Wizard**: Setup collects admin password and runs a skip-able GCP connection test. Configurable products are pre-filled with default socks/water.
+- **Simplified Setup Wizard**: Setup collects admin password, supports optional safe restore, and runs a skip-able local GCP `.env` config check that does not enable cloud backup without later backup-service verification. Configurable products are pre-filled with default socks/water.
 - **GCP Credential Storage**: GCP credentials (key, bucket) are loaded from a local gitignored `.env` file, never stored in SQLite or exposed in setup forms.
 - **Sound + Visual Notifications**: Overdue players trigger a visual state change and an auditory system alert. A global mute option is provided.
 - **Durable Audit Ledger**: Audit events capture admin password entry and high-risk actions.
@@ -82,3 +83,6 @@ Update this file after every meaningful implementation change.
 - 2026-05-27: Applied Feature 05 review fixes. Runtime now applies persisted screen scaling to the cashier shell, protected settings saves require an active shared admin authorization session at the provider/repository mutation boundary, pricing/product-base edits emit `price_change` audit rows with field-oriented metadata, non-price protected edits emit `settings_update`, the settings unlock flow uses the Feature 06 five-minute session duration, and the stale-threshold spec now consistently allows values greater than or equal to 60 minutes.
 - 2026-05-27: Implemented Feature 06 admin auth and audit infrastructure. Moved authorization tokens into `core/security`, routed plaintext password checks through `AdminAuthRepository`, added injectable session clock/timer behavior for exact five-minute sliding expiry tests, added shared `AdminPasswordDialog`, added `AuditService`/`AuditRepository`/audit providers, rendered active admin countdown plus Lock System and paged recent audit events in settings, and verified transactional rollback when an audit insert fails. Verified with `flutter gen-l10n`, `dart format --set-exit-if-changed .`, `flutter analyze`, targeted settings repository/screen tests, and full `flutter test` (51 passing tests).
 - 2026-05-28: Applied Feature 06 review fixes. Admin auth now requires an explicit `system_settings.admin_password` row instead of falling back to the hard-coded default, and the audit event display summary now recursively expands nested pricing matrix diffs so changed prices such as `block_60_min: 18000 -> 19000` are visible in the admin audit grid. Added regression coverage for missing password rows and visible nested price diffs.
+- 2026-05-28: Implemented Feature 07 first-run setup and restore. Added the setup wizard state machine and full-screen UI, plaintext admin password setup, safe restore helper with raw `PRAGMA integrity_check`, required-table validation without running Drift migrations, safety-copy rollback, skippable `.env` cloud readiness check, editable Grippy Socks/Bottled Water catalog seeding, setup completion gating, and targeted setup tests. Verified with `flutter gen-l10n`, `dart format --set-exit-if-changed .`, `flutter analyze`, `flutter test test/features/setup` (8 passing tests), and full `flutter test` (60 passing tests).
+- 2026-05-28: Applied Feature 07 review fixes. Restore validation now rejects databases missing critical setup rows (`setup_complete == 1` and explicit non-empty `admin_password`), startup gating also requires the explicit admin password row, duplicate enabled setup SKUs are blocked in UI state and defensively rejected by the setup repository transaction, and the cloud setup step was downgraded to a local `.env` configuration check that never sets `gcp_enabled = 1` until a later backup service performs real bucket verification.
+- 2026-05-28: Raised the global cashier typography scale for better readability: timers now use 40px, major headers 26px, panel/dialog headers 20px, body/button text 16px, helper/input labels 14px, status chips 13px, and table numbers 15px. Updated the Feature 02 typography contract and theme regression coverage.
