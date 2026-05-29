@@ -8,6 +8,7 @@ import 'package:gravity_desktop_app_v2/app/widgets/gravity_data_table.dart';
 import 'package:gravity_desktop_app_v2/app/widgets/gravity_split_scaffold.dart';
 import 'package:gravity_desktop_app_v2/app/widgets/gravity_status_chip.dart';
 import 'package:gravity_desktop_app_v2/app/widgets/gravity_text_field.dart';
+import 'package:gravity_desktop_app_v2/l10n/app_localizations.dart';
 
 double _contrastRatio(Color color1, Color color2) {
   final luminance1 = color1.computeLuminance();
@@ -239,6 +240,34 @@ void main() {
         tester.widget<TextField>(find.byType(TextField)).obscureText,
         false,
       );
+    });
+
+    testWidgets('aligns left under English and right under Arabic', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          locale: Locale('en'),
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          home: Scaffold(body: GravityTextField(label: 'Test Label')),
+        ),
+      );
+
+      final englishField = tester.widget<TextField>(find.byType(TextField));
+      expect(englishField.textAlign, TextAlign.left);
+
+      await tester.pumpWidget(
+        const MaterialApp(
+          locale: Locale('ar'),
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          home: Scaffold(body: GravityTextField(label: 'Test Label')),
+        ),
+      );
+
+      final arabicField = tester.widget<TextField>(find.byType(TextField));
+      expect(arabicField.textAlign, TextAlign.right);
     });
   });
 

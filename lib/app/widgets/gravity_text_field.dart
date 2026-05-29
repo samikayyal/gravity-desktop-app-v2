@@ -142,7 +142,9 @@ class _GravityTextFieldState extends State<GravityTextField> {
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onFieldSubmitted,
       inputFormatters: widget.inputFormatters,
-      textAlign: widget.textAlign,
+      textAlign: Localizations.localeOf(context).languageCode == 'ar'
+          ? TextAlign.right
+          : TextAlign.left,
       style: textStyle,
       obscureText: widget.isBlind && _isHidden,
       decoration: InputDecoration(

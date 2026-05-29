@@ -63,9 +63,9 @@ class _AdminPasswordDialogState extends ConsumerState<AdminPasswordDialog> {
   }
 
   Future<void> _tryUnlock() async {
-    if (_passwordController.text.trim().length < 4) {
+    if (_passwordController.text.trim().isEmpty) {
       setState(() {
-        _errorText = context.l10n.msgInvalidAdminPasswordLength;
+        _errorText = context.l10n.msgRequiredField;
       });
       return;
     }

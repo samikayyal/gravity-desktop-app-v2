@@ -44,7 +44,7 @@ void main() {
       },
     );
 
-    test('rejects blank or too-short admin passwords', () {
+    test('rejects blank admin passwords', () {
       final settings = AppSettings.defaults.copyWith(adminPassword: '   ');
 
       final validation = settings.validate();

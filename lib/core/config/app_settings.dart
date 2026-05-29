@@ -446,7 +446,7 @@ class AppSettings {
   SettingsValidationResult validate() {
     final issues = <SettingsValidationIssue>[];
 
-    if (adminPassword.trim().length < 4) {
+    if (adminPassword.trim().isEmpty) {
       issues.add(
         const SettingsValidationIssue(
           field: SettingsValidationField.adminPassword,

@@ -739,9 +739,6 @@ class _AdminSettingsFormState extends State<_AdminSettingsForm> {
     if (value == null || value.trim().isEmpty) {
       return context.l10n.msgRequiredField;
     }
-    if (value.trim().length < 4) {
-      return context.l10n.msgInvalidAdminPasswordLength;
-    }
     return null;
   }
 
