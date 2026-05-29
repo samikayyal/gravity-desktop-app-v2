@@ -297,26 +297,6 @@ class _CashierSettingsTab extends ConsumerWidget {
                   await onSavePublic(overdueAudioMuted: value);
                 },
         ),
-        const SizedBox(height: AppSpacing.lg),
-        _SectionHeader(
-          icon: Icons.display_settings_outlined,
-          title: l10n.labelScreenScale,
-        ),
-        SegmentedButton<double>(
-          segments: [
-            for (final scale in AppSettings.allowedScreenScales)
-              ButtonSegment<double>(
-                value: scale,
-                label: Text(l10n.labelScaleOption(scale.toStringAsFixed(1))),
-              ),
-          ],
-          selected: {settings.screenScale},
-          onSelectionChanged: isSaving
-              ? null
-              : (selection) async {
-                  await onSavePublic(screenScale: selection.single);
-                },
-        ),
       ],
     );
   }

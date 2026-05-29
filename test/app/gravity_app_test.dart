@@ -36,7 +36,7 @@ void main() {
         );
   }
 
-  testWidgets('applies persisted cashier screen scale to the app shell', (
+  testWidgets('ignores persisted screen scale and always runs at scale 1.0', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(1280, 800));
@@ -54,12 +54,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    final transform = tester.widget<Transform>(
-      find.byKey(ScaledAppShell.transformKey),
-    );
-
-    expect(transform.transform.storage[0], closeTo(1.2, 0.001));
-    expect(transform.transform.storage[5], closeTo(1.2, 0.001));
+    expect(find.byKey(ScaledAppShell.transformKey), findsNothing);
     expect(tester.takeException(), isNull);
   });
 }

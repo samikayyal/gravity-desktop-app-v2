@@ -42,10 +42,8 @@ class GravityApp extends ConsumerWidget {
             case StartupState.complete:
               final settingsAsync = ref.watch(systemSettingsControllerProvider);
               return settingsAsync.when(
-                data: (settings) => ScaledAppShell(
-                  scale: settings.screenScale,
-                  child: const SplitPanelLayout(),
-                ),
+                data: (settings) =>
+                    const ScaledAppShell(scale: 1.0, child: SplitPanelLayout()),
                 loading: () => const _StartupLoadingScreen(),
                 error: (error, stackTrace) =>
                     _DatabaseRescueScreen(error: error),
