@@ -94,7 +94,7 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('settings language dropdown updates locale and persists it', (
+    testWidgets('settings language buttons update locale and persist it', (
       tester,
     ) async {
       await tester.binding.setSurfaceSize(const Size(1280, 800));
@@ -117,10 +117,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Language'), findsOneWidget);
+      expect(find.text('arabic'), findsOneWidget);
+      expect(find.text('english'), findsOneWidget);
 
-      await tester.tap(find.byType(DropdownButtonFormField<Locale>));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('العربية (Syria)').last);
+      await tester.tap(find.text('arabic'));
       await tester.pumpAndSettle();
 
       expect(find.text('الإعدادات'), findsWidgets);

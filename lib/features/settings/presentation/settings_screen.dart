@@ -211,57 +211,77 @@ class _CashierSettingsTab extends ConsumerWidget {
       localeAsync.valueOrNull ?? Localizations.localeOf(context),
     );
     final volumePercent = volumeDraft.round();
+    Future<void> changeLocale(Locale locale) async {
+      try {
+        await ref
+            .read(appLocaleControllerProvider.notifier)
+            .setLocale(locale);
+        if (!context.mounted) {
+          return;
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.msgLanguageUpdated)),
+        );
+      } catch (_) {
+        if (!context.mounted) {
+          return;
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.l10n.msgLanguageUpdateFailed),
+          ),
+        );
+      }
+    }
 
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
         Text(l10n.titleCashierOptions, style: theme.textTheme.titleLarge),
         const SizedBox(height: AppSpacing.md),
-        DropdownButtonFormField<Locale>(
-          key: ValueKey<String>(
-            'settings.language.${selectedLocale.languageCode}',
-          ),
-          initialValue: selectedLocale,
-          isExpanded: true,
-          decoration: InputDecoration(labelText: l10n.labelLanguage),
-          items: [
-            DropdownMenuItem<Locale>(
-              value: AppSupportedLocales.english,
-              child: Text(l10n.labelEnglishUs),
+        _SectionHeader(
+          icon: Icons.language_outlined,
+          title: l10n.labelLanguage,
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Row(
+          children: [
+            Expanded(
+              child: selectedLocale == AppSupportedLocales.arabic
+                  ? GravityButton.primary(
+                      key: const Key('settings.language.arabic'),
+                      label: 'arabic',
+                      onPressed: isSaving
+                          ? null
+                          : () => changeLocale(AppSupportedLocales.arabic),
+                    )
+                  : GravityButton.secondary(
+                      key: const Key('settings.language.arabic'),
+                      label: 'arabic',
+                      onPressed: isSaving
+                          ? null
+                          : () => changeLocale(AppSupportedLocales.arabic),
+                    ),
             ),
-            DropdownMenuItem<Locale>(
-              value: AppSupportedLocales.arabic,
-              child: Text(l10n.labelArabicSyria),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: selectedLocale == AppSupportedLocales.english
+                  ? GravityButton.primary(
+                      key: const Key('settings.language.english'),
+                      label: 'english',
+                      onPressed: isSaving
+                          ? null
+                          : () => changeLocale(AppSupportedLocales.english),
+                    )
+                  : GravityButton.secondary(
+                      key: const Key('settings.language.english'),
+                      label: 'english',
+                      onPressed: isSaving
+                          ? null
+                          : () => changeLocale(AppSupportedLocales.english),
+                    ),
             ),
           ],
-          onChanged: isSaving
-              ? null
-              : (locale) async {
-                  if (locale == null) {
-                    return;
-                  }
-
-                  try {
-                    await ref
-                        .read(appLocaleControllerProvider.notifier)
-                        .setLocale(locale);
-                    if (!context.mounted) {
-                      return;
-                    }
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(context.l10n.msgLanguageUpdated)),
-                    );
-                  } catch (_) {
-                    if (!context.mounted) {
-                      return;
-                    }
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(context.l10n.msgLanguageUpdateFailed),
-                      ),
-                    );
-                  }
-                },
         ),
         const SizedBox(height: AppSpacing.lg),
         _SectionHeader(
