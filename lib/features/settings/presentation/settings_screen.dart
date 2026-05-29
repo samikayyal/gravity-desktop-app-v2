@@ -287,15 +287,13 @@ class _CashierSettingsTab extends ConsumerWidget {
                   await onSavePublic(notificationVolumePercent: value.round());
                 },
         ),
-        SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Text(l10n.labelMuteOverdueAudios),
-          value: settings.overdueAudioMuted,
-          onChanged: isSaving
-              ? null
-              : (value) async {
-                  await onSavePublic(overdueAudioMuted: value);
-                },
+        const SizedBox(height: AppSpacing.md),
+        _AlarmSoundSelector(
+          isMuted: settings.overdueAudioMuted,
+          isSaving: isSaving,
+          onChanged: (muted) async {
+            await onSavePublic(overdueAudioMuted: muted);
+          },
         ),
       ],
     );
@@ -1047,4 +1045,223 @@ String _formatDamascusTimestamp(DateTime utcTimestamp) {
   return CashierFormatters.forceWesternDigits(
     '$year-$month-$day $hour:$minute:$second',
   );
+}
+
+class _AlarmSoundSelector extends StatelessWidget {
+  const _AlarmSoundSelector({
+    required this.isMuted,
+    required this.isSaving,
+    required this.onChanged,
+  });
+
+  final bool isMuted;
+  final bool isSaving;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final appColors = context.appColors;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SectionHeader(
+          icon: Icons.volume_up_outlined,
+          title: l10n.labelMuteOverdueAudios,
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final useRow = constraints.maxWidth >= 460;
+
+            final activeCard = _SoundOptionCard(
+              key: const Key('settings.soundActiveCard'),
+              isSelected: !isMuted,
+              isEnabled: !isSaving,
+              icon: Icons.volume_up_rounded,
+              title: l10n.labelSoundActive,
+              subtitle: l10n.labelSoundActiveDescription,
+              activeColor: appColors.statusActive,
+              onTap: () => onChanged(false),
+            );
+
+            final mutedCard = _SoundOptionCard(
+              key: const Key('settings.soundMutedCard'),
+              isSelected: isMuted,
+              isEnabled: !isSaving,
+              icon: Icons.volume_off_rounded,
+              title: l10n.labelMutedState,
+              subtitle: l10n.labelMutedStateDescription,
+              activeColor: appColors.statusOverdue,
+              onTap: () => onChanged(true),
+            );
+
+            if (useRow) {
+              return Row(
+                children: [
+                  Expanded(child: activeCard),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(child: mutedCard),
+                ],
+              );
+            } else {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  activeCard,
+                  const SizedBox(height: AppSpacing.md),
+                  mutedCard,
+                ],
+              );
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _SoundOptionCard extends StatefulWidget {
+  const _SoundOptionCard({
+    super.key,
+    required this.isSelected,
+    required this.isEnabled,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.activeColor,
+    required this.onTap,
+  });
+
+  final bool isSelected;
+  final bool isEnabled;
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color activeColor;
+  final VoidCallback onTap;
+
+  @override
+  State<_SoundOptionCard> createState() => _SoundOptionCardState();
+}
+
+class _SoundOptionCardState extends State<_SoundOptionCard> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isSelected = widget.isSelected;
+    final isEnabled = widget.isEnabled;
+
+    final Color backgroundColor = isSelected
+        ? AppColorTokens.statusSurface(widget.activeColor, alpha: 0.08)
+        : (theme.cardTheme.color ?? AppColorTokens.neutralSurface);
+
+    final Color borderColor = isSelected
+        ? widget.activeColor.withValues(alpha: 0.5)
+        : (_isHovered && isEnabled
+            ? widget.activeColor.withValues(alpha: 0.25)
+            : AppColorTokens.quietBorder);
+
+    final Color iconAndTitleColor = isSelected
+        ? widget.activeColor
+        : AppColorTokens.textPrimary;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: isEnabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      child: AnimatedContainer(
+        duration: AppMotion.fast,
+        curve: Curves.easeInOut,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          border: Border.all(
+            color: borderColor,
+            width: isSelected ? 1.5 : 1,
+          ),
+          borderRadius: AppRadius.mdBorder,
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: widget.activeColor.withValues(alpha: 0.04),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  )
+                ]
+              : null,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: isEnabled ? widget.onTap : null,
+            borderRadius: AppRadius.mdBorder,
+            hoverColor: widget.activeColor.withValues(alpha: 0.02),
+            splashColor: widget.activeColor.withValues(alpha: 0.05),
+            highlightColor: Colors.transparent,
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AnimatedContainer(
+                    duration: AppMotion.fast,
+                    padding: const EdgeInsets.all(AppSpacing.sm),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? widget.activeColor.withValues(alpha: 0.12)
+                          : AppColorTokens.neutralBackground,
+                      borderRadius: AppRadius.smBorder,
+                    ),
+                    child: Icon(
+                      widget.icon,
+                      size: 24,
+                      color: iconAndTitleColor,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              widget.title,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: iconAndTitleColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            if (isSelected)
+                              Icon(
+                                Icons.check_circle_rounded,
+                                size: 18,
+                                color: widget.activeColor,
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.xxs),
+                        Text(
+                          widget.subtitle,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: AppColorTokens.textSecondary,
+                            height: 1.3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

@@ -194,6 +194,10 @@
   "helperMinutes": "دقائق",
   "helperSyp": "ل.س",
   "chipActive": "نشط",
+  "labelSoundActive": "الصوت نشط",
+  "labelSoundActiveDescription": "يتم تشغيل تنبيهات صوتية عند تأخر اللاعبين",
+  "labelMutedState": "مكتوم",
+  "labelMutedStateDescription": "كتم جميع أصوات تنبيهات اللاعبين المتأخرين",
   "prodSocks": "جوارب",
   "prodWaterBottle": "عبوة ماء 0.5 لتر"
 }

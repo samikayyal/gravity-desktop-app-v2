@@ -1,4 +1,4 @@
-import 'package:drift/drift.dart' hide isNull;
+import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -123,5 +123,57 @@ void main() {
       findsOneWidget,
     );
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('renders premium sound selector, handles mute toggle, and disables volume slider', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1000, 1000));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(buildHarness());
+    await tester.pumpAndSettle();
+
+    // Verify both Sound Active and Muted cards exist
+    final soundActiveCard = find.byKey(const Key('settings.soundActiveCard'));
+    final soundMutedCard = find.byKey(const Key('settings.soundMutedCard'));
+
+    expect(soundActiveCard, findsOneWidget);
+    expect(soundMutedCard, findsOneWidget);
+
+    // Initial state: not muted, so soundActiveCard is selected
+    // Note: The Slider is enabled initially
+    final sliderFinder = find.byType(Slider);
+    expect(sliderFinder, findsOneWidget);
+    Slider slider = tester.widget<Slider>(sliderFinder);
+    expect(slider.onChanged, isNotNull); // Enabled
+
+    // Tap on Muted Card
+    await tester.tap(soundMutedCard);
+    await tester.pumpAndSettle();
+
+    // Verify settings were saved in database
+    final mutedSetting = await (database.select(database.systemSettings)
+          ..where((table) => table.key.equals(SettingKeys.overdueAudioMuted)))
+        .getSingle();
+    expect(mutedSetting.value, '1');
+
+    // After state: muted, so volume Slider should be disabled
+    slider = tester.widget<Slider>(sliderFinder);
+    expect(slider.onChanged, isNull); // Disabled
+
+    // Tap back to Sound Active
+    await tester.tap(soundActiveCard);
+    await tester.pumpAndSettle();
+
+    // Verify settings were saved in database
+    final mutedSetting2 = await (database.select(database.systemSettings)
+          ..where((table) => table.key.equals(SettingKeys.overdueAudioMuted)))
+        .getSingle();
+    expect(mutedSetting2.value, '0');
+
+    // Slider should be enabled again
+    slider = tester.widget<Slider>(sliderFinder);
+    expect(slider.onChanged, isNotNull); // Enabled
   });
 }

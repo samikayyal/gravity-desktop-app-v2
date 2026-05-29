@@ -457,6 +457,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chipActive => 'Active';
 
   @override
+  String get labelSoundActive => 'Sound Active';
+
+  @override
+  String get labelSoundActiveDescription =>
+      'Auditory alerts play when players are overdue';
+
+  @override
+  String get labelMutedState => 'Muted';
+
+  @override
+  String get labelMutedStateDescription =>
+      'All overdue player alarm sounds are silenced';
+
+  @override
   String get prodSocks => 'Socks';
 
   @override

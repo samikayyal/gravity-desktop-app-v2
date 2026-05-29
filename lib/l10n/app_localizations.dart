@@ -932,6 +932,30 @@ abstract class AppLocalizations {
   /// **'Active'**
   String get chipActive;
 
+  /// No description provided for @labelSoundActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound Active'**
+  String get labelSoundActive;
+
+  /// No description provided for @labelSoundActiveDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Auditory alerts play when players are overdue'**
+  String get labelSoundActiveDescription;
+
+  /// No description provided for @labelMutedState.
+  ///
+  /// In en, this message translates to:
+  /// **'Muted'**
+  String get labelMutedState;
+
+  /// No description provided for @labelMutedStateDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'All overdue player alarm sounds are silenced'**
+  String get labelMutedStateDescription;
+
   /// No description provided for @prodSocks.
   ///
   /// In en, this message translates to:

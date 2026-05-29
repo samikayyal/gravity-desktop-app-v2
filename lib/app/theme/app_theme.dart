@@ -208,12 +208,12 @@ abstract final class AppTheme {
       ),
       iconButtonTheme: IconButtonThemeData(style: _iconButtonStyle()),
       inputDecorationTheme: InputDecorationThemeData(
-        isDense: true,
+        isDense: false,
         filled: true,
-        fillColor: AppColorTokens.neutralSurface,
+        fillColor: AppColorTokens.neutralBackground,
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
-          vertical: AppSpacing.xs,
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
         ),
         border: _inputBorder(AppColorTokens.quietBorder),
         enabledBorder: _inputBorder(AppColorTokens.quietBorder),

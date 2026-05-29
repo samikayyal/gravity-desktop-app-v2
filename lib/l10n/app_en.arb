@@ -194,6 +194,10 @@
   "helperMinutes": "Minutes",
   "helperSyp": "SYP",
   "chipActive": "Active",
+  "labelSoundActive": "Sound Active",
+  "labelSoundActiveDescription": "Auditory alerts play when players are overdue",
+  "labelMutedState": "Muted",
+  "labelMutedStateDescription": "All overdue player alarm sounds are silenced",
   "prodSocks": "Socks",
   "prodWaterBottle": "Water Bottle (0.5L)"
 }

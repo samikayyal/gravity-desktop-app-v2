@@ -457,6 +457,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chipActive => 'نشط';
 
   @override
+  String get labelSoundActive => 'الصوت نشط';
+
+  @override
+  String get labelSoundActiveDescription =>
+      'يتم تشغيل تنبيهات صوتية عند تأخر اللاعبين';
+
+  @override
+  String get labelMutedState => 'مكتوم';
+
+  @override
+  String get labelMutedStateDescription =>
+      'كتم جميع أصوات تنبيهات اللاعبين المتأخرين';
+
+  @override
   String get prodSocks => 'جوارب';
 
   @override

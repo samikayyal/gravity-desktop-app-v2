@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gravity_desktop_app_v2/app/theme/spacing_tokens.dart';
 
 class GravityTextField extends StatefulWidget {
   const GravityTextField({
@@ -131,30 +132,45 @@ class _GravityTextFieldState extends State<GravityTextField> {
           )
         : theme.textTheme.bodyMedium;
 
-    return TextFormField(
-      controller: widget.controller,
-      focusNode: widget.focusNode,
-      enabled: widget.enabled,
-      autofocus: widget.autofocus,
-      keyboardType: widget.keyboardType,
-      textInputAction: widget.textInputAction,
-      validator: widget.validator,
-      onChanged: widget.onChanged,
-      onFieldSubmitted: widget.onFieldSubmitted,
-      inputFormatters: widget.inputFormatters,
-      textAlign: Localizations.localeOf(context).languageCode == 'ar'
-          ? TextAlign.right
-          : TextAlign.left,
-      style: textStyle,
-      obscureText: widget.isBlind && _isHidden,
-      decoration: InputDecoration(
-        labelText: widget.label,
-        hintText: widget.hintText,
-        helperText: widget.helperText,
-        errorText: widget.errorText,
-        suffixText: widget.suffixText,
-        suffixIcon: widget.isBlind ? _buildRevealButton() : null,
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: AppSpacing.xxs),
+          child: Text(
+            widget.label,
+            style: theme.textTheme.labelMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+        TextFormField(
+          controller: widget.controller,
+          focusNode: widget.focusNode,
+          enabled: widget.enabled,
+          autofocus: widget.autofocus,
+          keyboardType: widget.keyboardType,
+          textInputAction: widget.textInputAction,
+          validator: widget.validator,
+          onChanged: widget.onChanged,
+          onFieldSubmitted: widget.onFieldSubmitted,
+          inputFormatters: widget.inputFormatters,
+          textAlign: Localizations.localeOf(context).languageCode == 'ar'
+              ? TextAlign.right
+              : TextAlign.left,
+          style: textStyle,
+          obscureText: widget.isBlind && _isHidden,
+          decoration: InputDecoration(
+            hintText: widget.hintText,
+            helperText: widget.helperText,
+            errorText: widget.errorText,
+            suffixText: widget.suffixText,
+            suffixIcon: widget.isBlind ? _buildRevealButton() : null,
+          ),
+        ),
+      ],
     );
   }
 
