@@ -10,15 +10,12 @@ import 'package:gravity_desktop_app_v2/app/providers.dart';
 import 'package:gravity_desktop_app_v2/app/theme/color_tokens.dart';
 import 'package:gravity_desktop_app_v2/app/theme/spacing_tokens.dart';
 import 'package:gravity_desktop_app_v2/app/widgets/gravity_button.dart';
-import 'package:gravity_desktop_app_v2/app/widgets/gravity_data_table.dart';
 import 'package:gravity_desktop_app_v2/app/widgets/gravity_text_field.dart';
-import 'package:gravity_desktop_app_v2/core/audit/audit_providers.dart';
 import 'package:gravity_desktop_app_v2/core/config/app_settings.dart';
 import 'package:gravity_desktop_app_v2/core/config/system_settings_provider.dart';
 import 'package:gravity_desktop_app_v2/core/security/admin_authorization.dart';
 import 'package:gravity_desktop_app_v2/core/security/admin_auth_notifier.dart';
 import 'package:gravity_desktop_app_v2/core/security/admin_password_dialog.dart';
-import 'package:gravity_desktop_app_v2/data/repositories/audit_repository.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -617,8 +614,6 @@ class _AdminSettingsFormState extends State<_AdminSettingsForm> {
             ],
           ),
           const SizedBox(height: AppSpacing.xl),
-          const _AuditEventsPanel(),
-          const SizedBox(height: AppSpacing.xl),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -812,127 +807,6 @@ class _AdminSessionBadge extends StatelessWidget {
   }
 }
 
-class _AuditEventsPanel extends ConsumerStatefulWidget {
-  const _AuditEventsPanel();
-
-  @override
-  ConsumerState<_AuditEventsPanel> createState() => _AuditEventsPanelState();
-}
-
-class _AuditEventsPanelState extends ConsumerState<_AuditEventsPanel> {
-  static const int _pageSize = 10;
-
-  int _pageIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final auditPage = ref.watch(
-      auditEventsPageProvider(
-        AuditEventsPageRequest(pageIndex: _pageIndex, pageSize: _pageSize),
-      ),
-    );
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _SectionHeader(
-          icon: Icons.manage_search_outlined,
-          title: l10n.titleAuditEvents,
-        ),
-        auditPage.when(
-          data: _buildAuditTable,
-          loading: () => const Padding(
-            padding: EdgeInsets.all(AppSpacing.md),
-            child: LinearProgressIndicator(),
-          ),
-          error: (error, stackTrace) => Text(l10n.msgAuditEventsLoadFailed),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAuditTable(AuditEventPage page) {
-    final l10n = context.l10n;
-
-    if (page.records.isEmpty) {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          border: Border.all(color: Theme.of(context).colorScheme.outline),
-          borderRadius: AppRadius.mdBorder,
-        ),
-        child: Text(l10n.msgNoAuditEvents),
-      );
-    }
-
-    return Column(
-      children: [
-        GravityDataTable(
-          rowHeight: 42,
-          headingHeight: 36,
-          columns: [
-            GravityTableColumn(label: l10n.labelAuditTimestamp, flex: 2),
-            GravityTableColumn(label: l10n.labelAuditActionType, flex: 2),
-            GravityTableColumn(label: l10n.labelAuditTargetRecord, flex: 3),
-            GravityTableColumn(label: l10n.labelAuditReason, flex: 3),
-            GravityTableColumn(label: l10n.labelAuditChangedDetails, flex: 4),
-          ],
-          rows: [
-            for (final record in page.records)
-              GravityTableRow(
-                cells: [
-                  GravityTableCell.text(
-                    _formatDamascusTimestamp(record.triggeredAt),
-                  ),
-                  GravityTableCell.text(record.eventType.storageValue),
-                  GravityTableCell.text(
-                    record.targetSummary,
-                    tooltip: record.targetSummary,
-                  ),
-                  GravityTableCell.text(record.reason, tooltip: record.reason),
-                  GravityTableCell.text(
-                    record.changedDetails,
-                    tooltip: record.changedDetails,
-                  ),
-                ],
-              ),
-          ],
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              l10n.labelAuditPage(page.pageIndex + 1, page.totalPages),
-              style: Theme.of(context).textTheme.labelMedium,
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            GravityButton.secondary(
-              label: l10n.btnPreviousPage,
-              onPressed: page.hasPreviousPage
-                  ? () => setState(() {
-                      _pageIndex -= 1;
-                    })
-                  : null,
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            GravityButton.secondary(
-              label: l10n.btnNextPage,
-              onPressed: page.hasNextPage
-                  ? () => setState(() {
-                      _pageIndex += 1;
-                    })
-                  : null,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
 class _SettingsFieldGrid extends StatelessWidget {
   const _SettingsFieldGrid({required this.children});
 
@@ -1032,19 +906,6 @@ String _formatSessionCountdown(Duration remaining) {
   final minutes = safeRemaining.inMinutes.toString().padLeft(2, '0');
   final seconds = (safeRemaining.inSeconds % 60).toString().padLeft(2, '0');
   return CashierFormatters.forceWesternDigits('$minutes:$seconds');
-}
-
-String _formatDamascusTimestamp(DateTime utcTimestamp) {
-  final damascusTime = utcTimestamp.toUtc().add(const Duration(hours: 3));
-  final year = damascusTime.year.toString().padLeft(4, '0');
-  final month = damascusTime.month.toString().padLeft(2, '0');
-  final day = damascusTime.day.toString().padLeft(2, '0');
-  final hour = damascusTime.hour.toString().padLeft(2, '0');
-  final minute = damascusTime.minute.toString().padLeft(2, '0');
-  final second = damascusTime.second.toString().padLeft(2, '0');
-  return CashierFormatters.forceWesternDigits(
-    '$year-$month-$day $hour:$minute:$second',
-  );
 }
 
 class _AlarmSoundSelector extends StatelessWidget {
@@ -1162,8 +1023,8 @@ class _SoundOptionCardState extends State<_SoundOptionCard> {
     final Color borderColor = isSelected
         ? widget.activeColor.withValues(alpha: 0.5)
         : (_isHovered && isEnabled
-            ? widget.activeColor.withValues(alpha: 0.25)
-            : AppColorTokens.quietBorder);
+              ? widget.activeColor.withValues(alpha: 0.25)
+              : AppColorTokens.quietBorder);
 
     final Color iconAndTitleColor = isSelected
         ? widget.activeColor
@@ -1178,10 +1039,7 @@ class _SoundOptionCardState extends State<_SoundOptionCard> {
         curve: Curves.easeInOut,
         decoration: BoxDecoration(
           color: backgroundColor,
-          border: Border.all(
-            color: borderColor,
-            width: isSelected ? 1.5 : 1,
-          ),
+          border: Border.all(color: borderColor, width: isSelected ? 1.5 : 1),
           borderRadius: AppRadius.mdBorder,
           boxShadow: isSelected
               ? [
@@ -1189,7 +1047,7 @@ class _SoundOptionCardState extends State<_SoundOptionCard> {
                     color: widget.activeColor.withValues(alpha: 0.04),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
-                  )
+                  ),
                 ]
               : null,
         ),
