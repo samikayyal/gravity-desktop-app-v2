@@ -117,10 +117,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Language'), findsOneWidget);
-      expect(find.text('arabic'), findsOneWidget);
-      expect(find.text('english'), findsOneWidget);
+      expect(find.text('Arabic'), findsOneWidget);
+      expect(find.text('English'), findsOneWidget);
 
-      await tester.tap(find.text('arabic'));
+      await tester.tap(find.text('Arabic'));
       await tester.pumpAndSettle();
 
       expect(find.text('الإعدادات'), findsWidgets);

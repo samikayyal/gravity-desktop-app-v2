@@ -250,14 +250,14 @@ class _CashierSettingsTab extends ConsumerWidget {
               child: selectedLocale == AppSupportedLocales.arabic
                   ? GravityButton.primary(
                       key: const Key('settings.language.arabic'),
-                      label: 'arabic',
+                      label: 'Arabic',
                       onPressed: isSaving
                           ? null
                           : () => changeLocale(AppSupportedLocales.arabic),
                     )
                   : GravityButton.secondary(
                       key: const Key('settings.language.arabic'),
-                      label: 'arabic',
+                      label: 'Arabic',
                       onPressed: isSaving
                           ? null
                           : () => changeLocale(AppSupportedLocales.arabic),
@@ -268,14 +268,14 @@ class _CashierSettingsTab extends ConsumerWidget {
               child: selectedLocale == AppSupportedLocales.english
                   ? GravityButton.primary(
                       key: const Key('settings.language.english'),
-                      label: 'english',
+                      label: 'English',
                       onPressed: isSaving
                           ? null
                           : () => changeLocale(AppSupportedLocales.english),
                     )
                   : GravityButton.secondary(
                       key: const Key('settings.language.english'),
-                      label: 'english',
+                      label: 'English',
                       onPressed: isSaving
                           ? null
                           : () => changeLocale(AppSupportedLocales.english),
